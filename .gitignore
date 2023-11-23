@@ -1,0 +1,12 @@
+**/node_modules
+**/*~
+dist
+package-lock.json
+**/*solved*
+**/*Config.js*
+!telemetry.config.json
+/public/*.js
+/public/*.html
+test/vtl/__tests__
+test/vtl/__mocks__
+**/*Config.js*
