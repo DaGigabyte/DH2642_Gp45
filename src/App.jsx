@@ -1,11 +1,11 @@
 import "./App.css";
-import Counter from "./components/Counter";
+import CounterPresenter from "./presenters/CounterPresenter";
 
-function App() {
+function App(props) {
   return (
     <div>
       <h1>MobX Counter Example</h1>
-      <Counter />
+      <CounterPresenter model={props.model} />
     </div>
   );
 }
