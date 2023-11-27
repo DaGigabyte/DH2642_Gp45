@@ -1,17 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
-import { increment, decrement } from "../redux/counterSlice";
+import { observer } from "mobx-react";
+import { counterStore } from "../mobx/CounterStore";
 
-function Counter() {
-  const count = useSelector((state) => state.counter.value);
-  const dispatch = useDispatch();
-
+const Counter = observer(() => {
   return (
     <div>
-      <div>Count: {count}</div>
-      <button onClick={() => dispatch(increment())}>Increment</button>
-      <button onClick={() => dispatch(decrement())}>Decrement</button>
+      <div>Count: {counterStore.count}</div>
+      <button onClick={() => counterStore.increment()}>Increment</button>
+      <button onClick={() => counterStore.decrement()}>Decrement</button>
     </div>
   );
-}
+});
 
 export default Counter;
