@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import config from "./firebaseConfig.js";
 import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, signOut} from "firebase/auth";
+import { doc, getDoc, collection, query, where } from "firebase/firestore";
 
 const app= initializeApp(config);
 const auth = getAuth(app);
@@ -65,6 +66,7 @@ function connectToFirebase(model){
     // const readableTimestamp = now.toISOString();
     // set(ref(db, PATH+"/test"), {time: readableTimestamp});
     console.log("set ref");
+    model.ready = false;
     // model.ready = false;
     function propsToWatchCB() {
         return [model.user];
@@ -83,6 +85,39 @@ function connectToFirebase(model){
 // do nothing if model.user falsy (maybe wipe the model data)
 // otherwise read from "path/"+model.user.uid
 // manage model.ready as usual
+function readFromFirebase(model){
+    // TODO
+    // model.ready = false;
+    // get(ref(db, PATH))
+    // .then(function snapshotToModelACB(snapshot) {
+    //     const data = snapshot.val();
+    //     return persistenceToModel(data, model);
+    // })
+    // .then(function setDishesACB(dishes) {
+    //     model.dishes = dishes;
+    //     model.ready = true;
+    // });
+    if (!model.uid) {
+        return;
+    }
+    const docRef = doc(db, "Users", model.uid);
+    // const docSnap = await getDoc(docRef);
+    getDoc(docRef)
+    .then((docSnapshot) => {
+        if (docSnapshot.exists()) {
+            console.log("User data:", docSnapshot.data());
+            model = {...model, ...docSnapshot.data()};
+            model.ready = true;
+        } else {
+            console.log("No such user!");
+        }
+    })
+    .catch((error) => {
+        console.error("Error getting document:", error);
+    });
+    // const userCollectionRef = collection(db, 'Users');
+    // const q = query(userCollectionRef, where("uid", "==", model.user.uid));
+}
 
 // saveToFirebase: 
 // -----------------
