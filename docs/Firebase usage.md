@@ -13,6 +13,11 @@ https://medium.com/@peterkracik/my-approach-to-structure-firestore-without-explo
 ## Firestore structure
 - Users (collection)
     - 12klfs312rijf3221s=weroi2sdf32 (document)
+      - fullName: "Wong Pak Long"
+      - displayName: "Jasper"
+      - profilePicture: "default-avatar.jpg"
+      - follows: ["2387dgh2378chr2t7xtrn23723eb3d"]
+      - followedBy: []
     - 2387dgh2378chr2t7xtrn23723eb3d (document)
 - Posts (collection)
     - 9832rhj989ewhdihdqoq289yh378g4 (document)
