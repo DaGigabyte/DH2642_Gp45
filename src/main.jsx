@@ -13,3 +13,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <App model={reactiveModel} />
   </React.StrictMode>
 );
+
+window.myModel = reactiveModel; // For debugging purposes
+import {connectToFirebase} from "./firebase/firebaseModel.js";
+connectToFirebase(reactiveModel);
