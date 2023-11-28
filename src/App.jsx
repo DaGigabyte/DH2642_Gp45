@@ -1,13 +1,33 @@
-import "./App.css";
-import CounterPresenter from "./presenters/CounterPresenter";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+// Presenters
+import HomePresenter from "./presenters/HomePresenter";
+import AboutPresenter from "./presenters/AboutPresenter";
+// Views
+import Root from "./components/layout/Root";
+
+// Create a router
+function createRouter(props) {
+  return createBrowserRouter([
+    {
+      path: "/",
+      element: <Root />,
+      errorElement: <div>Error page</div>,
+      children: [
+        {
+          path: "/",
+          element: <HomePresenter model={props.model} />,
+        },
+        {
+          path: "about-us",
+          element: <AboutPresenter model={props.model} />,
+        },
+      ],
+    },
+  ]);
+}
 
 function App(props) {
-  return (
-    <div>
-      <h1>MobX Counter Example</h1>
-      <CounterPresenter model={props.model} />
-    </div>
-  );
+  return <RouterProvider router={createRouter(props)} />;
 }
 
 export default App;
