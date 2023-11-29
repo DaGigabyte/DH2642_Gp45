@@ -9,7 +9,7 @@ function App(props) {
     <div>
       <h1>MobX Counter Example</h1>
       <CounterPresenter model={props.model} />
-      <Auth onSignIn={signInACB} onSignOut={signOutACB} user={props.model.user}/>
+      <Auth onSignIn={signInACB} onSignOut={signOutACB} uid={props.model.user.uid}/>
     </div>
   );
 }

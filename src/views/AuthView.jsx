@@ -5,7 +5,7 @@ function AuthView(props) {
             <h1>AuthView</h1>
             <span>
                 <button onClick={props.onSignIn}>Sign in</button>
-                userID: {props.user?.uid}
+                userID: {props.uid && ""}
             </span>
             <span>
                 <button onClick={props.onSignOut}>Sign out</button>
