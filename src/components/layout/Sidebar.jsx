@@ -1,8 +1,13 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { IoReorderFourOutline, IoCloseOutline } from "react-icons/io5";
 // Logo
 import logo from "../../assets/firepins-logo.svg";
 
 function Sidebar() {
+  // State for mobile nav toggle
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
   return (
     <div className="bg-pins-secondary text-pins-light w-full md:w-80">
       {/* Logo container */}
@@ -11,24 +16,19 @@ function Sidebar() {
           <img src={logo} alt="FirePins Logo" className="w-48" />
         </Link>
         {/* Mobile nav toggle icon */}
-        <button className="bg-pins-light px-6 md:hidden">
-          <svg
-            className="w-8 h-8 text-pins-primary"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="{2}"
-              d="M4 6h16M4 12h16M4 18h16"
-            ></path>
-          </svg>
+        <button
+          onClick={() => setIsNavOpen(!isNavOpen)}
+          className="bg-pins-light px-6 md:hidden"
+        >
+          {isNavOpen ? (
+            <IoCloseOutline size={40} className="text-pins-secondary" />
+          ) : (
+            <IoReorderFourOutline size={40} className="text-pins-secondary" />
+          )}
         </button>
       </div>
       {/* Navigation */}
-      <nav className="p-4">
+      <nav className={`p-4 ${isNavOpen ? "flex" : "hidden"} md:flex`}>
         <ul>
           <li>
             <Link to="/">Home</Link>
