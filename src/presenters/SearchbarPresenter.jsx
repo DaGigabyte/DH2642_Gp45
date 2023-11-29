@@ -12,14 +12,15 @@ import { observer } from "mobx-react-lite";
 */
 function SearchbarPresenter(props) {
     const placeholderText = "Find your favorites";
-    const [searchText, setSearchText] = useState(placeholderText);
+    const [searchText, setSearchText] = useState();
 
     return (
         <Searchbar searchText={searchText ? searchText : placeholderText} onUserTyping={onUserTyping} onUserSearching={onUserSearching} />
     ) 
 
     function onUserTyping(searchText) {
-        setSearchText(searchText);
+        if (searchText !== placeholderText)
+            setSearchText(searchText);
     }
 
     function onUserSearching() {

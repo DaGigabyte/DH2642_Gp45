@@ -1,5 +1,6 @@
+import { FaMagnifyingGlass } from "react-icons/fa6";
 /*
-    Searchbar view compontent. 
+    Searchbar view component. 
 
     Recieves the following props:
     searchText - The text to be shown in the searchbar
@@ -9,9 +10,10 @@
 */
 function Searchbar(props) {
     return (
-        <div>
-            <input onChange={userTyping} onKeyDown={userKeyPressed} placeholder={props.searchText} className="bg-white rounded-full w-full text-gray-400" />
-        </div>
+        <div className="relative">
+            <input onChange={userTyping} onKeyDown={userKeyPressed} placeholder={props.searchText} className="bg-white p-2 pl-4 pr-10 rounded-full w-full focus:outline-none text-gray-400" />
+            <FaMagnifyingGlass onClick={userSearching} className="absolute top-3 right-4"/>
+        </div> 
     );
 
     function userTyping(evt) {
