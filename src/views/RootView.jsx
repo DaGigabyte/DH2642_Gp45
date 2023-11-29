@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
 // Components
-import Sidebar from "./Sidebar";
+import Sidebar from "../components/layout/Sidebar";
 
-function Root() {
+function RootView() {
   return (
     <div className="flex flex-col min-h-screen bg-pins-light md:flex-row">
       <Sidebar />
@@ -13,4 +13,4 @@ function Root() {
   );
 }
 
-export default Root;
+export default RootView;

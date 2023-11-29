@@ -3,14 +3,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePresenter from "./presenters/HomePresenter";
 import AboutPresenter from "./presenters/AboutPresenter";
 // Views
-import Root from "./components/layout/Root";
+import RootView from "./views/RootView";
 
 // Create a router
 function createRouter(props) {
   return createBrowserRouter([
     {
       path: "/",
-      element: <Root />,
+      element: <RootView />,
       errorElement: <div>Error page</div>,
       children: [
         {
