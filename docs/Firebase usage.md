@@ -10,6 +10,9 @@ Only store user id on Firestore
 ## Teasers/Partial loading
 https://medium.com/@peterkracik/my-approach-to-structure-firestore-without-exploding-the-budget-b5633e4f6dd7
 
+## Firestore update
+https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
+
 ## Firestore structure
 - Users (collection)
     - 12klfs312rijf3221s=weroi2sdf32 (document)
