@@ -14,7 +14,7 @@ function Sidebar() {
       {/* Logo container */}
       <div className="flex justify-between border-b-2 border-pins-grey-darker md:justify-center">
         <Link to="/" className="p-4">
-          <img src={logo} alt="FirePins Logo" className="w-48" />
+          <img src={logo} alt="FirePins Logo" className="w-44" />
         </Link>
         {/* Mobile nav toggle icon */}
         <button
