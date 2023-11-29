@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { IoReorderFourOutline, IoCloseOutline } from "react-icons/io5";
 // Logo
 import logo from "../../assets/firepins-logo.svg";
+import MenuItemsSidebar from "./MenuItemsSidebar";
 
 function Sidebar() {
   // State for mobile nav toggle
@@ -28,16 +29,7 @@ function Sidebar() {
         </button>
       </div>
       {/* Navigation */}
-      <nav className={`p-4 ${isNavOpen ? "flex" : "hidden"} md:flex`}>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about-us">About us</Link>
-          </li>
-        </ul>
-      </nav>
+      <MenuItemsSidebar isNavOpen={isNavOpen} />
     </div>
   );
 }

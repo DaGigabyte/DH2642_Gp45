@@ -11,6 +11,7 @@ export default {
         "pins-grey-darker": "#757C88",
         "pins-grey-dark": "#AEB5C0",
         "pins-light": "#F1F3F5",
+        "pins-menu-hover": "#1D252F",
       },
     },
   },
