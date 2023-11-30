@@ -12,21 +12,19 @@ export default {
       follows: [], // ["2387dgh2378chr2t7xtrn23723eb3d"]
       followedBy: [],
     }
-  }
-
-  /*
-  fullName: 'My Name',
-  displayName: 'My Nickname',
-  profilePicture: "default-avatar.jpg",
-
-  setPersonId(id){
-      this.personId = id; 
   },
-  setFullName(name){
-      this.fullName = name;
+  setFullName(name) {
+    this.user.fullName = name;
   },
-  setDisplayName(name){
-      this.displayName = name;
+  setDisplayName(name) {
+    this.user.displayName = name;
   },
-  */
+  searchText: null,
+  setSearchText(text) {
+    this.searchText = text;
+  },
+  //TODO temporary solution to display custom evt
+  confirmUserSearch() {
+    alert("User wants to search for:  " + this.searchText);
+  },
 };

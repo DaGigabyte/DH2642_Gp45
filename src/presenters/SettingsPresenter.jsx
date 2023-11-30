@@ -25,9 +25,9 @@ function SettingsPresenter(props) {
   }
   return (
     <SettingsView
-      fullName={props.model.fullName}
-      nickName={props.model.displayName}
-      profilePicture={props.model.profilePicture}
+      fullName={props.model.user.fullName}
+      nickName={props.model.user.displayName}
+      profilePicture={props.model.user.profilePicture}
       onNameChange={updateNameACB}
       onNickChange={updateNickACB}
       onConfirm={storeUpdatesACB}
