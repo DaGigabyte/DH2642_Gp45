@@ -1,15 +1,16 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+// import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // Presenters
 import HomePresenter from "./presenters/HomePresenter";
 import AboutPresenter from "./presenters/AboutPresenter";
 // Views
 import RootView from "./views/RootView";
-}
+
 import Auth from "./presenters/AuthPresenter";
 import { signInACB, signOutACB } from "./firebase/firebaseModel";
 import { observer } from "mobx-react-lite";
 
 // Create a router
+/*
 function createRouter(props) {
   return createBrowserRouter([
     {
@@ -33,9 +34,11 @@ function createRouter(props) {
     },
   ]);
 }
+*/
 
 function App(props) {
-  return <RouterProvider router={createRouter(props)} />;
+  // return <RouterProvider router={createRouter(props)} />;
+  return <Auth onSignIn={signInACB} onSignOut={signOutACB} uid={props.model.user.uid}/>;
 }
 
 export default observer(App);
