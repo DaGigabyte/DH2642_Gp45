@@ -7,7 +7,7 @@ function HomePresenter(props) {
     <div className="flex flex-col">
       <Topbar
         searchText={props.model.searchText}
-        profilePicture={props.model.user.profilePicture}
+        profilePicture={props.model.user.data.profilePicture}
         setSearchText={(text) => {
           props.model.setSearchText(text);
         }}

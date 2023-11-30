@@ -1,4 +1,3 @@
-/*
 import { Outlet } from "react-router-dom";
 // Components
 import Sidebar from "../components/layout/Sidebar";
@@ -15,5 +14,3 @@ function RootView() {
 }
 
 export default RootView;
-*/
-export default ()=>null;

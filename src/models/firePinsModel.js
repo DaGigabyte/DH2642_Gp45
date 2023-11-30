@@ -8,7 +8,7 @@ export default {
     data: {
       fullName: null, // "Wong Pak Long"
       displayName: null, // "Jasper"
-      profilePicture: null,
+      profilePicture: "default-avatar.jpg",
       follows: [], // ["2387dgh2378chr2t7xtrn23723eb3d"]
       followedBy: [],
     }
