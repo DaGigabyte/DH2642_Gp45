@@ -20,7 +20,7 @@ import {
 
 const app = initializeApp(config);
 const auth = getAuth(app);
-// const db = getFirestore(app);
+const db = getFirestore(app);
 
 // const appDiv = document.getElementById('app');
 // appDiv.innerHTML= auth.currentUser;  // should be undefined
@@ -69,14 +69,6 @@ function signOutACB() {
 // replace readFromFirebase: we need to check if we have a user first!
 // onAuthStateChanged(auth, loginOrOutACB);
 
-function loginOrOutACB(user) {
-    // demo render:
-    //   appDiv.innerHTML="user "+(user?" ID "+user.uid:user);
-    //   model.user = user
-    // model.ready=false
-    // readFromFirebase
-}
-
 function connectToFirebase(model) {
     // TODO
     // const now = new Date();
@@ -92,7 +84,24 @@ function connectToFirebase(model) {
         // saveToFirebase(model);
     }
     // readFromFirebase(model);
-    onAuthStateChanged(auth, (user) => (model.user.uid = user.uid));
+    function onAuthStateChangedCB(userAuthObj) {
+        console.log(userAuthObj);
+        if (userAuthObj?.uid) {
+            model.user.uid = userAuthObj.uid;
+            if (model.user.uid) {
+                const userObjFromFirebase = readUserFromFirebase(model.user.uid);
+                if (userObjFromFirebase) {
+                    model.user.data = { ...userObjFromFirebase };
+                    model.ready = true;
+                } else {
+                    model.user.data = {};
+                }
+            }
+        } else {
+
+        }
+    }
+    onAuthStateChanged(auth, onAuthStateChangedCB);
     // reaction(propsToWatchCB, callSaveToFirebaseCB);
 }
 
@@ -102,31 +111,20 @@ function connectToFirebase(model) {
 // otherwise read from "path/"+model.user.uid
 // manage model.ready as usual
 // 
-function readUserFromFirebase(model) {
-    // TODO
-    // model.ready = false;
-    // get(ref(db, PATH))
-    // .then(function snapshotToModelACB(snapshot) {
-    //     const data = snapshot.val();
-    //     return persistenceToModel(data, model);
-    // })
-    // .then(function setDishesACB(dishes) {
-    //     model.dishes = dishes;
-    //     model.ready = true;
-    // });
-    if (!model.user.uid) {
+function readUserFromFirebase(uid) {
+    if (!uid) {
         return;
     }
-    const docRef = doc(db, "Users", model.user.uid);
+    const docRef = doc(db, "Users", uid);
     // const docSnap = await getDoc(docRef);
     getDoc(docRef)
         .then((docSnapshot) => {
             if (docSnapshot.exists()) {
                 console.log("User data:", docSnapshot.data());
-                model = { ...model, user: { uid:model.user.uid, data: { ...docSnapshot.data() } } };
-                model.ready = true;
+                return docSnapshot.data();
             } else {
                 console.log("No such user!");
+                return null;
             }
         })
         .catch((error) => {
@@ -141,9 +139,9 @@ function readUserFromFirebase(model) {
 // do nothing if model.user falsy
 // otherwise write to the same path as above,
 // depending on model.ready as usual
-function saveUserToFirebase(user) {
-    const userDoc = doc(db, "Users", user.uid);
-    setDoc(userDoc, user.data);
+function saveUserToFirebase(userObj) {
+    const userDoc = doc(db, "Users", userObj.uid);
+    setDoc(userDoc, userObj.data);
 }
 
 // UI:
@@ -151,4 +149,4 @@ function saveUserToFirebase(user) {
 // - model.user null: shouw "sign in" UI (a button/link that triggers signInWithPopup, see below)
 // - model.user truthy: should the App (based on model.ready!) with the "sign out" UI
 
-export { connectToFirebase, signInACB, signOutACB };
+export { connectToFirebase, signInACB, signOutACB, saveUserToFirebase };

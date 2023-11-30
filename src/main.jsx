@@ -16,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 );
 
 window.myModel = reactiveModel; // For debugging purposes
-import {connectToFirebase} from "./firebase/firebaseModel.js";
+import {connectToFirebase, saveUserToFirebase} from "./firebase/firebaseModel.js";
 console.log("connecting to firebase")
 connectToFirebase(reactiveModel);
+window.saveUserToFirebase = saveUserToFirebase;
