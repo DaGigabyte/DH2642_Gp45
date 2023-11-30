@@ -74,7 +74,6 @@ function connectToFirebase(model) {
     // const now = new Date();
     // const readableTimestamp = now.toISOString();
     // set(ref(db, PATH+"/test"), {time: readableTimestamp});
-    console.log("set ref");
     model.ready = false;
     // model.ready = false;
     function propsToWatchCB() {
@@ -85,20 +84,20 @@ function connectToFirebase(model) {
     }
     // readFromFirebase(model);
     function onAuthStateChangedCB(userAuthObj) {
-        console.log(userAuthObj);
         if (userAuthObj?.uid) {
             model.user.uid = userAuthObj.uid;
             if (model.user.uid) {
-                const userObjFromFirebase = readUserFromFirebase(model.user.uid);
-                if (userObjFromFirebase) {
-                    model.user.data = { ...userObjFromFirebase };
-                    model.ready = true;
-                } else {
-                    model.user.data = {};
-                }
+                readUserFromFirebase(model.user.uid)
+                .then((userObjFromFirebase)=>{
+                    if (userObjFromFirebase) {
+                        model.user.data = { ...userObjFromFirebase };
+                        model.ready = true;
+                    } else {
+                        console.error("userObjFromFirebase should never cause an error here, it should instead be caught at readUserFromFirebase");
+                    }
+                })
+                .catch((error)=>console.error(error));
             }
-        } else {
-
         }
     }
     onAuthStateChanged(auth, onAuthStateChangedCB);
@@ -113,22 +112,22 @@ function connectToFirebase(model) {
 // 
 function readUserFromFirebase(uid) {
     if (!uid) {
-        return;
+        throw new Error("uid is falsy");
     }
     const docRef = doc(db, "Users", uid);
     // const docSnap = await getDoc(docRef);
-    getDoc(docRef)
+    return getDoc(docRef)
         .then((docSnapshot) => {
             if (docSnapshot.exists()) {
-                console.log("User data:", docSnapshot.data());
                 return docSnapshot.data();
             } else {
                 console.log("No such user!");
-                return null;
+                throw new Error("User ", uid, " does not exist on Firestore.");
             }
         })
         .catch((error) => {
             console.error("Error getting document:", error);
+            throw new Error("Error getting document");
         });
     // const userCollectionRef = collection(db, 'Users');
     // const q = query(userCollectionRef, where("uid", "==", model.user.uid));
