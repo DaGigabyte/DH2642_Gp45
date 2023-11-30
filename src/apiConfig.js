@@ -1,0 +1,4 @@
+const TMDB_API_KEY = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhZDQ0MmE5ZDM2NTE2MWViYzk2MzI2MmFmMGVkNDQzMyIsInN1YiI6IjY1NjQ3YWE1OGYyNmJjMDBjNTllMTE5YiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.xNX7W_gq2k2pWVwVT2dDp_blTnWso0vz2mxCZ7XClSQ'
+const TMDB_BASE_URL = 'https://api.themoviedb.org/3/'
+
+export {TMDB_API_KEY, TMDB_BASE_URL}
