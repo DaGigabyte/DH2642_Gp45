@@ -16,3 +16,4 @@ function RootView() {
 
 export default RootView;
 */
+export default ()=>null;

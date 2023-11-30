@@ -3,7 +3,18 @@ export default {
   setCount(value) {
     this.count = value;
   },
+  user: {
+    uid: null,
+    data: {
+      fullName: null, // "Wong Pak Long"
+      displayName: null, // "Jasper"
+      profilePicture: null,
+      follows: [], // ["2387dgh2378chr2t7xtrn23723eb3d"]
+      followedBy: [],
+    }
+  }
 
+  /*
   fullName: 'My Name',
   displayName: 'My Nickname',
   profilePicture: "default-avatar.jpg",
@@ -17,5 +28,5 @@ export default {
   setDisplayName(name){
       this.displayName = name;
   },
-
+  */
 };

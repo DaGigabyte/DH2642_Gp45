@@ -101,7 +101,8 @@ function connectToFirebase(model) {
 // do nothing if model.user falsy (maybe wipe the model data)
 // otherwise read from "path/"+model.user.uid
 // manage model.ready as usual
-function readFromFirebase(model) {
+// 
+function readUserFromFirebase(model) {
     // TODO
     // model.ready = false;
     // get(ref(db, PATH))
@@ -113,7 +114,7 @@ function readFromFirebase(model) {
     //     model.dishes = dishes;
     //     model.ready = true;
     // });
-    if (!model.uid) {
+    if (!model.user.uid) {
         return;
     }
     const docRef = doc(db, "Users", model.user.uid);

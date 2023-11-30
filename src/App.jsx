@@ -38,7 +38,7 @@ function createRouter(props) {
 
 function App(props) {
   // return <RouterProvider router={createRouter(props)} />;
-  return <Auth onSignIn={signInACB} onSignOut={signOutACB} uid={props.model.user.uid}/>;
+  return <Auth onSignIn={signInACB} onSignOut={signOutACB} uid={props.model.user?.uid}/>;
 }
 
 export default observer(App);
