@@ -2,7 +2,7 @@ import React from "react";
 import { observable, configure } from "mobx";
 import ReactDOM from "react-dom/client";
 import firePinsModel from "./models/firePinsModel.js";
-import "./teacherFetch.js"; // protection against fetch() in infinite re-render
+// import "./teacherFetch.js"; // protection against fetch() in infinite re-render
 import App from "./App.jsx";
 import "./index.css";
 
@@ -14,3 +14,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <App model={reactiveModel} />
   </React.StrictMode>
 );
+
+window.myModel = reactiveModel; // For debugging purposes
+import {connectToFirebase, saveUserToFirebase} from "./firebase/firebaseModel.js";
+connectToFirebase(reactiveModel);
+window.saveUserToFirebase = saveUserToFirebase;
