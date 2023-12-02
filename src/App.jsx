@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootPresenter from "./presenters/RootPresenter";
 import HomePresenter from "./presenters/HomePresenter";
 import AboutPresenter from "./presenters/AboutPresenter";
+import FavoritesPresenter from "./presenters/FavoritesPresenter";
 
 // Create a router
 function createRouter(props) {
@@ -19,6 +20,10 @@ function createRouter(props) {
         {
           path: "about-us",
           element: <AboutPresenter model={props.model} />,
+        },
+        {
+          path: "favorites",
+          element: <FavoritesPresenter model={props.model} />,
         },
       ],
     },
