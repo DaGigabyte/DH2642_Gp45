@@ -5,7 +5,7 @@ function RootPresenter(props) {
   return (
     <RootView
       searchText={props.model.searchText}
-      profilePicture={props.model.profilePicture}
+      profilePicture={props.model.user.data.profilePicture}
       setSearchText={(text) => {
         props.model.setSearchText(text);
       }}

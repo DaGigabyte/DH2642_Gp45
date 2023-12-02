@@ -28,7 +28,7 @@ function RootView(props) {
             </div>
             <img
               className="rounded-full self-center h-12 shadow hover:scale-110 transition duration-300"
-              src={props.user?.data?.profilePicture || ""}
+              src={props.profilePicture}
               alt="profile picture"
               onClick={() => {
                 window.location.hash = "#/Profile";
