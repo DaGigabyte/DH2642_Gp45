@@ -5,7 +5,12 @@ import HomePresenter from "./presenters/HomePresenter";
 import AboutPresenter from "./presenters/AboutPresenter";
 import FavoritesPresenter from "./presenters/FavoritesPresenter";
 
+import Auth from "./presenters/AuthPresenter";
+import { signInACB, signOutACB } from "./firebase/firebaseModel";
+import { observer } from "mobx-react-lite";
+
 // Create a router
+
 function createRouter(props) {
   return createBrowserRouter([
     {
@@ -25,13 +30,19 @@ function createRouter(props) {
           path: "favorites",
           element: <FavoritesPresenter model={props.model} />,
         },
+        {
+          path: "firebase-debug",
+          element: <Auth onSignIn={signInACB} onSignOut={signOutACB} uid={props.model.user.uid}/>,
+        },
       ],
     },
   ]);
 }
 
+
 function App(props) {
   return <RouterProvider router={createRouter(props)} />;
+  // return <Auth onSignIn={signInACB} onSignOut={signOutACB} uid={props.model.user?.uid}/>;
 }
 
-export default App;
+export default observer(App);

@@ -3,19 +3,21 @@ export default {
   setCount(value) {
     this.count = value;
   },
-
-  fullName: "My Name",
-  displayName: "My Nickname",
-  profilePicture: "default-avatar.jpg",
-
-  setPersonId(id) {
-    this.personId = id;
+  user: {
+    uid: null,
+    data: {
+      fullName: null, // "Wong Pak Long"
+      displayName: null, // "Jasper"
+      profilePicture: "default-avatar.jpg",
+      follows: [], // ["2387dgh2378chr2t7xtrn23723eb3d"]
+      followedBy: [],
+    }
   },
   setFullName(name) {
-    this.fullName = name;
+    this.user.fullName = name;
   },
   setDisplayName(name) {
-    this.displayName = name;
+    this.user.displayName = name;
   },
   searchText: null,
   setSearchText(text) {
