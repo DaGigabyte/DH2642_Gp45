@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
 // Components
 import Sidebar from "../components/layout/Sidebar";
+import NewPostModal from "../components/modal/NewPostModal";
 import Search from "./Searchbar";
-import NewPostButton from "./CreatePostButton";
 
 function RootView(props) {
   return (
@@ -20,11 +20,7 @@ function RootView(props) {
           </div>
           <div className="flex space-x-5 justify-end">
             <div className="flex-none self-center ">
-              <NewPostButton
-                onUserClick={() => {
-                  window.location.hash = "#/newPost";
-                }} //TODO change to real routing
-              />
+              <NewPostModal />
             </div>
             <img
               className="rounded-full self-center h-12 shadow hover:scale-110 transition duration-300"
