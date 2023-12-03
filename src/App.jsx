@@ -30,10 +30,6 @@ function createRouter(props) {
           path: "favorites",
           element: <FavoritesPresenter model={props.model} />,
         },
-        {
-          path: "firebase-debug",
-          element: <Auth onSignIn={signInACB} onSignOut={signOutACB} uid={props.model.user.uid}/>,
-        },
       ],
     },
   ]);
