@@ -5,6 +5,7 @@ import firePinsModel from "./models/firePinsModel.js";
 // import "./teacherFetch.js"; // protection against fetch() in infinite re-render
 import App from "./App.jsx";
 import "./index.css";
+import {connectToFirebase} from "./firebase/firebaseModel.js";
 
 configure({ enforceActions: "never" }); // Allowing direct state modifications
 const reactiveModel = observable(firePinsModel);
@@ -16,6 +17,4 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 );
 
 window.myModel = reactiveModel; // For debugging purposes
-import {connectToFirebase, saveUserToFirebase} from "./firebase/firebaseModel.js";
 connectToFirebase(reactiveModel);
-window.saveUserToFirebase = saveUserToFirebase;
