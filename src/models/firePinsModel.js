@@ -3,6 +3,7 @@ export default {
   setCount(value) {
     this.count = value;
   },
+  /* Left here for reference (refer to Firebase usage.md)
   user: {
     uid: null,
     data: {
@@ -13,6 +14,7 @@ export default {
       followedBy: [],
     }
   },
+  */
   setFullName(name) {
     this.user.fullName = name;
   },
