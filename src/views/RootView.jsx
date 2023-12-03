@@ -25,7 +25,10 @@ function RootView(props) {
                   window.location.hash = "#/newPost";
                 }} //TODO change to real routing
               />
+              <button onClick={props.onSignIn}>Sign in</button>
+              <button onClick={props.onSignOut}>Sign out</button>
             </div>
+            {props.profilePicture && 
             <img
               className="rounded-full self-center h-12 shadow hover:scale-110 transition duration-300"
               src={props.profilePicture}
@@ -33,7 +36,7 @@ function RootView(props) {
               onClick={() => {
                 window.location.hash = "#/Profile";
               }} //TODO change to real routing
-            />
+            />}
           </div>
         </div>
         {/* Main content */}
