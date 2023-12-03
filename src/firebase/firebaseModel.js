@@ -45,10 +45,11 @@ function signInACB() {
             // The signed-in user info.
             const user = result.user;
             // ...
-            console.log("sign in successful");
+            console.debug("sign in successful");
+            console.debug("user: ", user);
         })
         .catch((error) => {
-            console.error("sign in error");
+            console.error("sign in error", error.code, error.message);
         });
 }
 
@@ -60,7 +61,7 @@ function signOutACB() {
         })
         .catch((error) => {
             // An error happened.
-            console.error("sign out error");
+            console.error("sign out error", error.code, error.message);
         });
 }
 
@@ -74,34 +75,42 @@ function connectToFirebase(model) {
     // const now = new Date();
     // const readableTimestamp = now.toISOString();
     // set(ref(db, PATH+"/test"), {time: readableTimestamp});
-    model.ready = false;
-    // model.ready = false;
-    function propsToWatchCB() {
+    model.userReady = false;
+    function watchUserCB() {
         return [model.user];
     }
-    function callSaveToFirebaseCB() {
-        // saveToFirebase(model);
+    function callSaveUserToFirebaseCB() {
+        console.debug("model.user changed, calling saveUserToFirebase if model.userReady");
+        if (model.userReady) {
+            saveUserToFirebase(model.user);
+            console.debug("saved user to firebase since model.userReady");
+        }
     }
     // readFromFirebase(model);
     function onAuthStateChangedCB(userAuthObj) {
-        if (userAuthObj?.uid) {
-            model.user.uid = userAuthObj.uid;
-            if (model.user.uid) {
-                readUserFromFirebase(model.user.uid)
-                .then((userObjFromFirebase)=>{
-                    if (userObjFromFirebase) {
-                        model.user.data = { ...userObjFromFirebase };
-                        model.ready = true;
-                    } else {
-                        console.error("userObjFromFirebase should never cause an error here, it should instead be caught at readUserFromFirebase");
-                    }
-                })
-                .catch((error)=>console.error(error));
-            }
+        console.debug("new userAuthObj: ", userAuthObj);
+        if (userAuthObj?.uid) { // Signed in
+            const userObj = {uid: userAuthObj.uid};
+            readUserFromFirebase(userAuthObj.uid)
+            .then((userObjFromFirebase)=>{
+                if (userObjFromFirebase) { // Document for this user exists on Firestore
+                    userObj.data = { ...userObjFromFirebase };
+                } else { // Document for this user does not exist on Firestore
+                    // console.error("userObjFromFirebase should never cause an error here, it should instead be caught at readUserFromFirebase");
+                    console.debug("Creating new user document on Firestore");
+                    userObj.data = { fullName: null, displayName: userAuthObj.displayName, profilePicture: userAuthObj.photoURL, follows: [], followedBy: [] };
+                    saveUserToFirebase(userObj);
+                }
+                model.user = userObj;
+                model.userReady = true;
+            })
+            .catch((error)=>console.error(error));            
+        } else { // Signed out
+            delete model.user; // Now user is falsy
         }
     }
     onAuthStateChanged(auth, onAuthStateChangedCB);
-    // reaction(propsToWatchCB, callSaveToFirebaseCB);
+    reaction(watchUserCB, callSaveUserToFirebaseCB);
 }
 
 // readFromFirebase:
@@ -115,14 +124,14 @@ function readUserFromFirebase(uid) {
         throw new Error("uid is falsy");
     }
     const docRef = doc(db, "Users", uid);
-    // const docSnap = await getDoc(docRef);
     return getDoc(docRef)
         .then((docSnapshot) => {
-            if (docSnapshot.exists()) {
+            if (docSnapshot.exists()) { // Document for this user exists on Firestore
+                console.debug("User exists on Firestore, reading data");
                 return docSnapshot.data();
-            } else {
-                console.log("No such user!");
-                throw new Error("User ", uid, " does not exist on Firestore.");
+            } else { // Document for this user does not exist on Firestore
+                console.debug("No such user!");
+                return null;
             }
         })
         .catch((error) => {
