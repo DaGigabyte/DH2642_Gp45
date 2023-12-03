@@ -4,6 +4,7 @@ import RootPresenter from "./presenters/RootPresenter";
 import HomePresenter from "./presenters/HomePresenter";
 import AboutPresenter from "./presenters/AboutPresenter";
 import FavoritesPresenter from "./presenters/FavoritesPresenter";
+import SettingsPresenter from "./presenters/SettingsPresenter";
 
 import Auth from "./presenters/AuthPresenter";
 import { signInACB, signOutACB } from "./firebase/firebaseModel";
@@ -33,6 +34,9 @@ function createRouter(props) {
         {
           path: "firebase-debug",
           element: <Auth onSignIn={signInACB} onSignOut={signOutACB} uid={props.model.user.uid}/>,
+        },{
+          path: "settings",
+          element: <SettingsPresenter model={props.model} />,
         },
       ],
     },

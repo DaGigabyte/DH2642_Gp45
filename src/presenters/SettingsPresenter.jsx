@@ -9,15 +9,16 @@ import SettingsView from "../views/SettingsView";
 function SettingsPresenter(props) {
   /*ACB to set the full-name*/
   function updateNameACB(result) {
-    props.model.setFullName(result);
+    props.model.userSettingsData.setFullName(result);
   }
   /*ACB to set the nick-name*/
   function updateNickACB(result) {
-    props.model.setDisplayName(result);
+    props.model.userSettingsData.setDisplayName(result);
   }
   /*ACB to store the changes*/
   function storeUpdatesACB() {
     //implemntation missing, store the user info on firebase
+    props.model.userSettingsData.storeUpdates();
   }
   /*ACB to discard the changes*/
   function abortChangeACB() {

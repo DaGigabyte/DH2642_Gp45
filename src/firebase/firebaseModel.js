@@ -17,6 +17,7 @@ import {
     query,
     where,
 } from "firebase/firestore";
+import { reaction } from "mobx";
 
 const app = initializeApp(config);
 const auth = getAuth(app);
@@ -77,10 +78,10 @@ function connectToFirebase(model) {
     model.ready = false;
     // model.ready = false;
     function propsToWatchCB() {
-        return [model.user];
+        return [model.user.data];
     }
     function callSaveToFirebaseCB() {
-        // saveToFirebase(model);
+        saveUserToFirebase(model.user);
     }
     // readFromFirebase(model);
     function onAuthStateChangedCB(userAuthObj) {
@@ -101,7 +102,7 @@ function connectToFirebase(model) {
         }
     }
     onAuthStateChanged(auth, onAuthStateChangedCB);
-    // reaction(propsToWatchCB, callSaveToFirebaseCB);
+    reaction(propsToWatchCB, callSaveToFirebaseCB);
 }
 
 // readFromFirebase:

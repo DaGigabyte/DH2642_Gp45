@@ -1,4 +1,4 @@
-export default {
+const model = {
   count: 1,
   setCount(value) {
     this.count = value;
@@ -13,11 +13,20 @@ export default {
       followedBy: [],
     }
   },
-  setFullName(name) {
-    this.user.fullName = name;
-  },
-  setDisplayName(name) {
-    this.user.displayName = name;
+  userSettingsData: {
+    data: {
+      fullName: null,
+      displayName: null,
+    },
+    setFullName(name) {
+      this.data.fullName = name;
+    },
+    setDisplayName(name) {
+      this.data.displayName = name;
+    },
+    storeUpdates() {
+      model.user.data = { ...model.user.data, ...this.data };
+    },
   },
   searchText: null,
   setSearchText(text) {
@@ -28,3 +37,4 @@ export default {
     alert("User wants to search for:  " + this.searchText);
   },
 };
+export default model;
