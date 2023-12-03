@@ -1,3 +1,5 @@
+import { reaction } from "mobx";
+
 const model = {
   count: 1,
   setCount(value) {
@@ -11,7 +13,13 @@ const model = {
       profilePicture: "default-avatar.jpg",
       follows: [], // ["2387dgh2378chr2t7xtrn23723eb3d"]
       followedBy: [],
-    }
+    },
+    setUid(uid) {
+      this.uid = uid;
+    },
+    setData(data) {
+      this.data = data;
+    },
   },
   userSettingsData: {
     data: {

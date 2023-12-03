@@ -86,12 +86,12 @@ function connectToFirebase(model) {
     // readFromFirebase(model);
     function onAuthStateChangedCB(userAuthObj) {
         if (userAuthObj?.uid) {
-            model.user.uid = userAuthObj.uid;
+            model.user.setUid(userAuthObj.uid);
             if (model.user.uid) {
                 readUserFromFirebase(model.user.uid)
                 .then((userObjFromFirebase)=>{
                     if (userObjFromFirebase) {
-                        model.user.data = { ...userObjFromFirebase };
+                        model.user.setData({ ...userObjFromFirebase });
                         model.ready = true;
                     } else {
                         console.error("userObjFromFirebase should never cause an error here, it should instead be caught at readUserFromFirebase");

@@ -6,7 +6,7 @@ import firePinsModel from "./models/firePinsModel.js";
 import App from "./App.jsx";
 import "./index.css";
 
-configure({ enforceActions: "never" }); // Allowing direct state modifications
+configure({ enforceActions: "observed" }); // All state that is observed somewhere needs to be changed through actions. how
 const reactiveModel = observable(firePinsModel);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
