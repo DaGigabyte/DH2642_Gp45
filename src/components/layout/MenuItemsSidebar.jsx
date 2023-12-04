@@ -2,6 +2,7 @@ import {
   IoHomeOutline,
   IoInformationCircleOutline,
   IoHeartOutline,
+  IoSettingsOutline
 } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
@@ -21,6 +22,11 @@ const menuItems = [
     name: "About us",
     path: "/about-us",
     icon: <IoInformationCircleOutline size={20} />,
+  },
+  {
+    name: "Settings",
+    path: "/settings",
+    icon: <IoSettingsOutline size={20} />,
   },
 ];
 
