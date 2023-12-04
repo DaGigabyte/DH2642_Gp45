@@ -70,10 +70,10 @@ function connectToFirebase(model) {
                     userObj.data = { ...userObjFromFirebase };
                 } else { // Document for this user does not exist on Firestore
                     console.debug("Creating new user document on Firestore");
-                    userObj.data = { fullName: null, displayName: userAuthObj.displayName, profilePicture: userAuthObj.photoURL, follows: [], followedBy: [] };
+                    userObj.data = { fullName: "", displayName: userAuthObj.displayName, profilePicture: userAuthObj.photoURL, follows: [], followedBy: [] };
                     saveUserToFirebase(userObj);
                 }
-                model.user = userObj;
+                model.setUser(userObj);
                 model.userReady = true;
             })
             .catch((error)=>console.error(error));            

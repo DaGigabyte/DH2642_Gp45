@@ -18,22 +18,24 @@ function SettingsPresenter(props) {
   /*ACB to store the changes*/
   function storeUpdatesACB() {
     //implemntation missing, store the user info on firebase
-    props.model.userSettingsData.storeUpdates();
+    props.model.storeUpdates();
   }
   /*ACB to discard the changes*/
   function abortChangeACB() {
     //implemntation missing, reload model from firebase
   }
   return (
+    props.model.user?.uid && (
     <SettingsView
-      fullName={props.model.user.data.fullName}
-      nickName={props.model.user.data.displayName}
+      fullName={props.model.userSettingsData.data.fullName}
+      nickName={props.model.userSettingsData.data.displayName}
       profilePicture={props.model.user.data.profilePicture}
       onNameChange={updateNameACB}
       onNickChange={updateNickACB}
       onConfirm={storeUpdatesACB}
       onCancel={abortChangeACB}
     />
+    )
   );
 }
 
