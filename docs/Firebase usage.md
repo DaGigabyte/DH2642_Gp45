@@ -18,6 +18,7 @@ https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
     - 12klfs312rijf3221s=weroi2sdf32 (document)
       - fullName: "Wong Pak Long"
       - displayName: "Jasper"
+      - bio: "I am a cool guy"
       - profilePicture: "default-avatar.jpg"
       - follows: ["2387dgh2378chr2t7xtrn23723eb3d"]
       - followedBy: []
@@ -32,3 +33,9 @@ https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
         - likedBy: ["Jasper"]
         - dislikedBy: []
         - Comments (sub-collection)
+
+## Querying Firestore
+```
+const userCollectionRef = collection(db, 'Users');
+const q = query(userCollectionRef, where("uid", "==", model.user.uid));
+```
