@@ -17,7 +17,6 @@ function SettingsPresenter(props) {
   }
   /*ACB to store the changes*/
   function storeUpdatesACB() {
-    //implemntation missing, store the user info on firebase
     props.model.storeUpdates();
   }
   /*ACB to discard the changes*/

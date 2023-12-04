@@ -5,8 +5,7 @@ import firePinsModel from "./models/firePinsModel.js";
 // import "./teacherFetch.js"; // protection against fetch() in infinite re-render
 import App from "./App.jsx";
 import "./index.css";
-import {connectToFirebase} from "./firebase/firebaseModel.js";
-import settingsReaction from "./components/settings/settingsReaction.js";
+import initialiseModel from "./models/initialiseModel.js";
 
 configure({ enforceActions: "observed" }); // All state that is observed somewhere needs to be changed through actions.
 
@@ -16,6 +15,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   </React.StrictMode>
 );
 
-window.myModel = firePinsModel; // For debugging purposes
-connectToFirebase(firePinsModel);
-settingsReaction(firePinsModel);
+window.myModel = firePinsModel; // For accessing the model in the console.
+initialiseModel(firePinsModel);

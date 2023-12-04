@@ -6,8 +6,6 @@ import AboutPresenter from "./presenters/AboutPresenter";
 import FavoritesPresenter from "./presenters/FavoritesPresenter";
 import SettingsPresenter from "./presenters/SettingsPresenter";
 
-import Auth from "./presenters/AuthPresenter";
-import { signInACB, signOutACB } from "./firebase/firebaseModel";
 import { observer } from "mobx-react-lite";
 
 // Create a router
