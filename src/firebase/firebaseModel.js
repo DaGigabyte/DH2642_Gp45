@@ -16,6 +16,7 @@ import {
     collection,
     query,
     where,
+    onSnapshot
 } from "firebase/firestore";
 import { reaction } from "mobx";
 
@@ -30,59 +31,66 @@ function signInACB() {
             const credential = GoogleAuthProvider.credentialFromResult(result); // This gives you a Google Access Token. You can use it to access the Google API.
             const token = credential.accessToken;
             const user = result.user; // The signed-in user info.
-            console.debug("sign in with pop up successful");
-            console.debug("user: ", user);
+            console.debug("signInACB: sign in with pop up successful\n", "user: ", user);
         })
         .catch((error) => {
-            console.error("sign in with pop up error", error.code, error.message);
+            console.error("signInACB: sign in with pop up error", error.code, error.message);
         });
 }
 
 function signOutACB() {
     signOut(auth)
         .then(() => {
-            console.debug("sign out successful");
+            console.debug("signOutACB: sign out successful");
         })
         .catch((error) => {
-            console.error("sign out error", error.code, error.message);
+            console.error("signOutACB: sign out error", error.code, error.message);
         });
 }
 
 function connectToFirebase(model) {
     model.userReady = false;
     function watchUserCB() {
-        return [model.user];
+        return [model.user.data.fullName, model.user.data.displayName, model.user.data.bio, model.user.data.profilePicture, model.user.data.follows, model.user.data.followedBy];
     }
     function callSaveUserToFirebaseCB() {
-        console.debug("model.user changed, calling saveUserToFirebase if model.userReady");
+        console.debug("callSaveUserToFirebaseCB: model.user changed, calling saveUserToFirebase if model.userReady");
         if (model.userReady) {
             saveUserToFirebase(model.user);
-            console.debug("saved user to firebase since model.userReady");
+            console.debug("callSaveUserToFirebaseCB: saved user to firebase since model.userReady");
         }
     }
     function onAuthStateChangedCB(userAuthObj) {
-        console.debug("new userAuthObj: ", userAuthObj);
+        console.debug("onAuthStateChangedCB: new userAuthObj: ", userAuthObj);
+        let unsubscribeUser = () => {}; // dummy function to prevent error in case sign out without calling onSnapshot
         if (userAuthObj?.uid) { // Signed in
+            console.debug("onAuthStateChangedCB: user signed in");
             const userObj = {...model.user, uid: userAuthObj.uid};
-            readUserFromFirebase(userAuthObj.uid)
-            .then((userObjFromFirebase)=>{
-                if (userObjFromFirebase) { // Document for this user exists on Firestore
-                    userObj.data = { ...userObjFromFirebase };
+            const docRef = doc(db, "Users", userAuthObj.uid);
+            unsubscribeUser = onSnapshot(docRef, onSnapshotChangeACB);
+            function onSnapshotChangeACB(docSnapshot) {
+                model.userReady = false;
+                if (docSnapshot.exists()) { // Document for this user exists on Firestore
+                    console.debug("onAuthStateChangedCB: User exists on Firestore, reading data");
+                    const data = docSnapshot.data();
+                    userObj.data = docSnapshot.data();
+                    model.setUser(userObj);
                 } else { // Document for this user does not exist on Firestore
-                    console.debug("Creating new user document on Firestore");
+                    console.debug("onAuthStateChangedCB: Creating new user document on Firestore");
                     userObj.data = { fullName: "", displayName: userAuthObj.displayName, profilePicture: userAuthObj.photoURL, follows: [], followedBy: [] };
-                    saveUserToFirebase(userObj);
+                    model.setUser(userObj);
                 }
-                model.setUser(userObj);
                 model.userReady = true;
-            })
-            .catch((error)=>console.error(error));            
+            }        
         } else { // Signed out
-            delete model.user; // Now user is falsy
+            console.debug("onAuthStateChangedCB: user signed out");
+            model.user.setUid(null);
+            model.user.setData({});
+            unsubscribeUser(); // Stop listening to the user document
         }
     }
     onAuthStateChanged(auth, onAuthStateChangedCB);
-    // reaction(watchUserCB, callSaveUserToFirebaseCB);
+    reaction(watchUserCB, callSaveUserToFirebaseCB);
 }
 
 function readUserFromFirebase(uid) {
@@ -93,10 +101,10 @@ function readUserFromFirebase(uid) {
     return getDoc(docRef)
         .then((docSnapshot) => {
             if (docSnapshot.exists()) { // Document for this user exists on Firestore
-                console.debug("User exists on Firestore, reading data");
+                console.debug("readUserFromFirebase: User exists on Firestore, reading data");
                 return docSnapshot.data();
             } else { // Document for this user does not exist on Firestore
-                console.debug("No such user!");
+                console.debug("readUserFromFirebase: No such user!");
                 return null;
             }
         })
