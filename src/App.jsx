@@ -4,6 +4,7 @@ import RootPresenter from "./presenters/RootPresenter";
 import HomePresenter from "./presenters/HomePresenter";
 import AboutPresenter from "./presenters/AboutPresenter";
 import FavoritesPresenter from "./presenters/FavoritesPresenter";
+import ProfilePresenter from "./presenters/ProfilePresenter";
 import SettingsPresenter from "./presenters/SettingsPresenter";
 
 import { observer } from "mobx-react-lite";
@@ -28,6 +29,10 @@ function createRouter(props) {
         {
           path: "favorites",
           element: <FavoritesPresenter model={props.model} />,
+        },
+        {
+          path: "profile",
+          element: <ProfilePresenter model={props.model} />
         },
         {
           path: "settings",

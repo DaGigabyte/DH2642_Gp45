@@ -33,12 +33,18 @@ function movieById(id) {
     };
 
     return fetch(url, options)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('http error, status code: ' + response.status);
+            }
+            return response.json();
+        })
         .catch(err => console.error(err));
 }
 
 /* 
     Retrieves information about movies matching the searchQuery string from TMDB
+    Returns an array, if no results are found an empty array is returned
     Read more https://developer.themoviedb.org/reference/search-movie
 */
 function searchMovie(searchQuery) {
@@ -60,7 +66,12 @@ function searchMovie(searchQuery) {
     };
 
     return fetch(url, options)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('http error, status code: ' + response.status);
+            }
+            return response.json();
+        })
         .then(result => result.results)
         .catch(err => console.error(err));
 }
