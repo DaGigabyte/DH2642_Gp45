@@ -1,4 +1,5 @@
 import { observable, reaction, action } from "mobx";
+import { v4 as uuidv4 } from 'uuid';
 
 const model = observable({
   count: 1,
@@ -58,5 +59,6 @@ const model = observable({
   confirmUserSearch() {
     alert("User wants to search for:  " + this.searchText);
   },
+  uuid: uuidv4(),
 });
 export default model;

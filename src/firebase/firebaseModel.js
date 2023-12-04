@@ -56,7 +56,7 @@ function connectToFirebase(model) {
     function callSaveUserToFirebaseCB() {
         console.debug("callSaveUserToFirebaseCB: model.user changed, calling saveUserToFirebase if model.userReady");
         if (model.userReady) {
-            saveUserToFirebase(model.user);
+            saveUserToFirebase(model.user, model.uuid);
             console.debug("callSaveUserToFirebaseCB: saved user to firebase since model.userReady");
         }
     }
@@ -71,12 +71,16 @@ function connectToFirebase(model) {
             function onSnapshotChangeACB(docSnapshot) {
                 model.userReady = false;
                 if (docSnapshot.exists()) { // Document for this user exists on Firestore
-                    console.debug("onAuthStateChangedCB: User exists on Firestore, reading data");
-                    const data = docSnapshot.data();
-                    userObj.data = docSnapshot.data();
-                    model.setUser(userObj);
+                    console.debug("onSnapshotChangeACB: User exists on Firestore, reading data");
+                    const docSnapshotdata = docSnapshot.data();
+                    if (docSnapshotdata.uuid != model.uuid) { // Document was not written by this device, need to update MobX store
+                        console.debug("onSnapshotChangeACB: Document was not written by this device, updating MobX store");
+                        userObj.data = docSnapshotdata;
+                        model.setUser(userObj);
+                    } else 
+                        console.debug("onSnapshotChangeACB: Document was written by this device, no need to update MobX store");
                 } else { // Document for this user does not exist on Firestore
-                    console.debug("onAuthStateChangedCB: Creating new user document on Firestore");
+                    console.debug("onSnapshotChangeACB: Creating new user document on Firestore");
                     userObj.data = { fullName: "", displayName: userAuthObj.displayName, profilePicture: userAuthObj.photoURL, follows: [], followedBy: [] };
                     model.setUser(userObj);
                 }
@@ -114,9 +118,9 @@ function readUserFromFirebase(uid) {
         });
 }
 
-function saveUserToFirebase(userObj) {
+function saveUserToFirebase(userObj, uuid) {
     const userDoc = doc(db, "Users", userObj.uid);
-    setDoc(userDoc, userObj.data);
+    setDoc(userDoc, {...userObj.data, uuid: uuid});
 }
 
 export { connectToFirebase, signInACB, signOutACB, saveUserToFirebase };
