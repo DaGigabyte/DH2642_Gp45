@@ -1,4 +1,4 @@
-import { connectToFirebase } from "../firebase/firebaseModel";
+import { connectToFirestore } from "../firebase/firebaseModel";
 import { reaction } from "mobx";
 
 function settingsReaction(model) {
@@ -16,6 +16,6 @@ function settingsReaction(model) {
 
 export default function initialiseModel(model) {
     console.debug("initialiseModel");
-    connectToFirebase(model);
+    connectToFirestore(model);
     settingsReaction(model);
 }

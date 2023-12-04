@@ -48,15 +48,15 @@ function signOutACB() {
         });
 }
 
-function connectToFirebase(model) {
+function connectToFirestore(model) {
     model.userReady = false;
     function watchUserCB() {
         return [model.user.data.fullName, model.user.data.displayName, model.user.data.bio, model.user.data.profilePicture, model.user.data.follows, model.user.data.followedBy];
     }
-    function callSaveUserToFirebaseCB() {
-        console.debug("callSaveUserToFirebaseCB: model.user changed, calling saveUserToFirebase if user is signed in");
+    function callSaveUserToFirestoreCB() {
+        console.debug("callSaveUserToFirestoreCB: model.user changed, calling callSaveUserToFirestoreCB if user is signed in");
         if (model.user.uid) // User is signed in
-            saveUserToFirebase(model.user, model.uuid);
+            saveUserToFirestore(model.user, model.uuid);
     }
     function onAuthStateChangedCB(userAuthObj) {
         console.debug("onAuthStateChangedCB: new userAuthObj: ", userAuthObj);
@@ -92,10 +92,10 @@ function connectToFirebase(model) {
         }
     }
     onAuthStateChanged(auth, onAuthStateChangedCB);
-    reaction(watchUserCB, callSaveUserToFirebaseCB);
+    reaction(watchUserCB, callSaveUserToFirestoreCB);
 }
 
-function readUserFromFirebase(uid) {
+function readUserFromFirestore(uid) {
     if (!uid) {
         throw new Error("uid is falsy");
     }
@@ -103,10 +103,10 @@ function readUserFromFirebase(uid) {
     return getDoc(docRef)
         .then((docSnapshot) => {
             if (docSnapshot.exists()) { // Document for this user exists on Firestore
-                console.debug("readUserFromFirebase: User exists on Firestore, reading data");
+                console.debug("readUserFromFirestore: User exists on Firestore, reading data");
                 return docSnapshot.data();
             } else { // Document for this user does not exist on Firestore
-                console.debug("readUserFromFirebase: No such user!");
+                console.debug("readUserFromFirestore: No such user!");
                 return null;
             }
         })
@@ -116,9 +116,9 @@ function readUserFromFirebase(uid) {
         });
 }
 
-function saveUserToFirebase(userObj, uuid) {
+function saveUserToFirestore(userObj, uuid) {
     const userDoc = doc(db, "Users", userObj.uid);
     setDoc(userDoc, {...userObj.data, uuid: uuid});
 }
 
-export { connectToFirebase, signInACB, signOutACB, saveUserToFirebase };
+export { connectToFirestore, signInACB, signOutACB };
