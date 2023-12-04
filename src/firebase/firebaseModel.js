@@ -13,6 +13,7 @@ import {
     doc,
     getDoc,
     setDoc,
+    addDoc,
     collection,
     query,
     where,
@@ -131,4 +132,10 @@ function saveUserToFirestore(userObj, uuid) {
     setDoc(userDoc, {...userObj.data, uuid: uuid});
 }
 
-export { connectToFirestore, signInACB, signOutACB };
+async function savePostToFirebase(postObj, userUid) {
+    const postObjWithMetadata = {...postObj, createdBy: userUid, createdAt: new Date(), modifiedAt: new Date(), likedBy: [], dislikedBy: [],};
+    const docRef = await addDoc(collection(db, "Posts"), postObjWithMetadata);
+    console.debug("savePostToFirebase: Document written with ID: ", docRef.id);
+}
+
+export { connectToFirestore, signInACB, signOutACB, savePostToFirebase };

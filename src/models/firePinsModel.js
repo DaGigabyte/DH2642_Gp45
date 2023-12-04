@@ -1,5 +1,6 @@
 import { observable, reaction, action } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
+import { savePostToFirebase } from "../firebase/firebaseModel";
 
 const model = observable({
   count: 1,
@@ -50,6 +51,24 @@ const model = observable({
     const newUserData = { ...this.user.data, ...this.userSettingsData.data };
     console.debug("storing updates to user.data\n", "newUserData: ", newUserData);
     this.user.setData(newUserData);
+  }),
+  createPostEditor: {
+    data: {
+      title: "",
+      content: "",
+    },
+    setTitle: action(function(title) {
+      console.debug("setting createPostEditor.title to: ", title);
+      this.data.title = title;
+    }),
+    setContent: action(function(content) {
+      console.debug("setting createPostEditor.content to: ", content);
+      this.data.content = content;
+    }),
+  },
+  createPost: action(function() {
+    console.debug("creating post with data: ", this.createPostEditor.data);
+    savePostToFirebase(this.createPostEditor.data, this.user.uid);
   }),
   searchText: "",
   setSearchText(text) {
