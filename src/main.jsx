@@ -1,8 +1,8 @@
 import React from "react";
+import "./services/teacherFetch.js"; // protection against fetch() in infinite re-render
 import { configure } from "mobx";
 import ReactDOM from "react-dom/client";
 import firePinsModel from "./models/firePinsModel.js";
-// import "./teacherFetch.js"; // protection against fetch() in infinite re-render
 import App from "./App.jsx";
 import "./index.css";
 import initialiseModel from "./models/initialiseModel.js";
