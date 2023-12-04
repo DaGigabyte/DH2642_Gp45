@@ -138,4 +138,16 @@ async function savePostToFirebase(postObj, userUid) {
     console.debug("savePostToFirebase: Document written with ID: ", docRef.id);
 }
 
-export { connectToFirestore, signInACB, signOutACB, savePostToFirebase };
+function queryPostByUserUid(userUid) {
+    const q = query(collection(db, "Posts"), where("createdBy", "==", userUid));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const posts = [];
+        querySnapshot.forEach((doc) => {
+            posts.push(doc.data());
+        });
+        console.debug("Current posts: ", posts);
+    });
+    return unsubscribe;
+}
+
+export { connectToFirestore, signInACB, signOutACB, savePostToFirebase, queryPostByUserUid };
