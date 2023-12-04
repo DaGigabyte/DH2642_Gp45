@@ -8,6 +8,7 @@ import FavoritesPresenter from "./presenters/FavoritesPresenter";
 import Auth from "./presenters/AuthPresenter";
 import { signInACB, signOutACB } from "./firebase/firebaseModel";
 import { observer } from "mobx-react-lite";
+import ProfilePresenter from "./presenters/ProfilePresenter";
 
 // Create a router
 
@@ -29,6 +30,10 @@ function createRouter(props) {
         {
           path: "favorites",
           element: <FavoritesPresenter model={props.model} />,
+        },
+        {
+          path: "profile",
+          element: <ProfilePresenter model={props.model} />
         },
         {
           path: "firebase-debug",
