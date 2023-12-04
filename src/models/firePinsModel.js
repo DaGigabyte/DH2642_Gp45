@@ -5,6 +5,7 @@ const model = {
   setCount(value) {
     this.count = value;
   },
+  /* Left here for reference (refer to Firebase usage.md)*/
   user: {
     uid: null,
     data: {

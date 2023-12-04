@@ -32,9 +32,6 @@ function createRouter(props) {
           element: <FavoritesPresenter model={props.model} />,
         },
         {
-          path: "firebase-debug",
-          element: <Auth onSignIn={signInACB} onSignOut={signOutACB} uid={props.model.user.uid}/>,
-        },{
           path: "settings",
           element: <SettingsPresenter model={props.model} />,
         },
@@ -46,7 +43,6 @@ function createRouter(props) {
 
 function App(props) {
   return <RouterProvider router={createRouter(props)} />;
-  // return <Auth onSignIn={signInACB} onSignOut={signOutACB} uid={props.model.user?.uid}/>;
 }
 
 export default observer(App);

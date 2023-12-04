@@ -32,3 +32,9 @@ https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
         - likedBy: ["Jasper"]
         - dislikedBy: []
         - Comments (sub-collection)
+
+## Querying Firestore
+```
+const userCollectionRef = collection(db, 'Users');
+const q = query(userCollectionRef, where("uid", "==", model.user.uid));
+```
