@@ -24,6 +24,7 @@ const app = initializeApp(config);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
+let unsubscribeOnSnapshotUser = () => {}; // dummy function to prevent error in case sign out without calling onSnapshot
 
 function signInACB() {
     signInWithPopup(auth, provider)
@@ -69,12 +70,11 @@ function connectToFirestore(model) {
     }
     function onAuthStateChangedCB(userAuthObj) {
         console.debug("onAuthStateChangedCB: new userAuthObj: ", userAuthObj);
-        let unsubscribeUser = () => {}; // dummy function to prevent error in case sign out without calling onSnapshot
         if (userAuthObj?.uid) { // Signed in
             console.debug("onAuthStateChangedCB: user signed in");
             const userObj = {...model.user, uid: userAuthObj.uid};
             const docRef = doc(db, "Users", userAuthObj.uid);
-            unsubscribeUser = onSnapshot(docRef, onSnapshotChangeACB);
+            unsubscribeOnSnapshotUser = onSnapshot(docRef, onSnapshotChangeACB);
             function onSnapshotChangeACB(docSnapshot) {
                 model.userReady = false;
                 if (docSnapshot.exists()) { // Document for this user exists on Firestore
@@ -98,7 +98,7 @@ function connectToFirestore(model) {
             console.debug("onAuthStateChangedCB: user signed out");
             model.user.setUid(null);
             model.user.setData({});
-            unsubscribeUser(); // Stop listening to the user document
+            unsubscribeOnSnapshotUser(); // Stop listening to the user document
         }
     }
     onAuthStateChanged(auth, onAuthStateChangedCB);
