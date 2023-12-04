@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 // Components
 import Sidebar from "../components/layout/Sidebar";
 import NewPostModal from "../components/modal/NewPostModal";
@@ -22,14 +22,15 @@ function RootView(props) {
             <div className="flex-none self-center ">
               <NewPostModal />
             </div>
-            <img
-              className="rounded-full self-center h-12 shadow hover:scale-110 transition duration-300"
-              src={props.profilePicture}
-              alt="profile picture"
-              onClick={() => {
-                window.location.hash = "#/Profile";
-              }} //TODO change to real routing
-            />
+            {props.profilePicture && (
+              <Link to="/profile">
+                <img
+                  className="rounded-full self-center h-12 shadow hover:scale-110 transition duration-300"
+                  src={props.profilePicture}
+                  alt="profile picture"
+                />
+              </Link>
+            )}
           </div>
         </div>
         {/* Main content */}
