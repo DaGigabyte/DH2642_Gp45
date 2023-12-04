@@ -55,8 +55,17 @@ function connectToFirestore(model) {
     }
     function callSaveUserToFirestoreCB() {
         console.debug("callSaveUserToFirestoreCB: model.user changed, calling callSaveUserToFirestoreCB if user is signed in");
-        if (model.user.uid) // User is signed in
-            saveUserToFirestore(model.user, model.uuid);
+        if (model.user.uid) { // User is signed in
+            console.debug("callSaveUserToFirestoreCB: User is signed in");
+            if (model.userReady) { // User data has been read from Firestore, i.e. not from Firestore
+                console.debug("callSaveUserToFirestoreCB: Changes not come from Firestore, saving to Firestore");
+                saveUserToFirestore(model.user, model.uuid);
+            } else { // User data has not been read from Firestore, i.e. from Firestore
+                console.debug("callSaveUserToFirestoreCB: Changes come from Firestore, not saving to Firestore to prevent infinite loop");
+            }
+        } else { // User is not signed in
+            console.debug("callSaveUserToFirestoreCB: User is not signed in, not saving to Firestore");
+        }
     }
     function onAuthStateChangedCB(userAuthObj) {
         console.debug("onAuthStateChangedCB: new userAuthObj: ", userAuthObj);
@@ -74,15 +83,16 @@ function connectToFirestore(model) {
                     if (docSnapshotdata.uuid != model.uuid) { // Document was not written by this device, need to update MobX store
                         console.debug("onSnapshotChangeACB: Document was not written by this device, updating MobX store");
                         userObj.data = docSnapshotdata;
-                        model.setUser(userObj);
+                        model.setUser(userObj); // Update MobX store based on Firestore document
+                        model.userReady = true;
                     } else 
                         console.debug("onSnapshotChangeACB: Document was written by this device, no need to update MobX store");
                 } else { // Document for this user does not exist on Firestore
-                    console.debug("onSnapshotChangeACB: Creating new user document on Firestore");
+                    console.debug("onSnapshotChangeACB: Creating new user document on MobX store");
+                    model.userReady = true;
                     userObj.data = { fullName: "", displayName: userAuthObj.displayName, profilePicture: userAuthObj.photoURL, follows: [], followedBy: [] };
-                    model.setUser(userObj);
+                    model.setUser(userObj); // Create new user document on MobX store based on userAuthObj
                 }
-                model.userReady = true;
             }        
         } else { // Signed out
             console.debug("onAuthStateChangedCB: user signed out");
