@@ -54,11 +54,9 @@ function connectToFirebase(model) {
         return [model.user.data.fullName, model.user.data.displayName, model.user.data.bio, model.user.data.profilePicture, model.user.data.follows, model.user.data.followedBy];
     }
     function callSaveUserToFirebaseCB() {
-        console.debug("callSaveUserToFirebaseCB: model.user changed, calling saveUserToFirebase if model.userReady");
-        if (model.userReady) {
+        console.debug("callSaveUserToFirebaseCB: model.user changed, calling saveUserToFirebase if user is signed in");
+        if (model.user.uid) // User is signed in
             saveUserToFirebase(model.user, model.uuid);
-            console.debug("callSaveUserToFirebaseCB: saved user to firebase since model.userReady");
-        }
     }
     function onAuthStateChangedCB(userAuthObj) {
         console.debug("onAuthStateChangedCB: new userAuthObj: ", userAuthObj);
