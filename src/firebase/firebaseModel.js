@@ -63,7 +63,7 @@ function connectToFirebase(model) {
     function onAuthStateChangedCB(userAuthObj) {
         console.debug("new userAuthObj: ", userAuthObj);
         if (userAuthObj?.uid) { // Signed in
-            const userObj = {uid: userAuthObj.uid};
+            const userObj = {...model.user, uid: userAuthObj.uid};
             readUserFromFirebase(userAuthObj.uid)
             .then((userObjFromFirebase)=>{
                 if (userObjFromFirebase) { // Document for this user exists on Firestore

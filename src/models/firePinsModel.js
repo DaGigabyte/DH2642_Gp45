@@ -48,7 +48,7 @@ const model = observable({
     console.debug("storing updates to user.data");
     const newUserData = { ...this.user.data, ...this.userSettingsData.data };
     console.debug("newUserData: ", newUserData)
-    model.user.setData(newUserData);
+    this.user.setData(newUserData);
   }),
   searchText: null,
   setSearchText(text) {
