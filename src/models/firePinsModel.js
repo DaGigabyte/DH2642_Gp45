@@ -9,8 +9,9 @@ const model = observable({
   user: {
     uid: null,
     data: {
-      fullName: null, // "Wong Pak Long"
-      displayName: null, // "Jasper"
+      fullName: "", // "Wong Pak Long"
+      displayName: "", // "Jasper"
+      bio: "", // "I am a cool guy"
       profilePicture: "default-avatar.jpg",
       follows: [], // ["2387dgh2378chr2t7xtrn23723eb3d"]
       followedBy: [],
@@ -31,8 +32,8 @@ const model = observable({
   }),
   userSettingsData: {
     data: {
-      fullName: null,
-      displayName: null,
+      fullName: "",
+      displayName: "",
     },
     setFullName: action(function(name) {
       console.debug("setting userSettingsData.fullName to: ", name);
@@ -45,12 +46,11 @@ const model = observable({
   },
   storeUpdates: action(function() {
     console.debug(this);
-    console.debug("storing updates to user.data");
     const newUserData = { ...this.user.data, ...this.userSettingsData.data };
-    console.debug("newUserData: ", newUserData)
+    console.debug("storing updates to user.data\n", "newUserData: ", newUserData);
     this.user.setData(newUserData);
   }),
-  searchText: null,
+  searchText: "",
   setSearchText(text) {
     this.searchText = text;
   },
