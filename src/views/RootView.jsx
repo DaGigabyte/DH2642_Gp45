@@ -4,6 +4,7 @@ import Sidebar from "../components/layout/Sidebar";
 import NewPostModal from "../components/modal/NewPostModal";
 import Search from "./Searchbar";
 import UserAvatarAndMenu from "../components/topbar/UserAvatarAndMenu";
+import LogInButton from "../components/topbar/LogInButton";
 
 function RootView(props) {
   return (
@@ -29,12 +30,7 @@ function RootView(props) {
                 signOut={() => props.onSignOut()}
               />
             ) : (
-              <button
-                onClick={() => props.onSignIn()}
-                className="rounded-2xl px-4 py-2 bg-pins-primary text-white hover:bg-pins-primary-hover"
-              >
-                Log in
-              </button>
+              <LogInButton signIn={() => props.onSignIn()} />
             )}
           </div>
         </div>
