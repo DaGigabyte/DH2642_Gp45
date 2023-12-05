@@ -26,9 +26,14 @@ function HomePresenter(props) {
     content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
   ]
 
+  function loadMorePostACB(){
+    //TODO load more post into newPosts array
+    alert("USER WANTS MORE POSTS TODO")
+  }
+
   return (
     <div className="flex flex-col">
-      <HomePage model={props.model} hotPosts={temporary} newPosts={moreTemp}/>
+      <HomePage model={props.model} hotPosts={temporary} newPosts={moreTemp} loadMorePosts={loadMorePostACB}/>
     </div>
   );
 }
