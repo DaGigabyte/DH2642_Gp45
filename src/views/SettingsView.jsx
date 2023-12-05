@@ -36,13 +36,15 @@ export default function SettingsView(props) {
         <span className="text-5xl mb-2 block">Settings</span>
         <ProfileBox picture={props.profilePicture || ""} nick={props.nickName || ""} />
         <span className="text-3xl mt-4 mb-2 block">Full Name</span>
-        <InputBox text={props.fullName || ""} onInputChange={nameChangeACB} />
+        <InputBox inputId="fullNameInput" text={props.fullName || ""} onInputChange={nameChangeACB} />
         <span className="text-3xl mb-2 block">Nickname</span>
-        <InputBox text={props.nickName || ""} onInputChange={nickChangeACB} />
+        <InputBox inputId="nickNameInput" text={props.nickName || ""} onInputChange={nickChangeACB} />
       </div>
       <div className="mt-4 space-x-1">
-        <button onClick={handleCancelClickACB}>Cancel</button>
-        <button onClick={handleSaveClickACB}>Save</button>
+        <button onClick={handleCancelClickACB} className="w-[100px] text-lg text-violet-50 font-bold bg-violet-500 px-5 py-2 
+      rounded-2xl shadowhover:shadow-lg hover:bg-violet-700 transition duration-300">Cancel</button>
+        <button onClick={handleSaveClickACB} className="w-[100px] text-lg text-violet-50 font-bold bg-violet-500 px-5 py-2 
+      rounded-2xl shadow hover:shadow-lg hover:bg-violet-700 transition duration-300">Save</button>
       </div>
     </div>
   );
