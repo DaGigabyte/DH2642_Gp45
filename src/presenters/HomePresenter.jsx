@@ -14,10 +14,10 @@ function HomePresenter(props) {
     { id: 8, cover: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
   ];
   const moreTemp = [
-    {postid:9, picture:'public/default-avatar.jpg', nickName: "some name", postPicture:'src/assets/avatar_movie.jpg'},
-    {postid:9, picture:'public/default-avatar.jpg', nickName: "some name", postPicture:'src/assets/avatar_movie.jpg'},
-    {postid:9, picture:'public/default-avatar.jpg', nickName: "some name", postPicture:'src/assets/avatar_movie.jpg'},
-    {postid:9, picture:'public/default-avatar.jpg', nickName: "some name", postPicture:'src/assets/avatar_movie.jpg'},
+    {id:9, picture:'public/default-avatar.jpg', nickName: "some name 1", postPicture:'src/assets/avatar_movie.jpg', postTitle:'Title 1', postBody:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
+    {id:10, picture:'public/default-avatar.jpg', nickName: "some name 2", postPicture:'src/assets/avatar_movie.jpg', postTitle:'Title 2', postBody:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
+    {id:11, picture:'public/default-avatar.jpg', nickName: "some name 3", postPicture:'src/assets/avatar_movie.jpg', postTitle:'Title 3', postBody:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
+    {id:12, picture:'public/default-avatar.jpg', nickName: "some name 4", postPicture:'src/assets/avatar_movie.jpg', postTitle:'Title 4', postBody:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
   ]
 
   return (

@@ -6,6 +6,8 @@ import ProfileBox from "./profilePicAndNick";
  * @param {string} props.picture - The URL or source for the profile picture.
  * @param {string} props.nickName - The nickname associated with the post.
  * @param {string} props.postPicture - The URL or source for the post picture.
+ * @param {string} props.postTitle - The URL or source for the post picture.
+ * @param {string} props.postBody - The URL or source for the post picture.
  * @param {Function} props.viewPost - CB function triggered when the user clicks on the post.
  * @returns {React.Element} A component displaying a summarized post preview.
  */
@@ -16,7 +18,7 @@ export default function SummarizedPost(props) {
     alert("NAVIAGATE TO POST TODO")//TODO correct routing
   }
   return (
-    <div
+    <div 
       className="flex flex-col xl:flex-row items-start space-x-4 w-full text-black text-left 
         rounded-xl border border-gray-300 p-2 bg-white shadow hover:shadow-xl cursor-pointer 
              hover:bg-gray-200 transition duration-300 mb-5"
@@ -33,16 +35,14 @@ export default function SummarizedPost(props) {
 
       <div className="flex flex-col items-start mt-3">
         <ProfileBox picture={props.picture} nick={props.nickName} />
-        {/**Exchange for real data from post */}
+   
         <span className="text-2xl flex-shrink-0 font-semibold">
-          {/**Exchange for real data from post */}
-          Some title we write
+         
+          {props.postTitle}
         </span>
         <span className="text-lg">
-          {/**Exchange for real data from post */}
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,
-          harum debitis officiis odit id impedit nostrum, sed itaque non
-          repudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?
+    
+          {props.postBody}
         </span>
 
         {/* Buttons added later*/}
