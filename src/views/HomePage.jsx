@@ -11,7 +11,7 @@ import { MdChevronLeft, MdChevronRight } from "react-icons/md"
  */
 function HomePage(props) {
 
-  function renderTopRatedSection(){
+  function renderTopRatedSection() {
     if (props.hotPosts.length < 1)
       return null;
     return (
@@ -21,10 +21,10 @@ function HomePage(props) {
         <div id="slider"
           className="p-5 items-center overflow-x-scroll overflow-y-visible whitespace-nowrap scroll-smooth scrollbar-hide"> {/*inner*/}
           {props.hotPosts.map(renderHotPosts)}
-          </div>
+        </div>
         <MdChevronRight onClick={slideRight} size="30"
-        className="h-full w-8 shrink-0 flex items-center cursor-pointer rounded-lg shadow hover:bg-gray-300 hover:shadow-lg transition duration-200 ml-2" />
-      </div> )
+          className="h-full w-8 shrink-0 flex items-center cursor-pointer rounded-lg shadow hover:bg-gray-300 hover:shadow-lg transition duration-200 ml-2" />
+      </div>)
   }
   function renderHotPosts(post) {
     return <TopRatedCard key={post.postId} postPicture={post.posterPath} source={post.source} />
@@ -37,22 +37,22 @@ function HomePage(props) {
     const slider = document.getElementById("slider");
     slider.scrollLeft = slider.scrollLeft + 200;
   }
-  function renderNewPosts(post){
-    return<Post key={post.postId} picture={post.profilePicture} nickName={post.createdBy}  postPicture={post.posterPath} postTitle={post.postTitle} postBody={post.content}/>
+  function renderNewPosts(post) {
+    return <Post key={post.postId} picture={post.profilePicture} nickName={post.createdBy} postPicture={post.posterPath} postTitle={post.title} postBody={post.content} />
   }
   return (
     <div className="flex flex-col w-full xl:w-3/4">
       {/*Top rated pins*/}
       <span className="text-3xl font-semibold block m-5">Top Rated Pins</span>
-       {renderTopRatedSection()}
+      {renderTopRatedSection()}
       {/*NEW POSTS*/}
       <span className="text-3xl font-semibold  m-5">New Posts</span>
       <div className="flex flex-col w-full m-5">
-      {props.newPosts ? props.newPosts.map(renderNewPosts) : null}
+        {props.newPosts ? props.newPosts.map(renderNewPosts) : null}
       </div>
       {/*Load more button*/}
       <div className="flex justify-center">
-        <button className="purpleButton" onClick={()=>props.loadMorePosts()}>Load More Posts</button>
+        <button className="purpleButton" onClick={() => props.loadMorePosts()}>Load More Posts</button>
       </div>
       {/*More Content*/}
     </div>

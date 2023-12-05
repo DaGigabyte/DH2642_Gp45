@@ -12,13 +12,13 @@ import ProfileBox from "./profilePicAndNick";
  * @returns {React.Element} A component displaying a summarized post preview.
  */
 export default function SummarizedPost(props) {
-  
+
   /*ACB to handle postclick navigate ROUTING NEEEDED*/
   function handlePostClickACB() {
     alert("NAVIAGATE TO POST TODO")//TODO correct routing
   }
   return (
-    <div 
+    <div
       className="flex flex-col xl:flex-row items-start space-x-4 w-full text-black text-left 
         rounded-xl border border-gray-300 p-2 bg-white shadow hover:shadow-xl cursor-pointer 
              hover:bg-gray-200 transition duration-300 mb-5"
@@ -33,15 +33,12 @@ export default function SummarizedPost(props) {
         />
       </div>
 
-      <div className="flex flex-col items-start mt-3">
+      <div className="flex flex-col mt-4 gap-2">
         <ProfileBox picture={props.picture} nick={props.nickName} />
-   
         <span className="text-2xl flex-shrink-0 font-semibold">
-         
           {props.postTitle}
         </span>
-        <span className="text-lg">
-    
+        <span className="text-xl line-clamp-3">
           {props.postBody}
         </span>
 
