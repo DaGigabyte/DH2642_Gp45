@@ -24,7 +24,7 @@ function HomePage(props) {
     return<Post key={post.postId} picture={post.picture} nickName={post.nickName} postPicture={post.postPicture}/>
   }
   return (
-    <div className="flex flex-col w-3/4">
+    <div className="flex flex-col w-full xl:w-3/4">
       {/*Top rated pins*/}
       <span className="text-3xl font-semibold block m-5">Top Rated Pins</span>
       <div className="flex  items-center h-[400px] m-5 mb-20"> {/*outer*/}
