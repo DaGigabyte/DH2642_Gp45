@@ -36,9 +36,9 @@ export default function SettingsView(props) {
         <span className="text-5xl mb-2 block">Settings</span>
         <ProfileBox picture={props.profilePicture || ""} nick={props.nickName || ""} />
         <span className="text-3xl mt-4 mb-2 block">Full Name</span>
-        <InputBox text={props.fullName || ""} onInputChange={nameChangeACB} />
+        <InputBox inputId="fullNameInput" text={props.fullName || ""} onInputChange={nameChangeACB} />
         <span className="text-3xl mb-2 block">Nickname</span>
-        <InputBox text={props.nickName || ""} onInputChange={nickChangeACB} />
+        <InputBox inputId="nickNameInput" text={props.nickName || ""} onInputChange={nickChangeACB} />
       </div>
       <div className="mt-4 space-x-1">
         <button onClick={handleCancelClickACB}>Cancel</button>
