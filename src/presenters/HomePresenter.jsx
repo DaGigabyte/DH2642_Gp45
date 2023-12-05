@@ -3,21 +3,27 @@ import HomePage from "../views/HomePage";
 
 function HomePresenter(props) {
 
+  /*Source only needed if we use multiple APIs and want the badge*/
   const temporary = [
-    { id: 1, cover: 'src/assets/oppenhemier.jpg', source: 'TMdB' },
-    { id: 2, cover: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
-    { id: 3, cover: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
-    { id: 4, cover: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
-    { id: 5, cover: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
-    { id: 6, cover: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
-    { id: 7, cover: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
-    { id: 8, cover: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
+    { postId: 1, posterPath: 'src/assets/oppenhemier.jpg', source: 'TMdB' },
+    { postId: 2, posterPath: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
+    { postId: 3, posterPath: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
+    { postId: 4, posterPath: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
+    { postId: 5, posterPath: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
+    { postId: 6, posterPath: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
+    { postId: 7, posterPath: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
+    { postId: 8, posterPath: 'src/assets/oppenhemier.jpg', source: 'TMDB' },
   ];
+  /*for */
   const moreTemp = [
-    {id:9, picture:'public/default-avatar.jpg', nickName: "some name 1", postPicture:'src/assets/avatar_movie.jpg', postTitle:'Title 1', postBody:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-    {id:10, picture:'public/default-avatar.jpg', nickName: "some name 2", postPicture:'src/assets/avatar_movie.jpg', postTitle:'Title 2', postBody:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-    {id:11, picture:'public/default-avatar.jpg', nickName: "some name 3", postPicture:'src/assets/avatar_movie.jpg', postTitle:'Title 3', postBody:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-    {id:12, picture:'public/default-avatar.jpg', nickName: "some name 4", postPicture:'src/assets/avatar_movie.jpg', postTitle:'Title 4', postBody:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
+    {postId:9, profilePicture:'public/default-avatar.jpg', createdBy: "some name 1", posterPath:'src/assets/avatar_movie.jpg',  title:'Title 1', 
+    content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
+    {postId:10, profilePicture:'public/default-avatar.jpg', createdBy: "some name 2", posterPath:'src/assets/avatar_movie.jpg', title:'Title 2',
+    content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
+    {postId:11, profilePicture:'public/default-avatar.jpg', createdBy: "some name 3", posterPath:'src/assets/avatar_movie.jpg', title:'Title 3',
+    content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
+    {postId:12, profilePicture:'public/default-avatar.jpg', createdBy: "some name 4", posterPath:'src/assets/avatar_movie.jpg', title:'Title 4',
+    content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
   ]
 
   return (
