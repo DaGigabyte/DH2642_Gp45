@@ -20,17 +20,17 @@ function RootView(props) {
               onUserSearching={props.confirmUserSearch}
             />
           </div>
-          <div className="flex space-x-5 justify-end">
-            <div className="self-center ">
-              <NewPostModal />
-            </div>
-            {props.profilePicture ? (
+          <div className="flex items-center space-x-5 justify-end">
+            {/* Create new post button */}
+            {props.uid ? <NewPostModal /> : <></>}
+            {/* User avatar and menu */}
+            {props.uid ? (
               <UserAvatarAndMenu
-                profilePicture={props.profilePicture}
-                signOut={() => props.onSignOut()}
+                profilePicture={props.user?.data?.profilePicture || ""}
+                signOut={props.onSignOut}
               />
             ) : (
-              <LogInButton signIn={() => props.onSignIn()} />
+              <LogInButton signIn={props.onSignIn} />
             )}
           </div>
         </div>
