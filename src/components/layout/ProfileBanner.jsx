@@ -16,7 +16,7 @@ import FollowButton from "./FollowButton";
 export default function ProfileBanner(props) {
     return (
       <div className="flex justify-center ml-10 mr-16">
-        <img src={props.picture} className="w-[300px] rounded-full mr-10" />
+        <img src={props.picture} className="w-[400px] rounded-full mr-10" />
         <div className="bg-white p-8 h-[300px] w-full rounded-xl shadow-md">
             <div className="flex">
                 <h1 className="text-2xl font-bold mb-4">{props.username}</h1>
