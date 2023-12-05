@@ -28,6 +28,7 @@ https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
         - createdBy: "12klfs312rijf3221s=weroi2sdf32" // uid of creator
         - title: "Post Title"
         - content: "Post Content"
+        - posterPath: "https://image.tmdb.org/t/p/original/3GqP4HxjpVe0ChBAStTbkZhpWYC.jpg"
         - createdAt: "Timestamp"
         - modifiedAt: "Timestamp"
         - likedBy: ["u0gSii1Srsfy6gd7wOvYdtMObhp2"] // uid of users who liked
