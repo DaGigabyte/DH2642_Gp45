@@ -155,4 +155,4 @@ async function queryPostByUserUid(userUid) {
     });
 }
 
-export { connectToFirestore, signInACB, signOutACB, savePostToFirestore, queryPostByUserUid };
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, queryPostByUserUid };

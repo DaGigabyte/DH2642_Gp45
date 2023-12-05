@@ -15,6 +15,7 @@ function RootPresenter(props) {
       }}
       onSignIn={signInACB}
       onSignOut={signOutACB}
+      uid={props.model.user.uid}
     />
   );
 }

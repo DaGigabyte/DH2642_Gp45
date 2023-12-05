@@ -29,7 +29,7 @@ function RootView(props) {
               <button onClick={props.onSignOut}>Sign out</button>
             </div>
               {props.profilePicture && 
-              <Link to="/profile">
+              <Link to={{pathname: ("/profile/" + props.uid)}} >
                 <img
                   className="rounded-full self-center h-12 shadow hover:scale-110 transition duration-300"
                   src={props.profilePicture}
