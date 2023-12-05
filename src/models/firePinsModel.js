@@ -1,6 +1,6 @@
 import { observable, reaction, action } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
-import { savePostToFirebase } from "../firebase/firebaseModel";
+import { savePostToFirestore } from "../firebase/firebaseModel";
 
 const model = observable({
   count: 1,
@@ -68,7 +68,7 @@ const model = observable({
   },
   createPost: action(function() {
     console.debug("creating post with data: ", this.createPostEditor.data);
-    savePostToFirebase(this.createPostEditor.data, this.user.uid);
+    savePostToFirestore(this.createPostEditor.data, this.user.uid);
   }),
   searchText: "",
   setSearchText(text) {
