@@ -21,7 +21,7 @@ function HomePage(props) {
   }
 
   function renderNewPosts(post){
-    return<Post key={post.postId} picture={post.picture} nickName={post.nickName} postPicture={post.postPicture}/>
+    return<Post key={post.id} picture={post.picture} nickName={post.nickName}  postPicture={post.postPicture} postTitle={post.postTitle} postBody={post.postBody}/>
   }
   return (
     <div className="flex flex-col w-full xl:w-3/4">
