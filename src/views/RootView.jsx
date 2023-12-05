@@ -1,8 +1,9 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 // Components
 import Sidebar from "../components/layout/Sidebar";
 import NewPostModal from "../components/modal/NewPostModal";
 import Search from "./Searchbar";
+import UserAvatarAndMenu from "../components/topbar/UserAvatarAndMenu";
 
 function RootView(props) {
   return (
@@ -10,7 +11,7 @@ function RootView(props) {
       <Sidebar />
       <div className="flex-1">
         {/* Sticky top bar */}
-        <div className="sticky top-0 z-10 flex items-center justify-between p-4">
+        <div className="sticky top-0 z-10 flex flex-col md:flex-row items-center justify-between p-4">
           <div className="w-full sm:w-1/2 self-center">
             <Search
               searchText={props.searchText || ""}
@@ -19,17 +20,21 @@ function RootView(props) {
             />
           </div>
           <div className="flex space-x-5 justify-end">
-            <div className="flex-none self-center ">
+            <div className="self-center ">
               <NewPostModal />
             </div>
-            {props.profilePicture && (
-              <Link to="/profile">
-                <img
-                  className="rounded-full self-center h-12 shadow hover:scale-110 transition duration-300"
-                  src={props.profilePicture}
-                  alt="profile picture"
-                />
-              </Link>
+            {props.profilePicture ? (
+              <UserAvatarAndMenu
+                profilePicture={props.profilePicture}
+                signOut={() => props.onSignOut()}
+              />
+            ) : (
+              <button
+                onClick={() => props.onSignIn()}
+                className="rounded-2xl px-4 py-2 bg-pins-primary text-white hover:bg-pins-primary-hover"
+              >
+                Log in
+              </button>
             )}
           </div>
         </div>
