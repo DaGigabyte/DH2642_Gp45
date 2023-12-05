@@ -10,18 +10,19 @@ import ProfileBox from "./profilePicAndNick";
  * @returns {React.Element} A component displaying a summarized post preview.
  */
 export default function SummarizedPost(props) {
+  
   /*ACB to handle postclick navigate ROUTING NEEEDED*/
   function handlePostClickACB() {
-    props.viewPost();
+    alert("NAVIAGATE TO POST TODO")//TODO correct routing
   }
   return (
     <div
-      className="flex flex-col md:flex-row items-start space-x-4 w-full text-black text-left 
-        rounded-xl border border-gray-300 p-2 bg-white hover:border-indigo-600 
-        hover:scale-y-105 transition duration-300"
+      className="flex flex-col xl:flex-row items-start space-x-4 w-full text-black text-left 
+        rounded-xl border border-gray-300 p-2 bg-white shadow hover:shadow-xl cursor-pointer 
+             hover:bg-gray-200 transition duration-300 mb-5"
       onClick={handlePostClickACB}
     >
-      <div className="flex-none  aspect-square max-h-[300px] overflow-hidden">
+      <div className="shrink-0  aspect-video xl:aspect-square max-h-[300px] overflow-hidden rounded-xl">
         {/**Exchange for real data from post */}
         <img
           src={props.postPicture}
