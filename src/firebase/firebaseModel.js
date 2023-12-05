@@ -13,6 +13,8 @@ import {
     doc,
     getDoc,
     setDoc,
+    addDoc,
+    getDocs,
     collection,
     query,
     where,
@@ -131,4 +133,26 @@ function saveUserToFirestore(userObj, uuid) {
     setDoc(userDoc, {...userObj.data, uuid: uuid});
 }
 
-export { connectToFirestore, signInACB, signOutACB };
+async function savePostToFirestore(postObj, userUid) {
+    const postObjWithMetadata = {...postObj, createdBy: userUid, createdAt: new Date(), modifiedAt: new Date(), likedBy: [], dislikedBy: [],};
+    const docRef = await addDoc(collection(db, "Posts"), postObjWithMetadata);
+    console.debug("savePostToFirestore: Document written with ID: ", docRef.id);
+}
+
+async function queryPostByUserUid(userUid) {
+    const q = query(collection(db, "Posts"), where("createdBy", "==", userUid));
+    return getDocs(q)
+    .then((querySnapshot) => { // querySnapshot is an array of documents
+        const posts = [];
+        querySnapshot.forEach((doc) => {
+            posts.push(doc.data());
+        });
+        console.debug("queryPostByUserUid: Current posts: ", posts);
+        return posts; // return posts to caller
+    })
+    .catch((error) => {
+        console.error("Error getting documents: ", error);
+    });
+}
+
+export { connectToFirestore, signInACB, signOutACB, savePostToFirestore, queryPostByUserUid };
