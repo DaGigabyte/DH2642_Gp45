@@ -6,6 +6,7 @@ import { MdChevronLeft, MdChevronRight } from "react-icons/md"
  * @param {Object} props.model - The firepinsModel
  * @param {Object} props.hotPosts - An array of the most liked posts
  * @param {Object} props.newPosts - An array of new posts
+ * @param {funciton} props.loadMorePosts - onClick to load more posts into the array
  * @returns {React.Element} A render of the homepage
  */
 function HomePage(props) {
@@ -48,13 +49,12 @@ function HomePage(props) {
       <span className="text-3xl font-semibold  m-5">New Posts</span>
       <div className="flex flex-col w-full m-5">
       {props.newPosts ? props.newPosts.map(renderNewPosts) : null}
-
+      </div>
+      {/*Load more button*/}
+      <div className="flex justify-center">
+        <button className="purpleButton" onClick={()=>props.loadMorePosts()}>Load More Posts</button>
       </div>
       {/*More Content*/}
-      <div>
-        <h1 className="text-2xl font-bold">HomePage</h1>
-        <p>Main content for HomePage...</p>
-      </div>
     </div>
   );
 }

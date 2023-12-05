@@ -7,8 +7,7 @@
 export default function CreatePostButton(props) {
   return (
     <button
-      className="text-lg text-violet-50 font-bold bg-violet-500 px-5 py-2 
-      rounded-2xl shadow hover:scale-110 transition duration-300"
+      className="text-lg font-bold purpleButton hover:scale-110"
       onClick={props.onUserClick}
     >
       Create New Post
