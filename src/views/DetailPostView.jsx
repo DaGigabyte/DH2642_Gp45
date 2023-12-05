@@ -13,7 +13,7 @@ function DetailedPostView(props) {
         <div className="relative  p-4 bg-white rounded-2xl">
             <div className="flex flex-col 2xl:block p-20 ">
                 <div onClick={()=>{alert("USER WANT TO RETURN TODO")}}
-                    className="absolute top-0 right-0 p-4 m-2 shadow rounded-2xl cursor-pointer
+                    className="absolute top-0 right-0 p-2 m-2 shadow rounded-2xl cursor-pointer
                     hover:shadow-lg hover:bg-slate-100">
                     <MdClose size={40}/>
                 </div>
