@@ -11,6 +11,7 @@ function ProfilePresenter(props) {
     const [profileData, setProfileData] = useState();
 
     useEffect(() => {
+        setLoading(true);
         readUserFromFirestore(uid)
             .then((data) => {
                 setProfileData({
