@@ -1,8 +1,10 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 // Components
 import Sidebar from "../components/layout/Sidebar";
+import NewPostModal from "../components/modal/NewPostModal";
 import Search from "./Searchbar";
-import NewPostButton from "./CreatePostButton";
+import UserAvatarAndMenu from "../components/topbar/UserAvatarAndMenu";
+import LogInButton from "../components/topbar/LogInButton";
 
 function RootView(props) {
   return (
@@ -10,7 +12,7 @@ function RootView(props) {
       <Sidebar />
       <div className="flex-1">
         {/* Sticky top bar */}
-        <div className="sticky top-0 z-10 flex items-center justify-between p-4">
+        <div className="sticky top-0 z-10 flex flex-col md:flex-row items-center justify-between p-4">
           <div className="w-full sm:w-1/2 self-center">
             <Search
               searchText={props.searchText || ""}
@@ -18,24 +20,19 @@ function RootView(props) {
               onUserSearching={props.confirmUserSearch}
             />
           </div>
-          <div className="flex space-x-5 justify-end">
-            <div className="flex-none self-center ">
-              <NewPostButton
-                onUserClick={() => {
-                  window.location.hash = "#/newPost";
-                }} //TODO change to real routing
+          <div className="flex items-center space-x-5 justify-end">
+            {/* Create new post button */}
+            {props.uid ? <NewPostModal /> : <></>}
+            {/* User avatar and menu */}
+            {props.uid ? (
+              <UserAvatarAndMenu
+                uid={props.uid}
+                profilePicture={props.user?.data?.profilePicture || ""}
+                signOut={props.onSignOut}
               />
-              <button onClick={props.onSignIn}>Sign in</button>
-              <button onClick={props.onSignOut}>Sign out</button>
-            </div>
-              {props.profilePicture && 
-              <Link to="/profile">
-                <img
-                  className="rounded-full self-center h-12 shadow hover:scale-110 transition duration-300"
-                  src={props.profilePicture}
-                  alt="profile picture"
-                />
-              </Link> }
+            ) : (
+              <LogInButton signIn={props.onSignIn} />
+            )}
           </div>
         </div>
         {/* Main content */}

@@ -25,12 +25,13 @@ https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
     - 2387dgh2378chr2t7xtrn23723eb3d (document)
 - Posts (collection)
     - 9832rhj989ewhdihdqoq289yh378g4 (document)
-        - createdBy: "Jasper"
+        - createdBy: "12klfs312rijf3221s=weroi2sdf32" // uid of creator
         - title: "Post Title"
         - content: "Post Content"
+        - posterPath: "https://image.tmdb.org/t/p/original/3GqP4HxjpVe0ChBAStTbkZhpWYC.jpg"
         - createdAt: "Timestamp"
         - modifiedAt: "Timestamp"
-        - likedBy: ["Jasper"]
+        - likedBy: ["u0gSii1Srsfy6gd7wOvYdtMObhp2"] // uid of users who liked
         - dislikedBy: []
         - Comments (sub-collection)
 

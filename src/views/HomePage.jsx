@@ -15,7 +15,7 @@ function HomePage(props) {
     if (props.hotPosts.length < 1)
       return null;
     return (
-      <div className="flex  items-center h-[400px] m-5 mb-20"> {/*outer*/}
+      <div className="flex items-center h-[400px] p-5 mb-20"> {/*outer*/}
         <MdChevronLeft onClick={slideLeft} size="30"
           className="h-full w-8  shrink-0 flex items-center cursor-pointer rounded-lg shadow hover:bg-gray-300 hover:shadow-lg transition duration-200" />
         <div id="slider"
@@ -47,7 +47,7 @@ function HomePage(props) {
       {renderTopRatedSection()}
       {/*NEW POSTS*/}
       <span className="text-3xl font-semibold  m-5">New Posts</span>
-      <div className="flex flex-col w-full m-5">
+      <div className="flex flex-col w-full p-5">
         {props.newPosts ? props.newPosts.map(renderNewPosts) : null}
       </div>
       {/*Load more button*/}
