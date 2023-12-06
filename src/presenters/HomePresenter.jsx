@@ -28,12 +28,21 @@ function HomePresenter(props) {
 
   function loadMorePostACB(){
     //TODO load more post into newPosts array
-    alert("USER WANTS MORE POSTS TODO")
+    alert("USER WANTS MORE POSTS TODO") //remove when model is done
+  }
+  function userSelectsPost(postId){
+    console.log(postId)
+    //TODO set currentPost = postId in model
+    alert("USER Selects " +postId) //remove when model is done
   }
 
   return (
     <div className="flex flex-col">
-      <HomePage model={props.model} hotPosts={temporary} newPosts={moreTemp} loadMorePosts={loadMorePostACB}/>
+      <HomePage model={props.model} 
+      hotPosts={temporary} 
+      newPosts={moreTemp} 
+      loadMorePosts={loadMorePostACB} 
+      selectPost={userSelectsPost}/>
     </div>
   );
 }

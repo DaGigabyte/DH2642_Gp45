@@ -5,6 +5,7 @@ import ProfileBox from "./profilePicAndNick";
  * @param {Object} props - Props for the SummarizedPost component.
  * @param {string} props.picture - The URL or source for the profile picture.
  * @param {string} props.nickName - The nickname associated with the post.
+ * @param {int}    props.postId - The id of the post
  * @param {string} props.postPicture - The URL or source for the post picture.
  * @param {string} props.postTitle - The URL or source for the post picture.
  * @param {string} props.postBody - The URL or source for the post picture.
@@ -15,7 +16,7 @@ export default function SummarizedPost(props) {
 
   /*ACB to handle postclick navigate ROUTING NEEEDED*/
   function handlePostClickACB() {
-    alert("NAVIAGATE TO POST TODO")//TODO correct routing
+    props.selectPost();//TODO correct routing
   }
   return (
     <div
