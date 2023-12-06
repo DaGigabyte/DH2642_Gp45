@@ -26,18 +26,19 @@ export default function SettingsView(props) {
   function handleSaveClickACB() {
     props.onConfirm();
   }
-  /*ACB to discard new name*/
+  /*ACB to discard new name*///TODO rout to prev
   function handleCancelClickACB() {
     props.onCancel();
+    alert("CANCEL ROUTE TO PREV TODO")
   }
   return (
-    <div className="text-left rounded-xl border-2 border-gray-300 p-10 bg-white">
+    <div className="m-10 text-left rounded-xl border-2 border-gray-300 p-10 bg-white w-full lg:w-1/2 2xl:1/3">
       <div className="text-black ">
-        <span className="text-5xl mb-2 block">Settings</span>
+        <span className="text-5xl mb-8 block">Settings</span>
         <ProfileBox picture={props.profilePicture || ""} nick={props.nickName || ""} />
-        <span className="text-3xl mt-4 mb-2 block">Full Name</span>
+        <span className="text-3xl mt-6 mb-2 block">Full Name</span>
         <InputBox inputId="fullNameInput" text={props.fullName || ""} onInputChange={nameChangeACB} />
-        <span className="text-3xl mb-2 block">Nickname</span>
+        <span className="text-3xl mb-2 mt-6 block">Nickname</span>
         <InputBox inputId="nickNameInput" text={props.nickName || ""} onInputChange={nickChangeACB} />
       </div>
       <div className="mt-4 space-x-1">
