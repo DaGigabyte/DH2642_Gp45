@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import TopRatedCard from "../components/homepage/TopRatedCard"
 import Post from "./summarizedPost"
 import { MdChevronLeft, MdChevronRight } from "react-icons/md"
@@ -29,11 +30,13 @@ function HomePage(props) {
       </div>)
   }
   function renderHotPosts(post) {
-    return <TopRatedCard 
-    key={post.postId} 
-    postPicture={post.posterPath} 
-    source={post.source} 
-    selectPost ={()=>{props.selectPost(post.postId)}}/>
+    return(<Link to="/details">
+       <TopRatedCard 
+          key={post.postId} 
+          postPicture={post.posterPath} 
+          source={post.source} 
+          selectPost ={()=>{props.selectPost(post.postId)}}/>
+    </Link>)
   }
   function slideLeft() {
     const slider = document.getElementById("slider");
@@ -44,13 +47,15 @@ function HomePage(props) {
     slider.scrollLeft = slider.scrollLeft + 200;
   }
   function renderNewPosts(post) {
-    return <Post key={post.postId} 
-      picture={post.profilePicture} 
-      nickName={post.createdBy} 
-      postPicture={post.posterPath} 
-      postTitle={post.title} 
-      postBody={post.content} 
-      selectPost ={()=>{props.selectPost(post.postId)}}/>
+    return (<Link to="/details"> 
+      <Post key={post.postId} 
+        picture={post.profilePicture} 
+        nickName={post.createdBy} 
+        postPicture={post.posterPath} 
+        postTitle={post.title} 
+        postBody={post.content} 
+        selectPost ={()=>{props.selectPost(post.postId)}}/>
+    </Link>)
   }
   return (
     <div className="flex flex-col w-full xl:w-3/4">
