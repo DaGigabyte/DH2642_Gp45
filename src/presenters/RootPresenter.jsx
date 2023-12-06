@@ -5,8 +5,9 @@ import { signInACB, signOutACB } from "../firebase/firebaseModel";
 function RootPresenter(props) {
   return (
     <RootView
+      user={props.model.user}
+      uid={props.model.user?.uid}
       searchText={props.model.searchText}
-      profilePicture={props.model.user?.data?.profilePicture || ""}
       setSearchText={(text) => {
         props.model.setSearchText(text);
       }}
