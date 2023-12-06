@@ -11,7 +11,7 @@
 "pins-light": "#F1F3F5",
 "pins-menu-hover": "#1D252F",
 
-# It is the same like using Tailwind colors, our colors extend the Tailwind colors.
+# It is the same like using Tailwind colors, our colors extend the Tailwind colors. 
 
 Example:
 Text color: "text-pins-light"
