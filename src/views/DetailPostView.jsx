@@ -9,9 +9,9 @@ function DetailedPostView(props) {
 
     //TODO fix onclick for returning
     return (  
-    <div className="flex flex-col gap-2 m-10 w-full xl:w-3/4">
-        <div className="relative  p-4 bg-white rounded-2xl">
-            <div className="flex flex-col 2xl:block p-20 ">
+    <div className="flex flex-col gap-2  w-full xl:w-3/4">
+        <div className="relative bg-white rounded-2xl">
+            <div className="flex flex-col xl:block p-20 ">
                 <div onClick={()=>{alert("USER WANT TO RETURN TODO")}}
                     className="absolute top-0 right-0 p-2 m-2 shadow rounded-2xl cursor-pointer
                     hover:shadow-lg hover:bg-slate-100">
@@ -21,7 +21,7 @@ function DetailedPostView(props) {
                     <img className="w-full h-full object-cover 2xl:object-contain " src={props.post.posterPath} alt="/"/>
                 </div>
                 <div className="clear-right">
-                    <span className="block text-3xl mt-5 ">
+                    <span className="block text-3xl mt-4 ">
                         <ProfileBox 
                         picture={props.post.userPicture} 
                         nick = {props.post.createdBy}/>
@@ -34,8 +34,8 @@ function DetailedPostView(props) {
             </div>
         </div>
         <div className="p-5 bg-white rounded-2xl ">
-                    <span className="text-xl">COMMENTS ETC LATER</span>
-                </div>
+            <span className="text-xl">COMMENTS ETC LATER</span>
+        </div>
     </div>
 
     );
