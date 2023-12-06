@@ -37,7 +37,7 @@ function createRouter(props) {
           element: <FavoritesPresenter model={props.model} />,
         },
         {
-          path: "profile",
+          path: "profile/:uid",
           element: <ProfilePresenter model={props.model} />
         },
         {

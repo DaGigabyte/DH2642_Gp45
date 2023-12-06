@@ -2,6 +2,7 @@
  * Follow button component
  * @param {Object} props - The properties passed to the component.
  * @param {Function} props.onUserClick - refernence to the callback in the higher component
+ * @param {string} props.text - the text of the button
  * @returns {React.Element} Follow button component
  */
 export default function FollowButton(props) {
@@ -11,7 +12,7 @@ export default function FollowButton(props) {
         rounded-2xl shadow hover:scale-110 transition duration-300"
         onClick={props.onUserClick}
       >
-        Follow
+        {props.text}
       </button>
     );
   }
