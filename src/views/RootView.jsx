@@ -26,6 +26,7 @@ function RootView(props) {
             {/* User avatar and menu */}
             {props.uid ? (
               <UserAvatarAndMenu
+                uid={props.uid}
                 profilePicture={props.user?.data?.profilePicture || ""}
                 signOut={props.onSignOut}
               />

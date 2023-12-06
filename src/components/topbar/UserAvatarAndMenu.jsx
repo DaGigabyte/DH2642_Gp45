@@ -36,7 +36,7 @@ function UserAvatarAndMenu(props) {
           className="w-48 rounded-lg px-1.5 py-1 shadow-md md:w-56 bg-pins-secondary will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade z-[500]"
         >
           <DropdownMenu.Item asChild className={menuItemClasses}>
-            <Link to="/profile">
+            <Link to={{ pathname: "/profile/" + props.uid }}>
               <IoPersonOutline className="mr-3 flex-shrink-0 h-6 w-6" />
               <span>Profile</span>
             </Link>
