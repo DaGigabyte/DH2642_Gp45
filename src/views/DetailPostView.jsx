@@ -1,27 +1,18 @@
 import ProfileBox from "./profilePicAndNick"
-import { MdKeyboardReturn } from "react-icons/md";
-import { useNavigate  } from 'react-router-dom';
-import React, { useEffect } from 'react';
+import ReturnButton from "../components/navigation/ReturnButton.jsx"
 /**
  * Renders the Detailed post view
  * @param {Object} props.post - The post to display
  * @returns {React.Element} A render of the post
  */
 function DetailedPostView(props) {
-    const navigate = useNavigate ();
-    useEffect(() => {
-        window.scrollTo(0, 0);
-      }, []); 
 
     return (  
     <div className="flex flex-col gap-2  w-full xl:w-3/4">
         <div className="relative bg-white rounded-2xl">
+            <ReturnButton size="30"/>
             <div className="flex flex-col xl:block p-20 ">
-                <div onClick={() => {navigate(-1)}}
-                    className="absolute top-0 right-0 p-2 m-2 shadow rounded-2xl cursor-pointer
-                    hover:shadow-lg hover:bg-slate-100">
-                    <MdKeyboardReturn  size={40}/>
-                </div>
+
                 <div className="float-left h-[400px] shrink-0 rounded-xl mr-10 mb-10 overflow-hidden">
                     <img className="w-full h-full object-cover 2xl:object-contain " src={props.post.posterPath} alt="/"/>
                 </div>

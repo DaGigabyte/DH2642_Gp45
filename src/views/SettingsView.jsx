@@ -1,6 +1,6 @@
 import InputBox from "./settingsInputBox";
-import ProfileBox from"./profilePicAndNick";
-
+import ProfileBox from "./profilePicAndNick";
+import ReturnButton from "../components/navigation/ReturnButton.jsx";
 /**
  * Used for updating username and nickname for the user.
  * @param {Object} props - The properties passed to the SettingsView component.
@@ -32,7 +32,8 @@ export default function SettingsView(props) {
     alert("CANCEL ROUTE TO PREV TODO")
   }
   return (
-    <div className="text-left rounded-xl border-2 border-gray-300 p-10 bg-white w-full max-w-3xl"> -
+    <div className="relative text-left rounded-xl border-2 border-gray-300 p-10 bg-white w-full max-w-3xl"> -
+      <ReturnButton size="25" />
       <div className="text-black ">
         <span className="text-5xl mb-8 block">Settings</span>
         <ProfileBox picture={props.profilePicture || ""} nick={props.nickName || ""} />
