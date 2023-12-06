@@ -1,13 +1,51 @@
-import "./App.css";
-import CounterPresenter from "./presenters/CounterPresenter";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+// Presenters
+import RootPresenter from "./presenters/RootPresenter";
+import HomePresenter from "./presenters/HomePresenter";
+import AboutPresenter from "./presenters/AboutPresenter";
+import FavoritesPresenter from "./presenters/FavoritesPresenter";
+import ProfilePresenter from "./presenters/ProfilePresenter";
+import SettingsPresenter from "./presenters/SettingsPresenter";
 
-function App(props) {
-  return (
-    <div>
-      <h1>MobX Counter Example</h1>
-      <CounterPresenter model={props.model} />
-    </div>
-  );
+import { observer } from "mobx-react-lite";
+
+// Create a router
+
+function createRouter(props) {
+  return createBrowserRouter([
+    {
+      path: "/",
+      element: <RootPresenter model={props.model} />,
+      errorElement: <div>Error page</div>,
+      children: [
+        {
+          path: "/",
+          element: <HomePresenter model={props.model} />,
+        },
+        {
+          path: "about-us",
+          element: <AboutPresenter model={props.model} />,
+        },
+        {
+          path: "favorites",
+          element: <FavoritesPresenter model={props.model} />,
+        },
+        {
+          path: "profile/:uid",
+          element: <ProfilePresenter model={props.model} />
+        },
+        {
+          path: "settings",
+          element: <SettingsPresenter model={props.model} />,
+        },
+      ],
+    },
+  ]);
 }
 
-export default App;
+
+function App(props) {
+  return <RouterProvider router={createRouter(props)} />;
+}
+
+export default observer(App);

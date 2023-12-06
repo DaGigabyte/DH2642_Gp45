@@ -1,16 +1,19 @@
 import React from "react";
-import { observable, configure } from "mobx";
+import "./services/teacherFetch.js"; // protection against fetch() in infinite re-render
+import { configure } from "mobx";
 import ReactDOM from "react-dom/client";
 import firePinsModel from "./models/firePinsModel.js";
-import "./teacherFetch.js"; // protection against fetch() in infinite re-render
 import App from "./App.jsx";
 import "./index.css";
+import initialiseModel from "./models/initialiseModel.js";
 
-configure({ enforceActions: "never" }); // Allowing direct state modifications
-const reactiveModel = observable(firePinsModel);
+configure({ enforceActions: "observed" }); // All state that is observed somewhere needs to be changed through actions.
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App model={reactiveModel} />
+    <App model={firePinsModel} />
   </React.StrictMode>
 );
+
+window.myModel = firePinsModel; // For accessing the model in the console.
+initialiseModel(firePinsModel);
