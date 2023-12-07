@@ -17,6 +17,7 @@ function RootPresenter(props) {
   const [searchResultsTMDB, setSearchResultsTMDB] = useState([]);
   const [selectedMovieID, setSelectedMovieID] = useState(null);
   const [searchApiSource, setSearchApiSource] = useState(sourceENUM.TMDB);
+  const [newPostCaption, setNewPostCaption] = useState("");
 
   // Handle set search text
   function handleSetSearchText(text) {
@@ -31,6 +32,11 @@ function RootPresenter(props) {
   // Handle select search API source
   function handleSelectSearchApiSource(source) {
     setSearchApiSource(source);
+  }
+
+  // Handle set new post caption
+  function handleSetNewPostCaption(caption) {
+    setNewPostCaption(caption);
   }
 
   // Handle search movie depending on search API source use async/await
@@ -80,6 +86,8 @@ function RootPresenter(props) {
       sourceENUM={sourceENUM}
       searchApiSource={searchApiSource}
       onSelectSearchApiSource={handleSelectSearchApiSource}
+      newPostCaption={newPostCaption}
+      onSetNewPostCaption={handleSetNewPostCaption}
     />
   );
 }

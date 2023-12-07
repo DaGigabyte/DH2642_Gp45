@@ -32,6 +32,8 @@ function RootView(props) {
                 sourceENUM={props.sourceENUM}
                 searchApiSource={props.searchApiSource}
                 onSelectSearchApiSource={props.onSelectSearchApiSource}
+                newPostCaption={props.newPostCaption}
+                onSetNewPostCaption={props.onSetNewPostCaption}
               />
             ) : (
               <></>
