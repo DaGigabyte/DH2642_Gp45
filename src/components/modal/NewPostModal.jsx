@@ -4,7 +4,7 @@ import Modal from "./Modal";
 // Components
 import CreateNewPost from "./CreateNewPost";
 
-function NewPostModal() {
+function NewPostModal(props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -17,7 +17,11 @@ function NewPostModal() {
         Create New Post
       </Modal.Button>
       <Modal.Content title="Create New Post">
-        <CreateNewPost />
+        <CreateNewPost
+          searchTextTMDB={props.searchTextTMDB}
+          setSearchTextTMDB={props.setSearchTextTMDB}
+          searchResultsTMDB={props.searchResultsTMDB}
+        />
       </Modal.Content>
     </Modal>
   );

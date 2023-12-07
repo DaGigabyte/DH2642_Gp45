@@ -22,7 +22,15 @@ function RootView(props) {
           </div>
           <div className="flex items-center space-x-5 justify-end">
             {/* Create new post button */}
-            {props.uid ? <NewPostModal /> : <></>}
+            {props.uid ? (
+              <NewPostModal
+                searchTextTMDB={props.searchTextTMDB}
+                setSearchTextTMDB={props.setSearchTextTMDB}
+                searchResultsTMDB={props.searchResultsTMDB}
+              />
+            ) : (
+              <></>
+            )}
             {/* User avatar and menu */}
             {props.uid ? (
               <UserAvatarAndMenu
