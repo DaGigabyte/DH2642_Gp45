@@ -1,6 +1,6 @@
 import { observable, reaction, action } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
-import { savePostToFirestore } from "../firebase/firebaseModel";
+import { savePostToFirestore, queryNewestPosts } from "../firebase/firebaseModel";
 
 const model = observable({
   count: 1,
@@ -75,6 +75,16 @@ const model = observable({
     console.debug("creating post with data: ", this.createPostEditor.data);
     savePostToFirestore(this.createPostEditor.data, this.user.uid);
   }),
+  homePageData: {
+    data: {
+      topRatedPosts: [],
+      newestPosts: []
+    },
+    fetchNewestPosts: action(async function() {
+      const posts = await queryNewestPosts(this.data.newestPosts.length + 4);
+      this.data.newestPosts = posts;
+    }),
+  },
   searchText: "",
   setSearchText(text) {
     this.searchText = text;
@@ -85,4 +95,5 @@ const model = observable({
   },
   uuid: uuidv4(),
 });
+
 export default model;

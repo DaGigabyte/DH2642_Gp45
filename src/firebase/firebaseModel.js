@@ -18,6 +18,9 @@ import {
     collection,
     query,
     where,
+    orderBy,
+    limit,
+    startAfter,
     onSnapshot
 } from "firebase/firestore";
 import { reaction } from "mobx";
@@ -155,4 +158,19 @@ async function queryPostByUserUid(userUid) {
     });
 }
 
-export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, queryPostByUserUid };
+async function queryNewestPosts(amountOfPosts) {
+    const q = query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), limit(amountOfPosts))
+    return getDocs(q)
+    .then((querySnapshot) => { // querySnapshot is an array of documents
+        const posts = [];
+        querySnapshot.forEach((doc) => {
+            posts.push(doc.data());
+        });
+        return posts; // return posts to caller
+    })
+    .catch((error) => {
+        console.error("Error getting documents: ", error);
+    });
+}
+
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, queryPostByUserUid, queryNewestPosts };
