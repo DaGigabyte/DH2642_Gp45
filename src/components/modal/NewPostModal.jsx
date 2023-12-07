@@ -2,7 +2,7 @@ import { useState } from "react";
 import { IoAddOutline } from "react-icons/io5";
 import Modal from "./Modal";
 // Components
-import CreateNewPost from "./CreateNewPost";
+import CreateNewPostContainer from "../new-post/CreateNewPostContainer";
 
 function NewPostModal(props) {
   const [open, setOpen] = useState(false);
@@ -17,7 +17,7 @@ function NewPostModal(props) {
         Create New Post
       </Modal.Button>
       <Modal.Content title="Create New Post">
-        <CreateNewPost
+        <CreateNewPostContainer
           searchTextTMDB={props.searchTextTMDB}
           setSearchTextTMDB={props.setSearchTextTMDB}
           searchResultsTMDB={props.searchResultsTMDB}
