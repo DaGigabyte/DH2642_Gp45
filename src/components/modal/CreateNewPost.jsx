@@ -34,6 +34,10 @@ function CreateNewPost(props) {
 
   return (
     <div className="flex flex-col">
+      <p className="text-sm text-pins-grey-darker mb-4 -mt-4">
+        Share your favorites with others
+      </p>
+      {/* Search input */}
       <input
         type="text"
         placeholder={handlePlaceholderText()}
