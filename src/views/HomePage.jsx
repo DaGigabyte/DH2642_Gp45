@@ -12,6 +12,8 @@ import { MdChevronLeft, MdChevronRight } from "react-icons/md"
 function HomePage(props) {
 
   function renderTopRatedSection() {
+    if (!props.hotPosts)
+      return null;
     if (props.hotPosts.length < 1)
       return null;
     return (
