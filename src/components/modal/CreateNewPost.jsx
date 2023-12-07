@@ -25,13 +25,14 @@ function CreateNewPost(props) {
         type="text"
         placeholder="Search for a movie"
         value={props.searchTextTMDB}
-        className="border-2 border-gray-300 rounded-lg p-2 m-2 w-full"
+        className="border-2 border-gray-300 rounded-lg p-2 mb-4 w-full"
         onChange={handleSearchInputChange}
       />
       <div>
         <Swiper
-          slidesPerView={3}
-          spaceBetween={30}
+          slidesPerView="auto"
+          spaceBetween={20}
+          grabCursor={true}
           freeMode={true}
           pagination={{
             clickable: true,
@@ -40,16 +41,16 @@ function CreateNewPost(props) {
           className="mySwiper"
         >
           {props.searchResultsTMDB &&
-            props.searchResultsTMDB.map((result) => {
+            props.searchResultsTMDB.map((movie) => {
               return (
-                <SwiperSlide key={result.id}>
+                <SwiperSlide key={movie.id} className="w-32">
                   <img
-                    src={`https://image.tmdb.org/t/p/original/${result.poster_path}`}
-                    alt={result.title}
-                    className="w-32 h-48 rounded-lg object-cover"
+                    src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                    alt={movie.title}
+                    className="w-32 h-full rounded-lg object-cover"
                   />
-                  <p className="text-center text-ellipsis overflow-hidden">
-                    {result.title}
+                  <p className="h-16 text-center text-ellipsis whitespace-nowrap overflow-hidden">
+                    {movie.title}
                   </p>
                 </SwiperSlide>
               );
