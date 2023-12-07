@@ -137,7 +137,7 @@ function saveUserToFirestore(userObj, uuid) {
 }
 
 async function savePostToFirestore(postObj, userUid) {
-    const postObjWithMetadata = {...postObj, createdBy: userUid, createdAt: new Date(), modifiedAt: new Date(), likedBy: [], dislikedBy: [],};
+    const postObjWithMetadata = {...postObj, createdBy: userUid, createdAt: new Date(), modifiedAt: new Date(), likedBy: [], dislikedBy: [], likes: 0};
     const docRef = await addDoc(collection(db, "Posts"), postObjWithMetadata);
     console.debug("savePostToFirestore: Document written with ID: ", docRef.id);
 }
