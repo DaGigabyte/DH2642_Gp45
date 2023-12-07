@@ -11,6 +11,14 @@ import "swiper/css/pagination";
 /**
  * @param {function} props.setSearchTextTMDB set search text for TMDB
  * @param {array} props.searchResultsTMDB search results array for TMDB
+ * @param {string} props.selectedMovieID selected movie ID
+ * @param {function} props.onSelectMovie select movie
+ * @param {object} props.sourceENUM source ENUM
+ * @param {string} props.searchApiSource search API source
+ * @param {function} props.onSelectSearchApiSource select search API source
+ * @param {string} props.newPostCaption new post caption
+ * @param {function} props.onSetNewPostCaption set new post caption
+ * @param {function} props.onCreateNewPost create new post
  */
 
 function CreateNewPost(props) {
@@ -29,6 +37,17 @@ function CreateNewPost(props) {
       return "Search for a pin on Pinterest";
     } else {
       return "Search here";
+    }
+  }
+
+  // Conditional create new post button
+  function handleCreateNewPostButton() {
+    if (props.selectedMovieID === null) {
+      return "Select a movie";
+    } else if (props.newPostCaption === "") {
+      return "Add a caption";
+    } else {
+      return "Create New Post";
     }
   }
 
@@ -193,7 +212,7 @@ function CreateNewPost(props) {
         onClick={props.onCreateNewPost}
         disabled={props.selectedMovieID === null || props.newPostCaption === ""}
       >
-        Create New Post
+        {handleCreateNewPostButton()}
       </button>
     </div>
   );
