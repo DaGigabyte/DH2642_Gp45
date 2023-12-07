@@ -57,6 +57,7 @@ const model = observable({
       title: "",
       content: "",
       posterPath: "",
+      source: "",
     },
     setTitle: action(function(title) {
       console.debug("setting createPostEditor.title to: ", title);
@@ -69,6 +70,10 @@ const model = observable({
     setPosterPath: action(function(posterPath) {
       console.debug("setting createPostEditor.posterPath to: ", posterPath);
       this.data.posterPath = posterPath;
+    }),
+    setSource: action(function (source) {
+      console.debug("setting createPostEditor.source to: ", source);
+      this.data.source = source;
     }),
   },
   createPost: action(function() {
