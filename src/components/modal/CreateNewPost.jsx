@@ -40,7 +40,7 @@ function CreateNewPost(props) {
           modules={[FreeMode, Pagination]}
           className="mySwiper"
         >
-          {props.searchResultsTMDB &&
+          {props.searchResultsTMDB.length > 0 ? (
             props.searchResultsTMDB.map((movie) => {
               return (
                 <SwiperSlide key={movie.id} className="w-32">
@@ -54,7 +54,10 @@ function CreateNewPost(props) {
                   </p>
                 </SwiperSlide>
               );
-            })}
+            })
+          ) : (
+            <p className="text-center">No results found</p>
+          )}
         </Swiper>
       </div>
     </div>
