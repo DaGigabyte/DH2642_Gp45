@@ -59,6 +59,7 @@ function RootPresenter(props) {
       props.model.createPostEditor.setTitle(movieTitle);
       props.model.createPostEditor.setPosterPath(completePosterPath);
       props.model.createPostEditor.setContent(newPostCaption);
+      props.model.createPostEditor.setSource(searchApiSource);
 
       // Create new post
       props.model.createPost();
@@ -97,6 +98,7 @@ function RootPresenter(props) {
 
     return () => {
       clearTimeout(timeoutId);
+      setSelectedMovieID(null);
     };
   }, [searchTextTMDB]);
 
