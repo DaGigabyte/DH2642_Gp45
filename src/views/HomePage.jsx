@@ -30,7 +30,8 @@ function HomePage(props) {
       </div>)
   }
   function renderHotPosts(post) {
-    return(<Link to="/details">
+    return(
+      <Link to={`/details`} key={post.postId}>
        <TopRatedCard 
           key={post.postId} 
           postPicture={post.posterPath} 
@@ -47,7 +48,7 @@ function HomePage(props) {
     slider.scrollLeft = slider.scrollLeft + 200;
   }
   function renderNewPosts(post) {
-    return (<Link to="/details"> 
+    return ( <Link to={`/details`} key={post.postId}> 
       <Post key={post.postId} 
         picture={post.profilePicture} 
         nickName={post.createdBy} 
