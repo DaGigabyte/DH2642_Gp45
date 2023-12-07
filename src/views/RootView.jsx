@@ -29,6 +29,9 @@ function RootView(props) {
                 searchResultsTMDB={props.searchResultsTMDB}
                 selectedMovieID={props.selectedMovieID}
                 onSelectMovie={props.onSelectMovie}
+                sourceENUM={props.sourceENUM}
+                searchApiSource={props.searchApiSource}
+                onSelectSearchApiSource={props.onSelectSearchApiSource}
               />
             ) : (
               <></>

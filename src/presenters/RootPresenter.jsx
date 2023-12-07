@@ -4,11 +4,19 @@ import RootView from "../views/RootView";
 import { signInACB, signOutACB } from "../firebase/firebaseModel";
 import { searchMovie } from "../services/firePinsSource";
 
+// Enum for search API source
+const sourceENUM = {
+  TMDB: "TMDB",
+  Unsplash: "Unsplash",
+  Pinterest: "Pinterest",
+};
+
 function RootPresenter(props) {
   // State for search movie
   const [searchTextTMDB, setSearchTextTMDB] = useState("");
   const [searchResultsTMDB, setSearchResultsTMDB] = useState([]);
   const [selectedMovieID, setSelectedMovieID] = useState(null);
+  const [searchApiSource, setSearchApiSource] = useState(sourceENUM.TMDB);
 
   // Handle set search text
   function handleSetSearchText(text) {
@@ -20,10 +28,23 @@ function RootPresenter(props) {
     setSelectedMovieID(movieID);
   }
 
-  // Handle search movie
+  // Handle select search API source
+  function handleSelectSearchApiSource(source) {
+    setSearchApiSource(source);
+  }
+
+  // Handle search movie depending on search API source use async/await
   async function handleSearchMovie() {
-    const results = await searchMovie(searchTextTMDB);
-    setSearchResultsTMDB(results);
+    if (searchApiSource === sourceENUM.TMDB) {
+      const results = await searchMovie(searchTextTMDB);
+      setSearchResultsTMDB(results);
+    } else if (searchApiSource === sourceENUM.Unsplash) {
+      console.log("Unsplash");
+    } else if (searchApiSource === sourceENUM.Pinterest) {
+      console.log("Pinterest");
+    } else {
+      console.log("No search API source selected");
+    }
   }
 
   // Search for movies in TMDB on searchTextTMDB change
@@ -56,6 +77,9 @@ function RootPresenter(props) {
       searchResultsTMDB={searchResultsTMDB}
       selectedMovieID={selectedMovieID}
       onSelectMovie={handleSelectMovie}
+      sourceENUM={sourceENUM}
+      searchApiSource={searchApiSource}
+      onSelectSearchApiSource={handleSelectSearchApiSource}
     />
   );
 }
