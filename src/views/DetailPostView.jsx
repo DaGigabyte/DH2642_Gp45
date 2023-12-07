@@ -1,5 +1,4 @@
 import ProfileBox from "./profilePicAndNick"
-import { MdClose } from "react-icons/md";
 import ReturnButton from "../components/navigation/ReturnButton.jsx"
 /**
  * Renders the Detailed post view
@@ -10,7 +9,7 @@ function DetailedPostView(props) {
 
     //TODO fix onclick for returning
     return (  
-    <div className="flex flex-col gap-2  w-full xl:w-3/4">
+    <div className="flex flex-col gap-2  w-full max-w-6xl">
         <div className="relative bg-white rounded-2xl">
             <ReturnButton size="30"/>
             <div className="flex flex-col xl:block p-20 ">
