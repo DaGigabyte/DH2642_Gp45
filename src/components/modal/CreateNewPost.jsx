@@ -154,7 +154,7 @@ function CreateNewPost(props) {
                     }`}
                   >
                     <img
-                      src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                      src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
                       alt={movie.title}
                       className="w-32 h-full rounded-lg object-cover transition duration-150 ease-in-out transform hover:scale-110"
                     />
@@ -187,6 +187,13 @@ function CreateNewPost(props) {
           onChange={(event) => props.onSetNewPostCaption(event.target.value)}
         />
       </div>
+      {/* Create new post button */}
+      <button
+        className="bg-pins-primary text-white font-bold text-lg rounded-lg px-5 py-2 mt-4 hover:bg-pins-primary/80 transition duration-150 ease-in-out"
+        onClick={props.onCreateNewPost}
+      >
+        Create New Post
+      </button>
     </div>
   );
 }

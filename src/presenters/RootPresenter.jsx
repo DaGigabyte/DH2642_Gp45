@@ -39,6 +39,41 @@ function RootPresenter(props) {
     setNewPostCaption(caption);
   }
 
+  // Handle create new post
+  function handleCreateNewPost() {
+    if (selectedMovieID !== null) {
+      // Get movie title from search results for selected movie
+      const movieTitle = searchResultsTMDB.find(
+        (movie) => movie.id === selectedMovieID
+      ).title;
+
+      // Get movie poster path from search results for selected movie
+      const moviePosterPath = searchResultsTMDB.find(
+        (movie) => movie.id === selectedMovieID
+      ).poster_path;
+
+      // Complete poster path
+      const completePosterPath = `https://image.tmdb.org/t/p/original${moviePosterPath}`;
+
+      // Set new post data to model
+      props.model.createPostEditor.setTitle(movieTitle);
+      props.model.createPostEditor.setPosterPath(completePosterPath);
+      props.model.createPostEditor.setContent(newPostCaption);
+
+      // Create new post
+      props.model.createPost();
+
+      // Reset new post caption
+      setNewPostCaption("");
+      // Reset selected movie ID
+      setSelectedMovieID(null);
+      // Reset search text
+      setSearchTextTMDB("");
+      // Reset search results
+      setSearchResultsTMDB([]);
+    }
+  }
+
   // Handle search movie depending on search API source use async/await
   async function handleSearchMovie() {
     if (searchApiSource === sourceENUM.TMDB) {
@@ -88,6 +123,7 @@ function RootPresenter(props) {
       onSelectSearchApiSource={handleSelectSearchApiSource}
       newPostCaption={newPostCaption}
       onSetNewPostCaption={handleSetNewPostCaption}
+      onCreateNewPost={handleCreateNewPost}
     />
   );
 }
