@@ -21,6 +21,8 @@ function NewPostModal(props) {
           searchTextTMDB={props.searchTextTMDB}
           setSearchTextTMDB={props.setSearchTextTMDB}
           searchResultsTMDB={props.searchResultsTMDB}
+          selectedMovieID={props.selectedMovieID}
+          onSelectMovie={props.onSelectMovie}
         />
       </Modal.Content>
     </Modal>

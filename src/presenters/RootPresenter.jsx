@@ -8,10 +8,16 @@ function RootPresenter(props) {
   // State for search movie
   const [searchTextTMDB, setSearchTextTMDB] = useState("");
   const [searchResultsTMDB, setSearchResultsTMDB] = useState([]);
+  const [selectedMovieID, setSelectedMovieID] = useState(null);
 
   // Handle set search text
   function handleSetSearchText(text) {
     setSearchTextTMDB(text);
+  }
+
+  // Handle select movie
+  function handleSelectMovie(movieID) {
+    setSelectedMovieID(movieID);
   }
 
   // Handle search movie
@@ -48,6 +54,8 @@ function RootPresenter(props) {
       searchTextTMDB={searchTextTMDB}
       setSearchTextTMDB={handleSetSearchText}
       searchResultsTMDB={searchResultsTMDB}
+      selectedMovieID={selectedMovieID}
+      onSelectMovie={handleSelectMovie}
     />
   );
 }

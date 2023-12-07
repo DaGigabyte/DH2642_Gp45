@@ -32,7 +32,6 @@ function CreateNewPost(props) {
         <Swiper
           slidesPerView="auto"
           spaceBetween={20}
-          grabCursor={true}
           freeMode={true}
           pagination={{
             clickable: true,
@@ -43,13 +42,32 @@ function CreateNewPost(props) {
           {props.searchResultsTMDB.length > 0 ? (
             props.searchResultsTMDB.map((movie) => {
               return (
-                <SwiperSlide key={movie.id} className="w-32">
-                  <img
-                    src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
-                    alt={movie.title}
-                    className="w-32 h-full rounded-lg object-cover"
-                  />
-                  <p className="h-16 text-center text-ellipsis whitespace-nowrap overflow-hidden">
+                <SwiperSlide
+                  onClick={() => props.onSelectMovie(movie.id)}
+                  key={movie.id}
+                  className="w-32"
+                >
+                  <div
+                    className={`relative w-32 rounded-lg overflow-hidden ${
+                      props.selectedMovieID === movie.id
+                        ? "shadow-black/50 shadow-lg opacity-80"
+                        : ""
+                    }`}
+                  >
+                    <img
+                      src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                      alt={movie.title}
+                      className="w-32 h-full rounded-lg object-cover transition duration-150 ease-in-out transform hover:scale-110"
+                    />
+                    {props.selectedMovieID === movie.id ? (
+                      <div className="absolute inset-0 flex bg-pins-primary bg-opacity-50 rounded-lg items-center justify-center text-white">
+                        SELECTED
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                  <p className="h-16 text-center text-ellipsis whitespace-nowrap overflow-hidden mt-2">
                     {movie.title}
                   </p>
                 </SwiperSlide>
