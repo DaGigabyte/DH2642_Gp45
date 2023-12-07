@@ -1,6 +1,6 @@
 import { observable, reaction, action } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
-import { savePostToFirestore } from "../firebase/firebaseModel";
+import { savePostToFirestore, queryNewestPosts } from "../firebase/firebaseModel";
 
 const model = observable({
   count: 1,
@@ -57,6 +57,7 @@ const model = observable({
       title: "",
       content: "",
       posterPath: "",
+      source: "",
     },
     setTitle: action(function(title) {
       console.debug("setting createPostEditor.title to: ", title);
@@ -70,11 +71,25 @@ const model = observable({
       console.debug("setting createPostEditor.posterPath to: ", posterPath);
       this.data.posterPath = posterPath;
     }),
+    setSource: action(function (source) {
+      console.debug("setting createPostEditor.source to: ", source);
+      this.data.source = source;
+    }),
   },
   createPost: action(function() {
     console.debug("creating post with data: ", this.createPostEditor.data);
     savePostToFirestore(this.createPostEditor.data, this.user.uid);
   }),
+  homePageData: {
+    data: {
+      topRatedPosts: [],
+      newestPosts: []
+    },
+    fetchNewestPosts: action(async function() {
+      const posts = await queryNewestPosts(this.data.newestPosts.length + 4);
+      this.data.newestPosts = posts;
+    }),
+  },
   searchText: "",
   setSearchText(text) {
     this.searchText = text;
@@ -85,4 +100,5 @@ const model = observable({
   },
   uuid: uuidv4(),
 });
+
 export default model;
