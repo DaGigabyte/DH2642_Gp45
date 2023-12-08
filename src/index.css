@@ -35,3 +35,18 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
+
+@layer utilities{
+  .purpleButton {
+    color: #e9e2ec; /* Equivalent to text-violet-50 in Tailwind */
+    background-color: #7f5af0; /* Equivalent to bg-violet-500 in Tailwind */
+    padding: 0.5rem 1.25rem; /* Equivalent to px-5 py-2 in Tailwind */
+    border-radius: 1rem; /* Equivalent to rounded-2xl in Tailwind */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); 
+    transition: transform 0.3s ease; 
+  }
+  .purpleButton:hover{
+    background-color: #7c3aed;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+}
