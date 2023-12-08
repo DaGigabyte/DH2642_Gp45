@@ -59,7 +59,7 @@ function HomePage(props) {
     </Link>)
   }
   return (
-    <div className="flex flex-col w-full xl:w-3/4">
+    <div className="flex flex-col w-full max-w-6xl">
       {/*Top rated pins*/}
       <span className="text-3xl font-semibold block m-5">Top Rated Pins</span>
       {renderTopRatedSection()}
