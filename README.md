@@ -43,6 +43,15 @@ The image below represents how the React components are connected to each other.
 
 ---
 
+### What we still plan to do
+
+- Like & Dislike
+- Comments
+- Custom biography & profile pictures
+- Unsplash & Pinterest API
+
+---
+
 ## Getting Started
 
 To get started with "FirePins", follow these steps:
