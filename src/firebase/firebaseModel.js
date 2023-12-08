@@ -142,6 +142,29 @@ async function savePostToFirestore(postObj, userUid) {
     console.debug("savePostToFirestore: Document written with ID: ", docRef.id);
 }
 
+async function queryUsername(username) {
+    const q = query(collection(db, "Users"), where("displayName", "==", username));
+    return getDocs(q)
+    .then((querySnapshot) => { // querySnapshot is an array of documents
+        const users = [];
+        querySnapshot.forEach((doc) => {
+            const userDocId = doc.id;
+            const userData = doc.data();
+            users.push({
+                uid: userDocId,
+                displayName: userData.displayName,
+                profilePicture: userData.profilePicture
+            });
+        });
+        console.debug("queryUsername: Current users: ", users);
+        return users; // return posts to caller
+    })
+    .catch((error) => {
+        console.error("Error getting documents: ", error);
+    });
+}
+
+
 async function queryPostByUserUid(userUid) {
     const q = query(collection(db, "Posts"), where("createdBy", "==", userUid));
     return getDocs(q)
@@ -173,4 +196,4 @@ async function queryNewestPosts(amountOfPosts) {
     });
 }
 
-export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, queryPostByUserUid, queryNewestPosts };
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, queryPostByUserUid, queryNewestPosts, queryUsername };

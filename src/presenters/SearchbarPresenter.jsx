@@ -1,21 +1,30 @@
 import { useState } from "react";
 import Searchbar from "../views/Searchbar";
 import { observer } from "mobx-react-lite";
+import { queryUsername } from "../firebase/firebaseModel";
 
 /*
     Searchbar presenter
 
-    Uses component state for the text in the searchbar
-
-    Recieves the following props:
-    searchAccounts - method used to find accounts related to the search query provided by the user
 */
 function SearchbarPresenter(props) {
+
     const placeholderText = "Find your favorites";
+
     const [searchText, setSearchText] = useState();
+    const [searchResults, setSearchResults] = useState();
+    const [showSuggestions, setShowSuggestions] = useState();
 
     return (
-        <Searchbar searchText={searchText ? searchText : placeholderText} onUserTyping={onUserTyping} onUserSearching={onUserSearching} />
+        <Searchbar 
+        searchText={searchText ? searchText : placeholderText} 
+        searchResults={searchResults} 
+        onUserTyping={onUserTyping} 
+        onUserSearching={onUserSearching} 
+        onSearchBlur={onSearchBlur} 
+        onSearchFocus={onSearchFocus} 
+        showSuggestions={showSuggestions}
+        />
     ) 
 
     function onUserTyping(searchText) {
@@ -24,9 +33,25 @@ function SearchbarPresenter(props) {
     }
 
     function onUserSearching() {
-        console.log("searching.. " + searchText);
-        // props.model.searchAccounts(searchText);
-        // window.location.hash = ...;
+        if (searchText) {
+            queryUsername(searchText)
+            .then((data) => {
+                setSearchResults(data);
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+        }
+    }
+
+    function onSearchBlur() {
+        setTimeout(() => {
+            setShowSuggestions(false);
+        }, 100)
+    }
+
+    function onSearchFocus() {
+        setShowSuggestions(true);
     }
 }
 

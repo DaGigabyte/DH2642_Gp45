@@ -90,14 +90,6 @@ const model = observable({
       this.data.newestPosts = posts;
     }),
   },
-  searchText: "",
-  setSearchText(text) {
-    this.searchText = text;
-  },
-  //TODO temporary solution to display custom evt
-  confirmUserSearch() {
-    alert("User wants to search for:  " + this.searchText);
-  },
   uuid: uuidv4(),
 });
 
