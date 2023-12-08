@@ -20,7 +20,7 @@ function UserAvatarAndMenu(props) {
       <DropdownMenu.Trigger asChild>
         <button
           onClick={() => setOpen(() => !open)}
-          className=" rounded-full w-11 h-11 select-none outline-none hover:cursor-pointer"
+          className="rounded-full w-11 h-11 select-none outline-none hover:cursor-pointer"
         >
           <img
             className="rounded-full self-center h-11 w-11 shadow hover:scale-110 transition duration-100"
