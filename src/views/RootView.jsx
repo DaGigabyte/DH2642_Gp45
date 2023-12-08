@@ -10,12 +10,13 @@ import SearchbarPresenter from "../presenters/SearchbarPresenter";
 function RootView(props) {
   return (
     <div className="flex flex-col min-h-screen bg-pins-light md:flex-row">
+      {/* Sidebar */}
       <Sidebar />
       <div className="flex-1">
         {/* Sticky top bar */}
-        <div className="sticky top-0 z-10 flex flex-col md:flex-row items-center justify-between p-4">
+        <div className="sticky top-[66px] z-10 flex flex-col md:flex-row md:top-0 items-center justify-between p-4 bg-pins-light bg-opacity-95">
           <div className="w-full sm:w-1/2 self-center">
-            <SearchbarPresenter/>
+            <SearchbarPresenter />
           </div>
           <div className="flex items-center space-x-5 justify-end">
             {/* Create new post button */}
