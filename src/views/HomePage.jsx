@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import TopRatedCard from "../components/homepage/TopRatedCard"
 import Post from "./summarizedPost"
 import { MdChevronLeft, MdChevronRight } from "react-icons/md"
-import defaultPic from "../assets/default-avatar.jpg"
+import defaultProfile from "../assets/default-avatar.jpg"
 /**
  * Renders the homepage view
  * @param {Object} props.model - The firepinsModel
