@@ -143,7 +143,11 @@ async function savePostToFirestore(postObj, userUid) {
 }
 
 async function queryUsername(username) {
-    const q = query(collection(db, "Users"), where("displayName", "==", username));
+    const q = query(
+        collection(db, "Users"), 
+        where("displayNameInsensitive", ">=", username.toLowerCase()), 
+        where("displayNameInsensitive", "<=", username + "\uf8ff")
+    );
     return getDocs(q)
     .then((querySnapshot) => { // querySnapshot is an array of documents
         const users = [];
