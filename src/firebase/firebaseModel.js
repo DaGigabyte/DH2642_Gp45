@@ -142,6 +142,17 @@ async function savePostToFirestore(postObj, userUid) {
     console.debug("savePostToFirestore: Document written with ID: ", docRef.id);
 }
 
+async function saveCommentToFireStore(uid, postId, comment) {
+    const path = "Posts/" + postId + "/Comments";
+    const commentObj = {
+        content: comment,
+        createdAt: new Date(),
+        createdBy: uid
+    };
+    const docRef = await addDoc(collection(db, path), commentObj);
+    console.debug("saveCommentToFirestore: Document written with ID: ", docRef.id);
+}
+
 async function queryUsername(username) {
     const q = query(
         collection(db, "Users"), 
@@ -200,4 +211,4 @@ async function queryNewestPosts(amountOfPosts) {
     return posts; // return posts to caller
 }
 
-export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, queryPostByUserUid, queryNewestPosts, queryUsername };
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, saveCommentToFireStore, queryPostByUserUid, queryNewestPosts, queryUsername };
