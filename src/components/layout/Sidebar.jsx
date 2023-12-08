@@ -10,7 +10,7 @@ function Sidebar() {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
-    <div className="bg-pins-secondary text-pins-light w-full md:w-80">
+    <div className="sticky top-0 z-10 bg-pins-secondary text-pins-light w-full md:w-80 md:h-screen">
       {/* Logo container */}
       <div className="flex justify-between border-b-2 border-pins-grey-darker md:justify-center">
         <Link to="/" className="p-4">

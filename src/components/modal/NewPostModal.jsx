@@ -9,9 +9,9 @@ function NewPostModal(props) {
 
   return (
     <Modal open={open} onOpenChange={setOpen}>
-      <Modal.Button className="flex items-center justify-center text-lg text-white font-bold bg-pins-primary px-5 py-2 rounded-2xl shadow hover:scale-105 transition duration-75">
+      <Modal.Button className="flex items-center justify-center text-lg md:text-sm lg:text-lg text-white font-bold bg-pins-primary px-5 py-2 md:px-2 lg:px-5 rounded-2xl shadow hover:scale-105 transition duration-75">
         <IoAddOutline
-          className="text-white mr-3 flex-shrink-0 h-6 w-6"
+          className="text-white mr-3 md:mr-1 lg:mr-3 flex-shrink-0 h-6 w-6 md:h-4 lg:h-6 md:w-4 lg:w-6"
           aria-hidden="true"
         />{" "}
         Create New Post
