@@ -39,7 +39,7 @@ export default function SummarizedPost(props) {
         <span className="text-2xl flex-shrink-0 font-semibold">
           {props.postTitle}
         </span>
-        <span className="text-xl line-clamp-3">
+        <span className="text-lg line-clamp-3 font-normal">
           {props.postBody}
         </span>
 

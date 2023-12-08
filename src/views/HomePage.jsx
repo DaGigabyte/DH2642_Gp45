@@ -60,7 +60,6 @@ function HomePage(props) {
         selectPost ={()=>{props.selectPost(post.id)}}/>
     </Link>)
   }
-  console.log(props.loading)
   return (
     <div className="flex flex-col w-full max-w-6xl">
       {/*Top rated pins*/}
