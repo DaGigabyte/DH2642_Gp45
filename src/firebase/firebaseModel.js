@@ -184,18 +184,20 @@ async function queryPostByUserUid(userUid) {
 }
 
 async function queryNewestPosts(amountOfPosts) {
-    const q = query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), limit(amountOfPosts))
-    return getDocs(q)
-    .then((querySnapshot) => { // querySnapshot is an array of documents
-        const posts = [];
-        querySnapshot.forEach((doc) => {
-            posts.push(doc.data());
-        });
-        return posts; // return posts to caller
-    })
-    .catch((error) => {
-        console.error("Error getting documents: ", error);
-    });
+    const q = query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), limit(amountOfPosts));
+    const querySnapshot = await getDocs(q);
+    const posts = [];
+    for (const doc of querySnapshot.docs) {
+        const postData = doc.data();
+        try {
+            const user = await readUserFromFirestore(postData.createdBy);
+            posts.push({ id: doc.id, user: user, ...postData });
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    }
+    console.debug("queryNewestPosts: Current posts: ", posts);
+    return posts; // return posts to caller
 }
 
 export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, queryPostByUserUid, queryNewestPosts, queryUsername };
