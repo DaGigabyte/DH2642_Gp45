@@ -13,6 +13,7 @@ Currently, the project features TMDB API integration. Future plans, time permitt
 ### Dom Tree
 
 The image below represents how the React components are connected to each other.
+_OBS! Due to time pressure for the Mid-project review submission, there has been a mistake in importing 'SearchbarPresenter' inside 'RootView', and we acknowledge that it violates the MVP architecture. It will be fixed._
 
 ![React Component Dom Tree](dom-tree.png)
 
@@ -46,6 +47,7 @@ The image below represents how the React components are connected to each other.
 ### What we still plan to do
 
 - Like & Dislike
+- UI improvements
 - Comments
 - Custom biography & profile pictures
 - Unsplash & Pinterest API
