@@ -188,7 +188,7 @@ async function queryNewestPosts(amountOfPosts) {
     const q = query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), limit(amountOfPosts));
     const querySnapshot = await getDocs(q);
     const posts = [];
-    querySnapshot.forEach(async (doc) => {
+    for (const doc of querySnapshot.docs) {
         const postData = doc.data();
         try {
             const user = await readUserFromFirestore(postData.createdBy);
@@ -196,7 +196,7 @@ async function queryNewestPosts(amountOfPosts) {
         } catch (error) {
             console.error("Error fetching user data:", error);
         }
-    });
+    }
     console.debug("queryNewestPosts: Current posts: ", posts);
     return posts; // return posts to caller
 }
