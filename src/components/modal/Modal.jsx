@@ -13,7 +13,7 @@ function ModalContent({ title, children }) {
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="bg-black/70 data-[state=open]:animate-overlayShow fixed inset-0 backdrop-blur-sm z-[1010]" />
-      <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[30vw] translate-x-[-50%] translate-y-[-50%] bg-pins-light border border-black rounded-md shadow-lg shadow-black/80 p-8 overflow-hidden focus:outline-none z-[1020]">
+      <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] md:w-[80vw] max-w-3xl translate-x-[-50%] translate-y-[-50%] bg-white border border-black rounded-md shadow-lg shadow-black/80 p-8 overflow-hidden focus:outline-none overflow-y-auto z-[1020]">
         <Dialog.Title className="text-2xl font-bold mb-4">{title}</Dialog.Title>
         {children}
         <Dialog.Close asChild>
