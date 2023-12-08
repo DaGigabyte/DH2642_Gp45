@@ -19,7 +19,9 @@ function RootView(props) {
       <div className="flex-1">
         {/* Sticky top bar */}
         <div className="sticky top-[66px] z-10 flex flex-row md:top-0  justify-between p-4 bg-pins-light bg-opacity-95">
-          <div className="flex md:w-1/2">
+          <div
+            className={`${showSearch ? "flex w-full space-x-2" : ""} md:w-1/2`}
+          >
             {/* Mobile search button */}
             <button
               onClick={() => setShowSearch(() => !showSearch)}
@@ -30,8 +32,8 @@ function RootView(props) {
             {/* Search bar */}
             <div
               className={`${
-                showSearch ? "" : "hidden"
-              } md:flex w-full self-center`}
+                showSearch ? "w-full self-center" : "hidden"
+              } md:block md:w-full md:self-center`}
             >
               <SearchbarPresenter />
             </div>
