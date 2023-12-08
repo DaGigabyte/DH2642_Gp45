@@ -46,7 +46,7 @@ const model = observable({
     setDisplayName: action(function(name) {
       console.debug("setting userSettingsData.displayName to: ", name);
       this.data.displayName = name;
-      this.data.displayNameInsensitive = name.toLowerCase();
+      this.data.displayNameInsensitive = name?.toLowerCase();
     }),
   },
   storeUpdates: action(function() {
