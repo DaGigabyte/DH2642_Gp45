@@ -7,45 +7,7 @@ const model = observable({
   setCount(value) {
     this.count = value;
   },
-  /* OBS JUST FOR TESTING */
-  currentPostId: null,
-  setCurrentPost(id){
-    this.currentPostId = id;
-  },
-    /*Source only needed if we use multiple APIs and want the badge*/
-    hotPosts : [
-      { postId: 1,profilePicture: "public/default-avatar.jpg",createdBy: "some name 1", posterPath: 'src/assets/oppenhemier.jpg',title:'Title 1', source: 'TMdB', content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-      { postId: 2,profilePicture: "public/default-avatar.jpg",createdBy: "some name 2", posterPath: 'src/assets/oppenhemier.jpg',title:'Title 2', source: 'TMDB', content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-      { postId: 3,profilePicture: "public/default-avatar.jpg",createdBy: "some name 3", posterPath: 'src/assets/oppenhemier.jpg',title:'Title 3', source: 'TMDB', content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-      { postId: 4,profilePicture: "public/default-avatar.jpg",createdBy: "some name 4", posterPath: 'src/assets/oppenhemier.jpg',title:'Title 4', source: 'TMDB', content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-      { postId: 5,profilePicture: "public/default-avatar.jpg",createdBy: "some name 5", posterPath: 'src/assets/oppenhemier.jpg',title:'Title 5', source: 'TMDB', content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-      { postId: 6,profilePicture: "public/default-avatar.jpg",createdBy: "some name 6", posterPath: 'src/assets/oppenhemier.jpg',title:'Title 6', source: 'TMDB', content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-      { postId: 7,profilePicture: "public/default-avatar.jpg",createdBy: "some name 7", posterPath: 'src/assets/oppenhemier.jpg',title:'Title 7', source: 'TMDB', content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-      { postId: 8,profilePicture: "public/default-avatar.jpg",createdBy: "some name 8", posterPath: 'src/assets/oppenhemier.jpg',title:'Title 8', source: 'TMDB', content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-    ],
-    /*for */
-   newPosts : [
-      {postId:9 , profilePicture:'public/default-avatar.jpg', createdBy: "some name 9 ", posterPath:'src/assets/avatar_movie.jpg', title:'Title 9 ', content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-      {postId:10, profilePicture:'public/default-avatar.jpg', createdBy: "some name 10", posterPath:'src/assets/avatar_movie.jpg', title:'Title 10', content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-      {postId:11, profilePicture:'public/default-avatar.jpg', createdBy: "some name 11", posterPath:'src/assets/avatar_movie.jpg', title:'Title 11', content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-      {postId:12, profilePicture:'public/default-avatar.jpg', createdBy: "some name 12", posterPath:'src/assets/avatar_movie.jpg', title:'Title 12', content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt alias,harum debitis officiis odit id impedit nostrum, sed itaque non pudiandae odio, ipsum mollitia laudantium cum. At earum natus quis?'},
-    ],
-    getCurrentPost(){
-      let post = null;
-      this.hotPosts.forEach(p => {
-        if (p.postId === this.currentPostId) {
-          post = p;
-        }
-      });
-      this.newPosts.forEach(p => {
-        if (p.postId === this.currentPostId) {
-          post = p;
-        }
-      });
-      return post;
-    },
-  /* ENDS here */
-
+  
   /* Left here for reference (refer to Firebase usage.md)*/
   user: {
     uid: null,

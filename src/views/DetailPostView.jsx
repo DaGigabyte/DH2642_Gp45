@@ -6,7 +6,8 @@ import ReturnButton from "../components/navigation/ReturnButton.jsx"
  * @returns {React.Element} A render of the post
  */
 function DetailedPostView(props) {
-
+    if(!props)
+        return null;
     return (  
     <div className="flex flex-col gap-2  w-full max-w-6xl">
         <div className="relative bg-white rounded-2xl">

@@ -6,7 +6,7 @@ function DetailsPresenter(props){
     
   return (
     <div className="flex flex-col">
-      <DetailPostView post={props.model.getCurrentPost()} /> 
+      <DetailPostView post={{}} /> {/*post={props.model.getCurrentPost()*/}
     </div>
   );
 }
