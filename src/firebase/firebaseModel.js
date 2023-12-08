@@ -171,7 +171,26 @@ async function queryUsername(username) {
                 profilePicture: userData.profilePicture
             });
         });
-        return users; // return posts to caller
+        return users; // return users to caller
+    })
+    .catch((error) => {
+        console.error("Error getting documents: ", error);
+    });
+}
+
+async function queryCommentsByPostId(postId) {
+    const path = "Posts/" + postId + "/Comments";
+    const q = query(
+        collection(db, path), 
+    );
+    return getDocs(q)
+    .then((querySnapshot) => { // querySnapshot is an array of documents
+        const comments = [];
+        querySnapshot.forEach((doc) => {
+            comments.push(doc.data());
+        });
+        console.debug("queryCommentsByPostId: Current comments: ", comments);
+        return comments; // return comments to caller
     })
     .catch((error) => {
         console.error("Error getting documents: ", error);
@@ -211,4 +230,4 @@ async function queryNewestPosts(amountOfPosts) {
     return posts; // return posts to caller
 }
 
-export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, saveCommentToFireStore, queryPostByUserUid, queryNewestPosts, queryUsername };
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, saveCommentToFireStore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryUsername };
