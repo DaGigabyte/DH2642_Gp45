@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import TopRatedCard from "../components/homepage/TopRatedCard"
 import Post from "./summarizedPost"
 import { MdChevronLeft, MdChevronRight } from "react-icons/md"
+import defaultPic from "../assets/default-avatar.jpg"
 /**
  * Renders the homepage view
  * @param {Object} props.model - The firepinsModel
@@ -11,7 +12,6 @@ import { MdChevronLeft, MdChevronRight } from "react-icons/md"
  * @returns {React.Element} A render of the homepage
  */
 function HomePage(props) {
-
   function renderTopRatedSection() {
     if (!props.hotPosts)
       return null;
@@ -33,12 +33,12 @@ function HomePage(props) {
   }
   function renderHotPosts(post) {
     return(
-      <Link to={`/details`} key={post.postId}>
+      <Link to={`/details`} key={post.id}>
        <TopRatedCard 
-          key={post.postId} 
+          key={post.id} 
           postPicture={post.posterPath} 
           source={post.source} 
-          selectPost ={()=>{props.selectPost(post.postId)}}/>
+          selectPost ={()=>{props.selectPost(post.id)}}/>
     </Link>)
   }
   function slideLeft() {
@@ -50,25 +50,30 @@ function HomePage(props) {
     slider.scrollLeft = slider.scrollLeft + 200;
   }
   function renderNewPosts(post) {
-    return ( <Link to={`/details`} key={post.postId}> 
-      <Post key={post.postId} 
-        picture={post.profilePicture} 
-        nickName={post.createdBy} 
+    return ( <Link to={`/details`} key={post.id}> 
+      <Post key={post.id} 
+        picture={post.user.profilePicture?post.user.profilePicture:defaultPic} 
+        nickName={post.user.displayName} 
         postPicture={post.posterPath} 
         postTitle={post.title} 
         postBody={post.content} 
-        selectPost ={()=>{props.selectPost(post.postId)}}/>
+        selectPost ={()=>{props.selectPost(post.id)}}/>
     </Link>)
   }
+  console.log(props.loading)
   return (
     <div className="flex flex-col w-full max-w-6xl">
       {/*Top rated pins*/}
-      <span className="text-3xl font-semibold block m-5">Top Rated Pins</span>
+      <span className="text-3xl font-semibold block p-5">Top Rated Pins</span>
       {renderTopRatedSection()}
+
       {/*NEW POSTS*/}
       <span className="text-3xl font-semibold  p-5">New Posts</span>
       <div className="flex flex-col w-full p-5">
-        {props.newPosts ? props.newPosts.map(renderNewPosts) : null}
+        
+      {props.loading? 
+        <span>loading...</span> : (props.newPosts.map(renderNewPosts))}
+
       </div>
       {/*Load more button*/}
       <div className="flex justify-center">
