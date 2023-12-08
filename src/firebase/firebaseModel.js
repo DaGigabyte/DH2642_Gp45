@@ -160,7 +160,6 @@ async function queryUsername(username) {
                 profilePicture: userData.profilePicture
             });
         });
-        console.debug("queryUsername: Current users: ", users);
         return users; // return posts to caller
     })
     .catch((error) => {
