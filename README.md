@@ -1,27 +1,40 @@
-### FirePins - Share Your Favorites
+# FirePins - Share Your Favorites
 
-Deployed App:
-https://dh2642-gp45.web.app/
+### Deployed App
 
-## Dom Tree
+[FirePins Web App](https://dh2642-gp45.web.app/)
 
-The image below is the React components connected to each other.
-![Alt text](dom-tree.png)
+---
 
-## The models are:
+### Dom Tree
 
-model
-|_ firePinsModel
-|_ initialiseModel
+The image below represents how the React components are connected to each other.
 
-firebase
-|_ firebaseConfig
-|_ firebaseModel
+![React Component Dom Tree](dom-tree.png)
 
-## Third Party Services
+---
 
-services
-|_ apiConfig
-|_ firePinsSource
-|_ resolvePromise
-|_ teacherFetch
+### The Models
+
+#### `model` Directory
+
+- `firePinsModel`
+- `initialiseModel`
+
+#### `firebase` Directory
+
+- `firebaseConfig`
+- `firebaseModel`
+
+---
+
+### Third Party Services
+
+#### `services` Directory
+
+- `apiConfig`
+- `firePinsSource`
+- `resolvePromise`
+- `teacherFetch`
+
+---
