@@ -1,8 +1,27 @@
-# React + Vite
+### FirePins - Share Your Favorites
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Deployed App:
+https://dh2642-gp45.web.app/
 
-Currently, two official plugins are available:
+## Dom Tree
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The image below is the React components connected to each other.
+![Alt text](dom-tree.png)
+
+## The models are:
+
+model
+|_ firePinsModel
+|_ initialiseModel
+
+firebase
+|_ firebaseConfig
+|_ firebaseModel
+
+## Third Party Services
+
+services
+|_ apiConfig
+|_ firePinsSource
+|_ resolvePromise
+|_ teacherFetch
