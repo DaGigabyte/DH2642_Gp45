@@ -5,6 +5,7 @@ import NewPostModal from "../components/modal/NewPostModal";
 import Search from "./Searchbar";
 import UserAvatarAndMenu from "../components/topbar/UserAvatarAndMenu";
 import LogInButton from "../components/topbar/LogInButton";
+import SearchbarPresenter from "../presenters/SearchbarPresenter";
 
 function RootView(props) {
   return (
@@ -14,11 +15,7 @@ function RootView(props) {
         {/* Sticky top bar */}
         <div className="sticky top-0 z-10 flex flex-col md:flex-row items-center justify-between p-4">
           <div className="w-full sm:w-1/2 self-center">
-            <Search
-              searchText={props.searchText || ""}
-              onUserTyping={props.setSearchText}
-              onUserSearching={props.confirmUserSearch}
-            />
+            <SearchbarPresenter/>
           </div>
           <div className="flex items-center space-x-5 justify-end">
             {/* Create new post button */}

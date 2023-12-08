@@ -14,6 +14,7 @@ function SettingsPresenter(props) {
   /*ACB to set the nick-name*/
   function updateNickACB(result) {
     props.model.userSettingsData.setDisplayName(result);
+    props.model.userSettingsData.setDisplayNameInsensitive(result);
   }
   /*ACB to store the changes*/
   function storeUpdatesACB() {
