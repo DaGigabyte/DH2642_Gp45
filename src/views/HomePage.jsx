@@ -1,6 +1,7 @@
 import TopRatedCard from "../components/homepage/TopRatedCard"
 import Post from "./summarizedPost"
 import { MdChevronLeft, MdChevronRight } from "react-icons/md"
+import defaultProfile from "../assets/default-avatar.jpg"
 /**
  * Renders the homepage view
  * @param {Object} props.model - The firepinsModel
@@ -42,7 +43,7 @@ function HomePage(props) {
     slider.scrollLeft = slider.scrollLeft + 200;
   }
   function renderNewPosts(post) {
-    return <Post key={post.postId} picture={post.profilePicture} nickName={post.createdBy} postPicture={post.posterPath} postTitle={post.title} postBody={post.content} />
+    return <Post key={post.postId} picture={post.profilePicture?post.profilePicture:defaultProfile} nickName={post.createdBy} postPicture={post.posterPath} postTitle={post.title} postBody={post.content} />
   }
   return (
     <div className="flex flex-col w-full max-w-6xl">
