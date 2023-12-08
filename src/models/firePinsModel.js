@@ -13,6 +13,7 @@ const model = observable({
     data: {
       fullName: "", // "Wong Pak Long"
       displayName: "", // "Jasper"
+      displayNameInsensitive: "", // Needed for search functionality
       bio: "", // "I am a cool guy"
       profilePicture: "default-avatar.jpg",
       follows: [], // ["2387dgh2378chr2t7xtrn23723eb3d"]
@@ -36,6 +37,7 @@ const model = observable({
     data: {
       fullName: "",
       displayName: "",
+      displayNameInsensitive: ""
     },
     setFullName: action(function(name) {
       console.debug("setting userSettingsData.fullName to: ", name);
@@ -44,6 +46,7 @@ const model = observable({
     setDisplayName: action(function(name) {
       console.debug("setting userSettingsData.displayName to: ", name);
       this.data.displayName = name;
+      this.data.displayNameInsensitive = name?.toLowerCase();
     }),
   },
   storeUpdates: action(function() {
@@ -89,14 +92,6 @@ const model = observable({
       const posts = await queryNewestPosts(this.data.newestPosts.length + 4);
       this.data.newestPosts = posts;
     }),
-  },
-  searchText: "",
-  setSearchText(text) {
-    this.searchText = text;
-  },
-  //TODO temporary solution to display custom evt
-  confirmUserSearch() {
-    alert("User wants to search for:  " + this.searchText);
   },
   uuid: uuidv4(),
 });
