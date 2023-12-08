@@ -7,12 +7,14 @@ const model = observable({
   setCount(value) {
     this.count = value;
   },
+  
   /* Left here for reference (refer to Firebase usage.md)*/
   user: {
     uid: null,
     data: {
       fullName: "", // "Wong Pak Long"
       displayName: "", // "Jasper"
+      displayNameInsensitive: "", // Needed for search functionality
       bio: "", // "I am a cool guy"
       profilePicture: "default-avatar.jpg",
       follows: [], // ["2387dgh2378chr2t7xtrn23723eb3d"]
@@ -36,6 +38,7 @@ const model = observable({
     data: {
       fullName: "",
       displayName: "",
+      displayNameInsensitive: ""
     },
     setFullName: action(function(name) {
       console.debug("setting userSettingsData.fullName to: ", name);
@@ -45,6 +48,11 @@ const model = observable({
       console.debug("setting userSettingsData.displayName to: ", name);
       this.data.displayName = name;
     }),
+    setDisplayNameInsensitive: action(function(name) {
+      const nameLowerCase = name?.toLowerCase();
+      console.debug("setting userSettingsData.displayNameInsensitive to: " + nameLowerCase);
+      this.data.displayNameInsensitive = nameLowerCase;
+    })
   },
   storeUpdates: action(function() {
     console.debug(this);
@@ -58,6 +66,7 @@ const model = observable({
       content: "",
       posterPath: "",
       source: "",
+      postDescription: ""
     },
     setTitle: action(function(title) {
       console.debug("setting createPostEditor.title to: ", title);
@@ -75,28 +84,40 @@ const model = observable({
       console.debug("setting createPostEditor.source to: ", source);
       this.data.source = source;
     }),
+    setPostDescription: action(function (postDescription) {
+      console.debug("setting createPostEditor.postDescription to: ", postDescription);
+      this.data.postDescription = postDescription;
+    }),
   },
   createPost: action(function() {
     console.debug("creating post with data: ", this.createPostEditor.data);
     savePostToFirestore(this.createPostEditor.data, this.user.uid);
   }),
   homePageData: {
+    currentPostID: null,
     data: {
       topRatedPosts: [],
-      newestPosts: []
+      newestPosts: [],
     },
-    fetchNewestPosts: action(async function() {
-      const posts = await queryNewestPosts(this.data.newestPosts.length + 4);
+    setNewestPosts: action(function(posts) {
+      console.debug("current homePageData.data.newestPosts: ", this.data.newestPosts);
+      console.debug("setting homePageData.data.newestPost to: ", posts);
       this.data.newestPosts = posts;
+      console.debug("new homePageData.data.newestPosts: ", this.data.newestPosts);
     }),
-  },
-  searchText: "",
-  setSearchText(text) {
-    this.searchText = text;
-  },
-  //TODO temporary solution to display custom evt
-  confirmUserSearch() {
-    alert("User wants to search for:  " + this.searchText);
+    setCurrentPostID: action(function(postID) {
+      console.debug("setting homePageData.currentPostID to: ", postID);
+      this.currentPostID = postID;
+    }),
+    fetchNewestPosts: async function() {
+      console.debug("this.data.newestPosts.length:", this.data.newestPosts.length);
+      const posts = await queryNewestPosts(this.data.newestPosts.length + 4);
+      this.setNewestPosts(posts);
+    },
+    getCurrentPost() {
+      console.debug("getting current post with ID: ", this.currentPostID);
+      return this.data.newestPosts.find(post => post.id === this.currentPostID);
+    }
   },
   uuid: uuidv4(),
 });

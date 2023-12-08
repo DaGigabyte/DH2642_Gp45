@@ -4,7 +4,8 @@
 
     setCurrentPostId(id) - a function to update the currentPostId
 
-    getCurrentPost() - a function that returns the post with the currentPostId === postId for the detailspresenter ( a seq search through newPosts and hotPosts is suffient enough for now I think)
+    getCurrentPost() - a function that returns the post with the currentPostId === postId for the detailspresenter 
+                    ( a seq search through newPosts and hotPosts is suffient enough for now I think)
 
 
 

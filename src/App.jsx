@@ -3,9 +3,11 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootPresenter from "./presenters/RootPresenter";
 import HomePresenter from "./presenters/HomePresenter";
 import AboutPresenter from "./presenters/AboutPresenter";
+import DetailsPresenter from "./presenters/DetailsPresenter"
 import FavoritesPresenter from "./presenters/FavoritesPresenter";
 import ProfilePresenter from "./presenters/ProfilePresenter";
 import SettingsPresenter from "./presenters/SettingsPresenter";
+
 
 import { observer } from "mobx-react-lite";
 
@@ -25,6 +27,10 @@ function createRouter(props) {
         {
           path: "about-us",
           element: <AboutPresenter model={props.model} />,
+        },
+        {
+        path: "details",
+        element: <DetailsPresenter model={props.model} />,
         },
         {
           path: "favorites",

@@ -57,7 +57,7 @@ function signOutACB() {
 function connectToFirestore(model) {
     model.userReady = false;
     function watchUserCB() {
-        return [model.user.data.fullName, model.user.data.displayName, model.user.data.bio, model.user.data.profilePicture, model.user.data.follows, model.user.data.followedBy];
+        return [model.user.data.fullName, model.user.data.displayName, model.user.data.displayNameInsensitive, model.user.data.bio, model.user.data.profilePicture, model.user.data.follows, model.user.data.followedBy];
     }
     function callSaveUserToFirestoreCB() {
         console.debug("callSaveUserToFirestoreCB: model.user changed, calling callSaveUserToFirestoreCB if user is signed in");
@@ -95,7 +95,7 @@ function connectToFirestore(model) {
                 } else { // Document for this user does not exist on Firestore
                     console.debug("onSnapshotChangeACB: Creating new user document on MobX store");
                     model.userReady = true;
-                    userObj.data = { fullName: "", displayName: userAuthObj.displayName, profilePicture: userAuthObj.photoURL, follows: [], followedBy: [] };
+                    userObj.data = { fullName: "", displayName: userAuthObj.displayName, displayNameInsensitive: userAuthObj.displayName.toLowerCase(), profilePicture: userAuthObj.photoURL, follows: [], followedBy: [] };
                     model.setUser(userObj); // Create new user document on MobX store based on userAuthObj
                 }
             }        
@@ -142,6 +142,31 @@ async function savePostToFirestore(postObj, userUid) {
     console.debug("savePostToFirestore: Document written with ID: ", docRef.id);
 }
 
+async function queryUsername(username) {
+    const q = query(
+        collection(db, "Users"), 
+        where("displayNameInsensitive", ">=", username.toLowerCase()), 
+        where("displayNameInsensitive", "<=", username + "\uf8ff")
+    );
+    return getDocs(q)
+    .then((querySnapshot) => { // querySnapshot is an array of documents
+        const users = [];
+        querySnapshot.forEach((doc) => {
+            const userDocId = doc.id;
+            const userData = doc.data();
+            users.push({
+                uid: userDocId,
+                displayName: userData.displayName,
+                profilePicture: userData.profilePicture
+            });
+        });
+        return users; // return posts to caller
+    })
+    .catch((error) => {
+        console.error("Error getting documents: ", error);
+    });
+}
+
 async function queryPostByUserUid(userUid) {
     const q = query(collection(db, "Posts"), where("createdBy", "==", userUid));
     return getDocs(q)
@@ -159,18 +184,20 @@ async function queryPostByUserUid(userUid) {
 }
 
 async function queryNewestPosts(amountOfPosts) {
-    const q = query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), limit(amountOfPosts))
-    return getDocs(q)
-    .then((querySnapshot) => { // querySnapshot is an array of documents
-        const posts = [];
-        querySnapshot.forEach((doc) => {
-            posts.push(doc.data());
-        });
-        return posts; // return posts to caller
-    })
-    .catch((error) => {
-        console.error("Error getting documents: ", error);
-    });
+    const q = query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), limit(amountOfPosts));
+    const querySnapshot = await getDocs(q);
+    const posts = [];
+    for (const doc of querySnapshot.docs) {
+        const postData = doc.data();
+        try {
+            const user = await readUserFromFirestore(postData.createdBy);
+            posts.push({ id: doc.id, user: user, ...postData });
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    }
+    console.debug("queryNewestPosts: Current posts: ", posts);
+    return posts; // return posts to caller
 }
 
-export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, queryPostByUserUid, queryNewestPosts };
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, queryPostByUserUid, queryNewestPosts, queryUsername };
