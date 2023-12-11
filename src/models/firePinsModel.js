@@ -1,6 +1,6 @@
 import { observable, reaction, action } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
-import { savePostToFirestore, queryNewestPosts } from "../firebase/firebaseModel";
+import { savePostToFirestore, queryNewestPosts, queryTopPosts } from "../firebase/firebaseModel";
 
 const model = observable({
   count: 1,
@@ -99,9 +99,15 @@ const model = observable({
       topRatedPosts: [],
       newestPosts: [],
     },
+    setTopRatedPosts: action(function(posts) {
+      console.debug("current homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
+      console.debug("setting homePageData.data.topRatedPosts to: ", posts);
+      this.data.topRatedPosts = posts;
+      console.debug("new homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
+    }),
     setNewestPosts: action(function(posts) {
       console.debug("current homePageData.data.newestPosts: ", this.data.newestPosts);
-      console.debug("setting homePageData.data.newestPost to: ", posts);
+      console.debug("setting homePageData.data.newestPosts to: ", posts);
       this.data.newestPosts = posts;
       console.debug("new homePageData.data.newestPosts: ", this.data.newestPosts);
     }),
@@ -109,6 +115,11 @@ const model = observable({
       console.debug("setting homePageData.currentPostID to: ", postID);
       this.currentPostID = postID;
     }),
+    fetchTopPosts: async function() {
+      console.debug("this.data.topRatedPosts.length:", this.data.topRatedPosts.length);
+      const posts = await queryTopPosts(this.data.topRatedPosts.length + 4);
+      this.setNewestPosts(posts);
+    },
     fetchNewestPosts: async function() {
       console.debug("this.data.newestPosts.length:", this.data.newestPosts.length);
       const posts = await queryNewestPosts(this.data.newestPosts.length + 4);

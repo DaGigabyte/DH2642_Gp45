@@ -142,6 +142,12 @@ async function savePostToFirestore(postObj, userUid) {
     console.debug("savePostToFirestore: Document written with ID: ", docRef.id);
 }
 
+async function modifyLikeArrayFirestore(postId) {
+    const path = "Posts/" + postId;
+    await getDoc(doc, path);
+
+}
+
 async function saveCommentToFireStore(uid, postId, comment) {
     const path = "Posts/" + postId + "/Comments";
     const commentObj = {
@@ -230,4 +236,22 @@ async function queryNewestPosts(amountOfPosts) {
     return posts; // return posts to caller
 }
 
-export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, saveCommentToFireStore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryUsername };
+async function queryTopPosts(amountOfPosts) {
+    const q = query(collection(db, 'Posts'), orderBy('likes', 'desc'), limit(amountOfPosts));
+    const querySnapshot = await getDocs(q);
+    const posts = [];
+    for (const doc of querySnapshot.docs) {
+        const postData = doc.data();
+        try {
+            const user = await readUserFromFirestore(postData.createdBy);
+            posts.push({ id: doc.id, user: user, ...postData });
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    }
+    console.debug("queryTopPosts: Current posts: ", posts);
+    return posts; // return posts to caller
+}
+
+
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, saveCommentToFireStore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryTopPosts, queryUsername };
