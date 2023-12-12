@@ -29,7 +29,7 @@ function createRouter(props) {
           element: <AboutPresenter model={props.model} />,
         },
         {
-        path: "details",
+        path: "post/:pid",
         element: <DetailsPresenter model={props.model} />,
         },
         {

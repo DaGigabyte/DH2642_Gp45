@@ -1,6 +1,6 @@
 import { observable, reaction, action } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
-import { savePostToFirestore, queryNewestPosts, queryTopPosts } from "../firebase/firebaseModel";
+import { savePostToFirestore, readPostFromFirestore, queryNewestPosts, queryTopPosts } from "../firebase/firebaseModel";
 
 const model = observable({
   count: 1,
@@ -125,9 +125,9 @@ const model = observable({
       const posts = await queryNewestPosts(this.data.newestPosts.length + 4);
       this.setNewestPosts(posts);
     },
-    getCurrentPost() {
+    getCurrentPost: function() {
       console.debug("getting current post with ID: ", this.currentPostID);
-      return this.data.newestPosts.find(post => post.id === this.currentPostID);
+      return readPostFromFirestore(this.currentPostID);
     }
   },
   uuid: uuidv4(),

@@ -33,13 +33,14 @@ function HomePage(props) {
   }
   function renderHotPosts(post) {
     return(
-      <Link to={`/details`} key={post.id}>
+      <Link to={{ pathname: "/post/" + post.id }} key={post.id}>
        <TopRatedCard 
           key={post.id} 
           postPicture={post.posterPath} 
           source={post.source} 
           selectPost ={()=>{props.selectPost(post.id)}}/>
-    </Link>)
+      </Link>
+    )
   }
   function slideLeft() {
     const slider = document.getElementById("slider");
@@ -50,15 +51,17 @@ function HomePage(props) {
     slider.scrollLeft = slider.scrollLeft + 200;
   }
   function renderNewPosts(post) {
-    return ( <Link to={`/details`} key={post.id}> 
-      <Post key={post.id} 
-        picture={post.user.profilePicture?post.user.profilePicture:defaultPic} 
-        nickName={post.user.displayName} 
-        postPicture={post.posterPath} 
-        postTitle={post.title} 
-        postBody={post.content} 
-        selectPost ={()=>{props.selectPost(post.id)}}/>
-    </Link>)
+    return (
+      <Link to={{ pathname: "/post/" + post.id }} key={post.id}>
+        <Post key={post.id} 
+          picture={post.user.profilePicture?post.user.profilePicture:defaultPic} 
+          nickName={post.user.displayName} 
+          postPicture={post.posterPath} 
+          postTitle={post.title} 
+          postBody={post.content} 
+          selectPost ={()=>{props.selectPost(post.id)}}/>
+      </Link>
+    )
   }
   return (
     <div className="flex flex-col w-full max-w-6xl">
