@@ -24,6 +24,7 @@ function HomePresenter(props) {
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [confirmPost, setConfirmPost] = useState(false);
   const currentPost = props.model.homePageData.getCurrentPost()
+  
   //TODO Fix correct storing
   function handleSubmittedComment() {
     setConfirmPost(true);
