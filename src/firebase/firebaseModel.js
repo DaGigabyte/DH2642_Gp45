@@ -142,6 +142,33 @@ async function savePostToFirestore(postObj, userUid) {
     console.debug("savePostToFirestore: Document written with ID: ", docRef.id);
 }
 
+function readPostFromFirestore(postId) {
+    if (!postId) {
+        throw new Error("pid is falsy");
+    }
+    const docRef = doc(db, "Posts", postId);
+    return getDoc(docRef)
+        .then(async (docSnapshot) => {
+            if (docSnapshot.exists()) { // Document for this post exists on Firestore
+                console.debug("readPostFromFirestore: Post exists on Firestore, reading data");
+                const postData = docSnapshot.data();
+                try {
+                    const user = await readUserFromFirestore(postData.createdBy);
+                    return { id: docSnapshot.id, user: user, ...postData };
+                } catch (error) {
+                    console.error("readPostFromFirestore: Error fetching user data:", error);
+                }
+            } else { // Document for this post does not exist on Firestore
+                console.debug("readPostFromFirestore: No such post!");
+                return null;
+            }
+        })
+        .catch((error) => {
+            console.error("Error getting document:", error);
+            throw new Error("Error getting document");
+        });
+}
+
 async function modifyLikeArrayFirestore(postId) {
     const path = "Posts/" + postId;
     await getDoc(doc, path);
@@ -254,4 +281,4 @@ async function queryTopPosts(amountOfPosts) {
 }
 
 
-export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, savePostToFirestore, saveCommentToFireStore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryTopPosts, queryUsername };
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, savePostToFirestore, saveCommentToFireStore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryTopPosts, queryUsername };
