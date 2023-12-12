@@ -49,4 +49,16 @@ h1 {
     background-color: #7c3aed;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
+
+  /*Used in  */
+  .postModifyingButtons{
+    border-radius: 9999px;
+    padding: 0.5rem;
+    transition-property: color, background-color, border-color;
+    transition-duration: 0.4s; 
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+  }
+  .postModifyingButtons:hover{
+    background-color: #fff
+  }
 }
