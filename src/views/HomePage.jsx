@@ -5,13 +5,14 @@ import { MdChevronLeft, MdChevronRight } from "react-icons/md"
 import defaultProfile from "../assets/default-avatar.jpg"
 /**
  * Renders the homepage view
- * @param {Object} props.currentUser - The currently logged in user
+ * @param {Object} props.currentUID - The currently logged in user
  * @param {Object} props.hotPosts - An array of the most liked posts
  * @param {Object} props.newPosts - An array of new posts
  * @param {function} props.loadMorePosts - onClick to load more posts into the array
  * @param {function} props.selectPost - sets the currentPost to the id of the clicked posts
  * @param {function} props.likePost - user wants to like or unlike the post
  * @param {function} props.dislikePost - user wants to dislike or undislike the post
+ * @param {function} props.commentOnCurrentPost - to change the comonent state do the modal open
  * @returns {React.Element} A render of the homepage
  */
 function HomePage(props) {
@@ -62,19 +63,19 @@ function HomePage(props) {
   function renderNewPosts(post) {
     return (
       <Post key={post.id}
-        picture={post.user.profilePicture ? post.user.profilePicture : defaultPic}
+        picture={post.user.profilePicture ? post.user.profilePicture : defaultProfile}
         nickName={post.user.displayName}
         postPicture={post.posterPath}
         postTitle={post.title}
         postBody={post.content}
         nofLikes={post.likedBy.length /* can we do things like this */}
         nofDislikes={post.dislikedBy.length /* can we do things like this */}
-        currentUserLikes={post.likedBy.find(props.currentUser.uid) /* can we do things like this */}
-        currentUserDislikes={post.likedBy.find(props.currentUser.uid) /* can we do things like this */}
+        currentUserLikes={post.likedBy.find(props.currentUID) /* can we do things like this */}
+        currentUserDislikes={post.likedBy.find(props.currentUID) /* can we do things like this */}
         selectPost={() => { props.selectPost(post.id) }}
-        commentPost={() => { alert('User wants to comment'); }}
-        likePost={() => {props.likePost(post.id)}}
-        dislikePost={() => {props.dislikePost(post.id)}}
+        likePost={() => { props.likePost(post.id) }}
+        dislikePost={() => { props.dislikePost(post.id) }}
+        commentOnPost={() => { props.commentOnCurrentPost() }}
       />
     )
   }
