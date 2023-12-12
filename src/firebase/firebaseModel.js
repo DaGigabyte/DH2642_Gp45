@@ -21,7 +21,8 @@ import {
     orderBy,
     limit,
     startAfter,
-    onSnapshot
+    onSnapshot,
+    updateDoc
 } from "firebase/firestore";
 import { reaction } from "mobx";
 
@@ -169,10 +170,50 @@ function readPostFromFirestore(postId) {
         });
 }
 
-async function modifyLikeArrayFirestore(postId) {
+async function likePostFirestore(uid, postId) {
     const path = "Posts/" + postId;
-    await getDoc(doc, path);
 
+    try {
+        const docRef = doc(db, path);
+        const docSnapshot = await getDoc(docRef);
+
+        if (docSnapshot.exists()) {
+            const { likedBy, dislikedBy, likes } = docSnapshot.data();
+
+            const updatedDislikedBy = dislikedBy.filter((dislikeUid) => dislikeUid !== uid);
+            const updatedLikedBy = likedBy.includes(uid) ? likedBy : [...likedBy, uid];
+            const updatedLikes = likedBy.includes(uid) ? likes : likes + 1;
+
+            await updateDoc(docRef, { likedBy: updatedLikedBy, dislikedBy: updatedDislikedBy, likes: updatedLikes });
+        } else {
+            console.error("likePostFirestore: Post not found");
+        }
+    } catch (error) {
+        console.error("Error updating post:", error);
+    }
+}
+
+async function dislikePostFirestore(uid, postId) {
+    const path = "Posts/" + postId;
+
+    try {
+        const docRef = doc(db, path);
+        const docSnapshot = await getDoc(docRef);
+
+        if (docSnapshot.exists()) {
+            const { likedBy, dislikedBy, likes } = docSnapshot.data();
+
+            const updatedDislikedBy = dislikedBy.includes(uid) ? dislikedBy : [...dislikedBy, uid];
+            const updatedLikedBy = likedBy.filter((likedBy) => likedBy !== uid);
+            const updatedLikes = dislikedBy.includes(uid) ? likes : likes - 1;
+
+            await updateDoc(docRef, { likedBy: updatedLikedBy, dislikedBy: updatedDislikedBy, likes: updatedLikes });
+        } else {
+            console.error("dislikePostFirestore: Post not found");
+        }
+    } catch (error) {
+        console.error("Error updating post:", error);
+    }
 }
 
 async function saveCommentToFireStore(uid, postId, comment) {
@@ -281,4 +322,4 @@ async function queryTopPosts(amountOfPosts) {
 }
 
 
-export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, savePostToFirestore, saveCommentToFireStore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryTopPosts, queryUsername };
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, savePostToFirestore, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryTopPosts, queryUsername };
