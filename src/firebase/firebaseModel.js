@@ -216,6 +216,44 @@ async function dislikePostFirestore(uid, postId) {
     }
 }
 
+async function followUserFirestore(uidFollowed, uidFollower) {
+    const path = "Users/" + uidFollowed;
+
+    try {
+        const docRef = doc(db, path);
+        const docSnapshot = await getDoc(docRef);
+
+        if (docSnapshot.exists()) {
+            const { followedBy } = docSnapshot.data();
+            const updatedFollowedBy = followedBy.includes(uidFollower) ? followedBy : [...followedBy, uidFollower];
+            await updateDoc(docRef, { followedBy: updatedFollowedBy });
+        } else {
+            console.error("followUserFirestore: User not found");
+        }
+    } catch (error) {
+        console.error("Error updating user:", error);
+    }
+}
+
+async function unfollowUserFirestore(uidFollowed, uidUnfollower) {
+    const path = "Users/" + uidFollowed;
+
+    try {
+        const docRef = doc(db, path);
+        const docSnapshot = await getDoc(docRef);
+
+        if (docSnapshot.exists()) {
+            const { followedBy } = docSnapshot.data();
+            const updatedFollowedBy = followedBy.filter((uidFollower) => uidFollower !== uidUnfollower);
+            await updateDoc(docRef, { followedBy: updatedFollowedBy });
+        } else {
+            console.error("unfollowUserFirestore: User not found");
+        }
+    } catch (error) {
+        console.error("Error updating user:", error);
+    }
+}
+
 async function saveCommentToFireStore(uid, postId, comment) {
     const path = "Posts/" + postId + "/Comments";
     const commentObj = {
@@ -322,4 +360,4 @@ async function queryTopPosts(amountOfPosts) {
 }
 
 
-export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, savePostToFirestore, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryTopPosts, queryUsername };
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, savePostToFirestore, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryTopPosts, queryUsername };
