@@ -151,6 +151,20 @@ const model = observable({
       this.setFavoritePosts(posts);
     },
   },
+  numberOfNewPost: 0,
+  newPostsData: [{}], // array of new posts
+  setNewPostsData: action(function(posts) {
+    console.debug("current newPostsData: ", this.newPostsData);
+    console.debug("setting newPostsData to: ", posts);
+    this.newPostsData = posts;
+    console.debug("new newPostsData: ", this.newPostsData);
+    setNumberOfNewPost(numberOfNewPost + 1);
+  }),
+  updateWithNewPosts: function() {
+    setNewestPosts({...newPostData, ...this.homePageData.data.newestPosts});
+    setNumberOfNewPost(0);
+    setNewPostData([{}]);
+  },
   listOfGenre: await listOfGenre(),
   uuid: uuidv4(),
 });
