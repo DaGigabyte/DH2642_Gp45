@@ -39,22 +39,13 @@ export default function SummarizedPost(props) {
     event.stopPropagation();
     props.likePost();
   }
-  function checkLikeColor() {
-    if (props.currentUserLike)
-      return "#8D66FC";
-    else return "black";
-  }
-  function checkDislikeColor() {
-    if (props.currentUserDislikes)
-      return "#8D66FC";
-    else return "black";
-  }
+
   /* React Component*/
   return (
     <div
       className="relative flex flex-col xl:flex-row space-x-4 w-full text-black text-left 
           rounded-xl border border-gray-300 p-3 bg-white shadow hover:shadow-xl cursor-pointer 
-             hover:bg-gray-200 transition duration-300 mb-5 p-5"
+             hover:bg-gray-200 transition duration-300 mb-5"
       onClick={handlePostClickACB}
       title="Click to view post"
     >
@@ -73,7 +64,7 @@ export default function SummarizedPost(props) {
         {/* Profile and name */}
         <div className="flex items-end pb-3 space-x-4">
           <span className="mr-2">
-            <img src={props.picture} alt="profile picture" className="w-16 h-16 rounded-full" />
+            <img src={props.picture} alt="profile picture" className="w-14 h-14 rounded-full" />
           </span>
           <span className="text-3xl">{props.nickName}</span>
         </div>
@@ -90,9 +81,9 @@ export default function SummarizedPost(props) {
         <div className="flex justify-end items-center mt-auto">
           <div title="Click to comment" onClick={handleCommentClickACB} className="postModifyingButtons"><BiCommentDetail size="40" /></div>
           <div className="pl-4 pr-1 text-s font-light">dislikes: {props.nofDislikes}</div>
-          <div title="Click to dislike" onClick={handleDislikeClickACB} className="postModifyingButtons"><BiDislike size="40" color={checkDislikeColor()} /></div>
+          <div title="Click to dislike" onClick={handleDislikeClickACB} className="postModifyingButtons"><BiDislike size="40" className={props.currentUserDislike ? "text-pins-primary": "text-black"} /></div>
           <div className="pl-4 pr-1 text-s font-light">likes: {props.nofLikes}</div>
-          <div title="Click to like" onClick={handleLikeClickACB} className="postModifyingButtons"><BiLike size="40" color={checkLikeColor()} /></div>
+          <div title="Click to like" onClick={handleLikeClickACB} className="postModifyingButtons"><BiLike size="40" className={props.currentUserLike ? "text-pins-primary": "text-black"} /></div>
         </div>
       </div>
 
