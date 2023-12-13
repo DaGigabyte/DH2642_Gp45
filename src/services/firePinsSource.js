@@ -76,4 +76,23 @@ function searchMovie(searchQuery) {
         .catch(err => console.error(err));
 }
 
-export { searchMovie, movieById }
+function listOfGenre() {
+    const url = 'https://api.themoviedb.org/3/genre/movie/list?language=en';
+    const options = {
+    method: 'GET',
+    headers: {
+        accept: 'application/json',
+        Authorization: TMDB_API_KEY
+    }
+    };
+
+    return fetch(url, options)
+    .then(res => res.json())
+    .then(json => {
+        console.log("listOfGenre():", json);
+        return json.genres;
+    })
+    .catch(err => console.error('error:' + err));
+}
+
+export { searchMovie, movieById, listOfGenre }

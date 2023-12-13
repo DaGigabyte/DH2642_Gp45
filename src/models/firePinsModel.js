@@ -1,5 +1,6 @@
 import { observable, reaction, action } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
+import { listOfGenre } from "../services/firePinsSource";
 import { savePostToFirestore, readPostFromFirestore, queryNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore } from "../firebase/firebaseModel";
 
 const model = observable({
@@ -149,7 +150,8 @@ const model = observable({
       const posts = await queryFavoritePosts(this.data.favoritePosts.length + 4, uid);
       this.setFavoritePosts(posts);
     },
-  },  
+  },
+  listOfGenre: await listOfGenre(),
   uuid: uuidv4(),
 });
 
