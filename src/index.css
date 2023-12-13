@@ -54,11 +54,15 @@ h1 {
   .postModifyingButtons{
     border-radius: 9999px;
     padding: 0.5rem;
+    border-width: 1px;
     transition-property: color, background-color, border-color;
     transition-duration: 0.4s; 
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
   }
   .postModifyingButtons:hover{
-    background-color: #fff
+    background-color: #fff;
+    border-style: solid;
+   
+    border-color: #8D66FC;
   }
 }

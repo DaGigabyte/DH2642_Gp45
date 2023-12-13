@@ -54,7 +54,7 @@ export default function SummarizedPost(props) {
     <div
       className="relative flex flex-col xl:flex-row space-x-4 w-full text-black text-left 
           rounded-xl border border-gray-300 p-3 bg-white shadow hover:shadow-xl cursor-pointer 
-             hover:bg-gray-200 transition duration-300 mb-5"
+             hover:bg-gray-200 transition duration-300 mb-5 p-5"
       onClick={handlePostClickACB}
       title="Click to view post"
     >
@@ -71,7 +71,7 @@ export default function SummarizedPost(props) {
       <div className="flex flex-col pl-3 pt-6 pr-3 w-full">
 
         {/* Profile and name */}
-        <div className="flex items-end pb-4 space-x-4">
+        <div className="flex items-end pb-3 space-x-4">
           <span className="mr-2">
             <img src={props.picture} alt="profile picture" className="w-16 h-16 rounded-full" />
           </span>
