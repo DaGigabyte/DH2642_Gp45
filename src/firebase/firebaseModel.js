@@ -360,11 +360,25 @@ async function queryTopPosts(amountOfPosts) {
 }
 
 async function queryFavoritePosts(amountOfPosts, uid) {
-    // Get the 'follows' array of the user logged in
-    const userDoc = await getDoc(doc(db, 'Users', uid));
-    const followsArray = userDoc.data().follows;
 
-    // Fetch posts created by users in the 'follows' array
+    const followsArray = [];
+
+    // Get the 'follows' array of the user logged in
+    try {
+        const user = await readUserFromFirestore(uid);
+        user.follows.map((account) => {
+            followsArray.push(account);
+        });
+    } catch (error) {
+        console.error("Error fetching user following data:", error);
+    }
+
+    // If user is not following anyone return an empty array
+    if (followsArray.length === 0) {
+        return [];
+    }
+
+    // Fetch posts created by users in the 'follows' array and order on upload date in descending order
     const q = query(
         collection(db, 'Posts'), 
         orderBy('createdAt', 'desc'), 
