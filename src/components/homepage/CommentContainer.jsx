@@ -14,6 +14,7 @@ export default function CommentContainer(props) {
             return (<div className="w-full flex flex-col sm:flex-row gap-4 items-end sm:items-end">
                 <textarea
                     className="w-full border rounded-xl p-2 content-start min-h-[6rem]"
+                    id="commentBox"
                     type="text"
                     placeholder={props.text ? props.text : "Enter Comment"}
                     onInput={(evt) => { props.onInputChange(evt.target.value) }} />

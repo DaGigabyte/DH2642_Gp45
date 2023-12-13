@@ -35,7 +35,7 @@ function HomePage(props) {
     /* CB to render each post in the array*/
     function renderHotPostCB(post) {
       return (
-        <Link to={`/details`} key={post.id}>
+        <Link to={{ pathname: "/post/" + post.id }} key={post.id}>
           <TopRatedCard
             key={post.id}
             postPicture={post.posterPath}
@@ -66,6 +66,7 @@ function HomePage(props) {
         picture={post.user.profilePicture ? post.user.profilePicture : defaultProfile}
         nickName={post.user.displayName}
         postPicture={post.posterPath}
+        postId={post.id}
         postTitle={post.title}
         postBody={post.content}
         nofLikes={post.likedBy.length /* can we do things like this */}
@@ -75,7 +76,7 @@ function HomePage(props) {
         selectPost={() => { props.selectPost(post.id) }}
         likePost={() => { props.likePost(post.id) }}
         dislikePost={() => { props.dislikePost(post.id) }}
-        commentOnPost={() => { props.commentOnCurrentPost() }}
+        commentOnPost={() => { props.commentOnCurrentPost(post.id) }}
       />
     )
   }
@@ -84,12 +85,12 @@ function HomePage(props) {
   return (
     <div className="flex flex-col w-full max-w-6xl">
       {/*Top rated pins*/}
-      <span className="text-3xl font-semibold block p-5">Top Rated Pins</span>
+      <span className="text-3xl font-semibold block pb-5 ">Top Rated Pins</span>
       {renderTopRatedSection()}
 
       {/*NEW POSTS*/}
-      <span className="text-3xl font-semibold  p-5">New Posts</span>
-      <div className="flex flex-col w-full p-5">
+      <span className="text-3xl font-semibold pb-5 ">New Posts</span>
+      <div className="flex flex-col w-full">
         {props.newPosts ? props.newPosts.map(renderNewPosts) : null}
       </div>
 

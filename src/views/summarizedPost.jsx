@@ -25,11 +25,10 @@ export default function SummarizedPost(props) {
   /*OnClick ACBs*/
   function handlePostClickACB() {
     props.selectPost();
-    navigate('/details');
+    navigate("post/" + props.postId );
   }
   function handleCommentClickACB(event) {
     event.stopPropagation();
-    props.selectPost();
     props.commentOnPost();
   }
   function handleDislikeClickACB(event) {

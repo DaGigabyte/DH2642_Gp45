@@ -22,9 +22,7 @@ function HomePresenter(props) {
   /* FOR COMMENT Modal*/
   const [comment, setComment] = useState("");
   const [commentModalOpen, setCommentModalOpen] = useState(false);
-  const [confirmPost, setConfirmPost] = useState(false);
-  const currentPost = props.model.homePageData.getCurrentPost()
-  
+  const [confirmPost, setConfirmPost] = useState(false); //BOOLEAN FOR TIMEOUT
   //TODO Fix correct storing
   function handleSubmittedComment() {
     setConfirmPost(true);
@@ -39,6 +37,26 @@ function HomePresenter(props) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  /* new getPost handler */
+  async function openCommentModalACB(id){
+    try {
+      await props.model.homePageData.setCurrentPostID(id);
+      await getPost();
+      setCommentModalOpen(true);
+    } catch (error) {
+      console.error("Error opening comment modal:", error);
+    }
+  }
+  const [post, setPost] = useState(null);
+  async function getPost() {
+    try {
+      const currentPost = await props.model.homePageData.getCurrentPost();
+      setPost(currentPost);
+      document.title = currentPost?.title;
+    } catch (error) {
+      console.error("Error getting post:", error);
+    }
+    }
   /* ends here */
 
   return (
@@ -51,10 +69,11 @@ function HomePresenter(props) {
         selectPost={userSelectsPostACB}
         likePost={userlikesPostACB}
         dislikePost={userdislikesPostACB}
-        commentOnCurrentPost={() => { setCommentModalOpen(true) }}
+        commentOnCurrentPost={openCommentModalACB}
       />
-      <CommentModal
-        post={currentPost}
+
+        <CommentModal
+        post={post}
         isUserConfirmed={props.model.user.uid ? true : false}
         isOpen={commentModalOpen}
         setOpen={setCommentModalOpen}
