@@ -2,6 +2,9 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import HomePage from "../views/HomePage";
 import CommentModal from "../components/modal/CommentModal"
+import React from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 function HomePresenter(props) {
   let data = props.model.homePageData.data;
@@ -22,16 +25,17 @@ function HomePresenter(props) {
   /* FOR COMMENT Modal*/
   const [comment, setComment] = useState("");
   const [commentModalOpen, setCommentModalOpen] = useState(false);
-  const [confirmPost, setConfirmPost] = useState(false); //BOOLEAN FOR TIMEOUT
   //TODO Fix correct storing
   function handleSubmittedComment() {
-    setConfirmPost(true);
-    delay(3000).then(() => {
-      setComment("");
+    try{
       setCommentModalOpen(false);
-      setConfirmPost(false);
-      alert("User \"" + props.model.user.uid + "\" wants to store comment \"" + comment + "\" on post \"" + currentPost + "\"");
-    });
+      alert("User \"" + props.model.user.uid + "\" wants to store comment \"" + comment + "\" on currentpost"); 
+      setComment("");
+      toast.success("Comment Posted!");
+    }
+    catch (error){
+      toast.error("There was an issue posting the comment");
+    }
   }
   function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -39,12 +43,13 @@ function HomePresenter(props) {
 
   /* new getPost handler */
   async function openCommentModalACB(id){
-    try {
-      await props.model.homePageData.setCurrentPostID(id);
+    try{
+      props.model.homePageData.setCurrentPostID(id);
       await getPost();
       setCommentModalOpen(true);
-    } catch (error) {
-      console.error("Error opening comment modal:", error);
+    }
+    catch (error){
+      console.error("Error in openCommentModalACB:", error);
     }
   }
   const [post, setPost] = useState(null);
@@ -56,7 +61,7 @@ function HomePresenter(props) {
     } catch (error) {
       console.error("Error getting post:", error);
     }
-    }
+  }
   /* ends here */
 
   return (
@@ -80,8 +85,18 @@ function HomePresenter(props) {
         text={comment}
         userEntersComment={(res) => setComment(res)}
         storeComment={handleSubmittedComment}
-        confirmPost={confirmPost}
       />
+      <ToastContainer 
+      position="top-right"
+      autoClose={3000}
+      hideProgressBar
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="light"/>
     </>
   );
 }
