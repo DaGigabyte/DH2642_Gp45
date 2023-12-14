@@ -7,6 +7,11 @@ import CreateNewPostContainer from "../new-post/CreateNewPostContainer";
 function NewPostModal(props) {
   const [open, setOpen] = useState(false);
 
+  // Handle close modal
+  function handleCloseModal() {
+    setOpen(false);
+  }
+
   return (
     <Modal open={open} onOpenChange={setOpen}>
       <Modal.Button className="flex items-center justify-center text-lg md:text-sm lg:text-lg text-white font-bold bg-pins-primary px-5 py-2 md:px-2 lg:px-5 rounded-2xl shadow hover:scale-105 transition duration-75">
@@ -29,6 +34,7 @@ function NewPostModal(props) {
           newPostCaption={props.newPostCaption}
           onSetNewPostCaption={props.onSetNewPostCaption}
           onCreateNewPost={props.onCreateNewPost}
+          closeModal={handleCloseModal}
         />
       </Modal.Content>
     </Modal>

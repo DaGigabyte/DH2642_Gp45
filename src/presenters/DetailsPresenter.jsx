@@ -5,21 +5,19 @@ import DetailPostView from "../views/DetailPostView";
 
 function DetailsPresenter(props){
   const { pid } = useParams();
-  const [post, setPost] = useState(null);
  
   useEffect(() => {
-    props.model.homePageData.setCurrentPostID(pid);
-    props.model.homePageData.getCurrentPost()
-      .then((currentPost) => {
-        setPost(currentPost);
-        document.title = currentPost?.title;
-      });
+    props.model.postDetailData.setCurrentPostID(pid);
   }, [pid]);
 
+  useEffect(() => {
+    document.title = props.model.postDetailData.data?.title;
+  }, [props.model.postDetailData.data.title]);
+
   function verifyCurrentPost(){
-    if (!post)
+    if (!props.model.postDetailData.data.id)
       return <h1>Post not found</h1>
-    return <DetailPostView post={post} />
+    return <DetailPostView post={props.model.postDetailData.data} />
   }
   return ( verifyCurrentPost() );
 }
