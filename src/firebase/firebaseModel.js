@@ -171,9 +171,8 @@ function readPostFromFirestore(postId) {
 }
 
 async function likePostFirestore(uid, postId) {
-    const path = "Posts/" + postId;
-
     try {
+        const path = "Posts/" + postId;
         const docRef = doc(db, path);
         const docSnapshot = await getDoc(docRef);
 
@@ -194,9 +193,8 @@ async function likePostFirestore(uid, postId) {
 }
 
 async function dislikePostFirestore(uid, postId) {
-    const path = "Posts/" + postId;
-
     try {
+        const path = "Posts/" + postId;
         const docRef = doc(db, path);
         const docSnapshot = await getDoc(docRef);
 
@@ -217,9 +215,8 @@ async function dislikePostFirestore(uid, postId) {
 }
 
 async function followUserFirestore(uidFollowed, uidFollower) {
-    const path = "Users/" + uidFollowed;
-
     try {
+        const path = "Users/" + uidFollowed;
         const docRef = doc(db, path);
         const docSnapshot = await getDoc(docRef);
 
@@ -236,9 +233,8 @@ async function followUserFirestore(uidFollowed, uidFollower) {
 }
 
 async function unfollowUserFirestore(uidFollowed, uidUnfollower) {
-    const path = "Users/" + uidFollowed;
-
     try {
+        const path = "Users/" + uidFollowed;
         const docRef = doc(db, path);
         const docSnapshot = await getDoc(docRef);
 
@@ -361,14 +357,12 @@ async function queryTopPosts(amountOfPosts) {
 
 async function queryFavoritePosts(amountOfPosts, uid) {
 
-    const followsArray = [];
+    let followsArray = [];
 
     // Get the 'follows' array of the user logged in
     try {
         const user = await readUserFromFirestore(uid);
-        user.follows.map((account) => {
-            followsArray.push(account);
-        });
+        followsArray = [...user.follows];
     } catch (error) {
         console.error("Error fetching user following data:", error);
     }
@@ -401,6 +395,5 @@ async function queryFavoritePosts(amountOfPosts, uid) {
     console.debug("queryFavoritePosts: Current posts: ", posts);
     return posts;
 }
-
 
 export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, savePostToFirestore, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };
