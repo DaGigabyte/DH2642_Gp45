@@ -29,6 +29,8 @@ https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
         - title: "Post Title"
         - content: "Post Content"
         - posterPath: "https://image.tmdb.org/t/p/original/3GqP4HxjpVe0ChBAStTbkZhpWYC.jpg"
+        - TMDBgenreID: "21"
+        - TMDBdateOfMovieRelease: "A date"
         - createdAt: "Timestamp"
         - modifiedAt: "Timestamp"
         - likedBy: ["u0gSii1Srsfy6gd7wOvYdtMObhp2"] // uid of users who liked
