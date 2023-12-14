@@ -37,26 +37,26 @@ function DetailedPostView(props) {
 
     /* Renders the comments of the displayed post */
     function renderCommentSection() {
-        if (props.postComments.length < 1)
+        if (!props.post.comments || props.post.comments.length < 1)
             return (
                 <div className="rounded-xl shadow text-center p-3 text-lg font-medium bg-pins-light">Be the first to comment on this!</div>)
         else {
-            return (props.postComments.map(renderCommentCB))
+            return (props.post.comments.map(renderCommentCB))
         }
     }
-
     /* CB to render each comment*/
     function renderCommentCB(comment) {
         return (
             /* container */
-            <div key={comment.id} className="flex flex-col border rounded-xl p-3 pl-6 pr-6 gap-2 mb-1">
+            <div key={comment.createdAt.nanoseconds + comment.createdBy} className="flex flex-col border rounded-xl p-3 pl-6 pr-6 gap-2 mb-1">
                 {/* user profile */}
                 <div className="flex gap-4 items-center">
-                    <img src={comment.user.userPicture} alt="/" className=" rounded-full h-12 w-12"></img>
-                    <span className="text-start text-xl font-medium">{comment.user.userName}</span>
+                    <img src={comment.profilePicture? comment.profilePicture : defaultPic} alt="/" className=" rounded-full h-12 w-12"></img>
+                    <span className="text-start text-xl font-medium">{comment.displayName? comment.displayName: "anonymous"}</span>
                 </div>
+               
                 {/* comment */}
-                <div className="border bg-pins-light rounded-lg p-3">
+                <div className="border bg-pins-light bg-opacity-30 rounded p-3 shadow">
                     <p>{comment.content}</p>
                 </div>
             </div>
