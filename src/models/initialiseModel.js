@@ -1,4 +1,4 @@
-import { connectToFirestore } from "../firebase/firebaseModel";
+import { connectToFirestore, readPostFromFirestore, queryCommentsByPostId } from "../firebase/firebaseModel";
 import { reaction } from "mobx";
 
 function settingsReaction(model) {
@@ -14,8 +14,31 @@ function settingsReaction(model) {
     reaction(watchUserCB, copyUserToUserSettingsDataCB);
 }
 
+// Reaction to fetch post data when currentPostID changes
+function currentPostIdReaction(model) {
+    function watchCurrentPostIdCB() {
+        return [model.postDetailData.currentPostID];
+    }
+
+    async function fetchPostDataCB([newPostId]) {
+        model.postDetailData.status = 'loading';
+        try {
+            const postData = await readPostFromFirestore(newPostId);
+            const postComments = await queryCommentsByPostId(newPostId);
+            model.postDetailData.setData({ ...postData, comments: postComments });
+            model.postDetailData.status = 'success';
+        } catch (error) {
+            console.error('Error fetching post data:', error);
+            model.postDetailData.status = 'error';
+        }
+    }
+
+    reaction(watchCurrentPostIdCB, fetchPostDataCB);
+}
+
 export default function initialiseModel(model) {
     console.debug("initialiseModel");
     connectToFirestore(model);
     settingsReaction(model);
+    currentPostIdReaction(model);
 }

@@ -171,9 +171,8 @@ function readPostFromFirestore(postId) {
 }
 
 async function likePostFirestore(uid, postId) {
-    const path = "Posts/" + postId;
-
     try {
+        const path = "Posts/" + postId;
         const docRef = doc(db, path);
         const docSnapshot = await getDoc(docRef);
 
@@ -181,8 +180,8 @@ async function likePostFirestore(uid, postId) {
             const { likedBy, dislikedBy, likes } = docSnapshot.data();
 
             const updatedDislikedBy = dislikedBy.filter((dislikeUid) => dislikeUid !== uid);
-            const updatedLikedBy = likedBy.includes(uid) ? likedBy : [...likedBy, uid];
-            const updatedLikes = likedBy.includes(uid) ? likes : likes + 1;
+            const updatedLikedBy = likedBy.includes(uid) ? likedBy.filter((likeUid) => likeUid !== uid) : [...likedBy, uid];
+            const updatedLikes = likedBy.includes(uid) ? likes - 1 : likes + 1;
 
             await updateDoc(docRef, { likedBy: updatedLikedBy, dislikedBy: updatedDislikedBy, likes: updatedLikes });
         } else {
@@ -194,20 +193,18 @@ async function likePostFirestore(uid, postId) {
 }
 
 async function dislikePostFirestore(uid, postId) {
-    const path = "Posts/" + postId;
-
     try {
+        const path = "Posts/" + postId;
         const docRef = doc(db, path);
         const docSnapshot = await getDoc(docRef);
 
         if (docSnapshot.exists()) {
             const { likedBy, dislikedBy, likes } = docSnapshot.data();
 
-            const updatedDislikedBy = dislikedBy.includes(uid) ? dislikedBy : [...dislikedBy, uid];
-            const updatedLikedBy = likedBy.filter((likedBy) => likedBy !== uid);
-            const updatedLikes = dislikedBy.includes(uid) ? likes : likes - 1;
+            const updatedDislikedBy = dislikedBy.includes(uid) ? dislikedBy.filter((dislikeUid) => dislikeUid !== uid) : [...dislikedBy, uid];
+            const updatedLikedBy = likedBy.filter((likeUid) => likeUid !== uid);
 
-            await updateDoc(docRef, { likedBy: updatedLikedBy, dislikedBy: updatedDislikedBy, likes: updatedLikes });
+            await updateDoc(docRef, { likedBy: updatedLikedBy, dislikedBy: updatedDislikedBy });
         } else {
             console.error("dislikePostFirestore: Post not found");
         }
@@ -217,9 +214,8 @@ async function dislikePostFirestore(uid, postId) {
 }
 
 async function followUserFirestore(uidFollowed, uidFollower) {
-    const path = "Users/" + uidFollowed;
-
     try {
+        const path = "Users/" + uidFollowed;
         const docRef = doc(db, path);
         const docSnapshot = await getDoc(docRef);
 
@@ -236,9 +232,8 @@ async function followUserFirestore(uidFollowed, uidFollower) {
 }
 
 async function unfollowUserFirestore(uidFollowed, uidUnfollower) {
-    const path = "Users/" + uidFollowed;
-
     try {
+        const path = "Users/" + uidFollowed;
         const docRef = doc(db, path);
         const docSnapshot = await getDoc(docRef);
 
@@ -254,13 +249,8 @@ async function unfollowUserFirestore(uidFollowed, uidUnfollower) {
     }
 }
 
-async function saveCommentToFireStore(uid, postId, comment) {
+async function saveCommentToFireStore(commentObj, postId) {
     const path = "Posts/" + postId + "/Comments";
-    const commentObj = {
-        content: comment,
-        createdAt: new Date(),
-        createdBy: uid
-    };
     const docRef = await addDoc(collection(db, path), commentObj);
     console.debug("saveCommentToFirestore: Document written with ID: ", docRef.id);
 }
@@ -361,14 +351,12 @@ async function queryTopPosts(amountOfPosts) {
 
 async function queryFavoritePosts(amountOfPosts, uid) {
 
-    const followsArray = [];
+    let followsArray = [];
 
     // Get the 'follows' array of the user logged in
     try {
         const user = await readUserFromFirestore(uid);
-        user.follows.map((account) => {
-            followsArray.push(account);
-        });
+        followsArray = [...user.follows];
     } catch (error) {
         console.error("Error fetching user following data:", error);
     }
@@ -401,6 +389,5 @@ async function queryFavoritePosts(amountOfPosts, uid) {
     console.debug("queryFavoritePosts: Current posts: ", posts);
     return posts;
 }
-
 
 export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, savePostToFirestore, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };

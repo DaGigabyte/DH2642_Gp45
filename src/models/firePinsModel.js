@@ -1,7 +1,7 @@
 import { observable, reaction, action } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import { listOfGenre } from "../services/firePinsSource";
-import { savePostToFirestore, readPostFromFirestore, queryNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore } from "../firebase/firebaseModel";
+import { savePostToFirestore, queryNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
 
 const model = observable({
   count: 1,
@@ -39,7 +39,8 @@ const model = observable({
     data: {
       fullName: "",
       displayName: "",
-      displayNameInsensitive: ""
+      displayNameInsensitive: "",
+      bio: ""
     },
     setFullName: action(function(name) {
       console.debug("setting userSettingsData.fullName to: ", name);
@@ -53,7 +54,10 @@ const model = observable({
       const nameLowerCase = name?.toLowerCase();
       console.debug("setting userSettingsData.displayNameInsensitive to: " + nameLowerCase);
       this.data.displayNameInsensitive = nameLowerCase;
-    })
+    }),
+    setBio: action(function(bio) {
+      this.data.bio = bio;
+    }), 
   },
   storeUpdates: action(function() {
     console.debug(this);
@@ -95,7 +99,6 @@ const model = observable({
     savePostToFirestore(this.createPostEditor.data, this.user.uid);
   }),
   homePageData: {
-    currentPostID: null,
     data: {
       topRatedPosts: [],
       newestPosts: [],
@@ -112,10 +115,6 @@ const model = observable({
       this.data.newestPosts = posts;
       console.debug("new homePageData.data.newestPosts: ", this.data.newestPosts);
     }),
-    setCurrentPostID: action(function(postID) {
-      console.debug("setting homePageData.currentPostID to: ", postID);
-      this.currentPostID = postID;
-    }),
     fetchTopPosts: async function() {
       console.debug("this.data.topRatedPosts.length:", this.data.topRatedPosts.length);
       const posts = await queryTopPosts(this.data.topRatedPosts.length + 4);
@@ -126,9 +125,50 @@ const model = observable({
       const posts = await queryNewestPosts(this.data.newestPosts.length + 4);
       this.setNewestPosts(posts);
     },
-    getCurrentPost: function() {
-      console.debug("getting current post with ID: ", this.currentPostID);
-      return readPostFromFirestore(this.currentPostID);
+  },
+  postDetailData: {
+    currentPostID: null,
+    status: null, // Has one of the values, 'loading, 'success' or 'error' depening on the state of the fetching
+    comment: "",
+    data: {
+      id: null, // post id
+      user: null, // user object from user who created post
+      content: null,
+      createdAt: null,
+      createdBy: null,
+      dislikedBy: null,
+      likedBy: null,
+      likes: null,
+      modifiedAt: null,
+      posterPath: null,
+      source: null,
+      title: null,
+      comments: null, // Array of comments on the post
+    },
+    setCurrentPostID: action(async function(postID) {
+      this.currentPostID = postID;
+    }),
+    setData: action(function(data) {
+      this.data = data;
+    }),
+    setComment: action(function(comment) {
+      this.comment = comment;
+    }),
+    postComment: async function() {
+      const commentObj = {
+        content: this.comment,
+        createdAt: new Date(),
+        createdBy: model.user.uid,
+        displayName: model.user.data.displayName,
+        profilePicture: model.user.data.profilePicture
+      };
+      await saveCommentToFireStore(commentObj, this.currentPostID);
+    },
+    likePost: async function () {
+      await likePostFirestore(model.user.uid, this.currentPostID);
+    },
+    dislikePost: async function () {
+      await dislikePostFirestore(model.user.uid, this.currentPostID);
     }
   },
   favoritesPageData: {
@@ -136,17 +176,10 @@ const model = observable({
       favoritePosts: [],
     },
     setFavoritePosts: action(function(posts) {
-      console.debug("current favoritesPageData.data.favoritePosts: ", this.data.favoritePosts);
-      console.debug("setting favoritesPageData.data.favoritePosts to: ", posts);
       this.data.favoritePosts = posts;
-      console.debug("new favoritesPageData.data.favoritePosts: ", this.data.favoritePosts);
     }),
     fetchFavoritePosts: async function() {
-      console.debug("this.data.favoritesPosts.length:", this.data.favoritePosts.length);
-  
-      // Access the uid of the current user
       const uid = model.user.uid;
-  
       const posts = await queryFavoritePosts(this.data.favoritePosts.length + 4, uid);
       this.setFavoritePosts(posts);
     },
@@ -168,5 +201,7 @@ const model = observable({
   listOfGenre: await listOfGenre(),
   uuid: uuidv4(),
 });
+
+
 
 export default model;

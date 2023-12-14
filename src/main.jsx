@@ -6,12 +6,27 @@ import firePinsModel from "./models/firePinsModel.js";
 import App from "./App.jsx";
 import "./index.css";
 import initialiseModel from "./models/initialiseModel.js";
+// Toastify
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 configure({ enforceActions: "observed" }); // All state that is observed somewhere needs to be changed through actions.
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <App model={firePinsModel} />
+    <ToastContainer
+      position="bottom-right"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss={false}
+      draggable
+      pauseOnHover
+      theme="colored"
+    />
   </React.StrictMode>
 );
 

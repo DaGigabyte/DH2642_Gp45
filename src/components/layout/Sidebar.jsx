@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { IoReorderFourOutline, IoCloseOutline } from "react-icons/io5";
 // Logo
 import logo from "../../assets/firepins-logo.svg";
@@ -8,9 +8,15 @@ import MenuItemsSidebar from "./MenuItemsSidebar";
 function Sidebar() {
   // State for mobile nav toggle
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const location = useLocation();
+
+  // Close mobile nav when route changes
+  useEffect(() => {
+    setIsNavOpen(false);
+  }, [location]);
 
   return (
-    <div className="sticky top-0 z-10 bg-pins-secondary text-pins-light w-full md:w-80 md:h-screen">
+    <div className="sticky top-0 z-50 bg-pins-secondary text-pins-light w-full md:w-80 md:h-screen">
       {/* Logo container */}
       <div className="flex justify-between border-b-2 border-pins-grey-darker md:justify-center">
         <Link to="/" className="p-4">
