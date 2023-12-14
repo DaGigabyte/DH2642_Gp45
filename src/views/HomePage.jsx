@@ -71,12 +71,12 @@ function HomePage(props) {
         postBody={post.content}
         nofLikes={post.likedBy.length /* can we do things like this */}
         nofDislikes={post.dislikedBy.length /* can we do things like this */}
-        currentUserLikes={post.likedBy.find(props.currentUID) /* can we do things like this */}
-        currentUserDislikes={post.likedBy.find(props.currentUID) /* can we do things like this */}
+        currentUserLikes={post.likedBy?.includes(props.currentUID) /* can we do things like this */}
+        currentUserDislikes={post.likedBy?.includes(props.currentUID) /* can we do things like this */}
         selectPost={() => { props.selectPost(post.id) }}
         likePost={() => { props.likePost(post.id) }}
         dislikePost={() => { props.dislikePost(post.id) }}
-        commentOnPost={() => { props.commentOnCurrentPost(post.id) }}
+        commentOnPost={() => { props.commentOnCurrentPost(post)}}
       />
     )
   }
@@ -99,6 +99,7 @@ function HomePage(props) {
         <button className="purpleButton w-64" onClick={(event) => { props.loadMorePosts(); event.stopPropagation(); }}>Load More Posts</button>
       </div>
       {/*More Content*/}
+
     </div>
   );
 }

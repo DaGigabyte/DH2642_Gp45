@@ -25,7 +25,8 @@ export default function SummarizedPost(props) {
   /*OnClick ACBs*/
   function handlePostClickACB() {
     props.selectPost();
-    navigate("post/" + props.postId );
+
+    navigate("post/" + props.postId);
   }
   function handleCommentClickACB(event) {
     event.stopPropagation();
@@ -81,9 +82,9 @@ export default function SummarizedPost(props) {
         <div className="flex justify-end items-center mt-auto">
           <div title="Click to comment" onClick={handleCommentClickACB} className="postModifyingButtons"><BiCommentDetail size="40" /></div>
           <div className="pl-4 pr-1 text-s font-light">dislikes: {props.nofDislikes}</div>
-          <div title="Click to dislike" onClick={handleDislikeClickACB} className="postModifyingButtons"><BiDislike size="40" className={props.currentUserDislike ? "text-pins-primary": "text-black"} /></div>
+          <div title="Click to dislike" onClick={handleDislikeClickACB} className="postModifyingButtons"><BiDislike size="40" className={props.currentUserDislike ? "text-pins-primary" : "text-black"} /></div>
           <div className="pl-4 pr-1 text-s font-light">likes: {props.nofLikes}</div>
-          <div title="Click to like" onClick={handleLikeClickACB} className="postModifyingButtons"><BiLike size="40" className={props.currentUserLike ? "text-pins-primary": "text-black"} /></div>
+          <div title="Click to like" onClick={handleLikeClickACB} className="postModifyingButtons"><BiLike size="40" className={props.currentUserLike ? "text-pins-primary" : "text-black"} /></div>
         </div>
       </div>
 

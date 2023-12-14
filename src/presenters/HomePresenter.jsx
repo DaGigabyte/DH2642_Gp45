@@ -27,42 +27,25 @@ function HomePresenter(props) {
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   //TODO Fix correct storing
   function handleSubmittedComment() {
-    try{
+    try {
       setCommentModalOpen(false);
-      alert("User \"" + props.model.user.uid + "\" wants to store comment \"" + comment + "\" on currentpost"); 
+      alert("User \"" + props.model.user.uid + "\" wants to store comment \"" + comment + "\" on post: "+post.id);
       setComment("");
       toast.success("Comment Posted!");
     }
-    catch (error){
+    catch (error) {
       toast.error("There was an issue posting the comment");
     }
   }
-  function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+
+  /*  */
+  const [post, setPost] = useState(null);
+  function openCommentModalACB(post) {
+    setPost(post)
+    setCommentModalOpen(true);
   }
 
-  /* new getPost handler */
-  async function openCommentModalACB(id){
-    try{
-      props.model.homePageData.setCurrentPostID(id);
-      await getPost();
-      setCommentModalOpen(true);
-    }
-    catch (error){
-      console.error("Error in openCommentModalACB:", error);
-    }
-  }
-  const [post, setPost] = useState(null);
-  async function getPost() {
-    try {
-      const currentPost = await props.model.homePageData.getCurrentPost();
-      setPost(currentPost);
-      document.title = currentPost?.title;
-    } catch (error) {
-      console.error("Error getting post:", error);
-    }
-  }
-  /* ends here */
+ 
 
   return (
     <>
@@ -77,7 +60,7 @@ function HomePresenter(props) {
         commentOnCurrentPost={openCommentModalACB}
       />
 
-        <CommentModal
+      <CommentModal
         post={post}
         isUserConfirmed={props.model.user.uid ? true : false}
         isOpen={commentModalOpen}
@@ -86,17 +69,17 @@ function HomePresenter(props) {
         userEntersComment={(res) => setComment(res)}
         storeComment={handleSubmittedComment}
       />
-      <ToastContainer 
-      position="top-right"
-      autoClose={3000}
-      hideProgressBar
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-      theme="light"/>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" />
     </>
   );
 }
