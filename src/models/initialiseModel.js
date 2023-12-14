@@ -21,9 +21,16 @@ function currentPostIdReaction(model) {
     }
 
     async function fetchPostDataCB([newPostId]) {
-        const postData = await readPostFromFirestore(newPostId);
-        const postComments = await queryCommentsByPostId(newPostId);
-        model.postDetailData.setData({ ...postData, comments: postComments });
+        model.postDetailData.status = 'loading';
+        try {
+            const postData = await readPostFromFirestore(newPostId);
+            const postComments = await queryCommentsByPostId(newPostId);
+            model.postDetailData.setData({ ...postData, comments: postComments });
+            model.postDetailData.status = 'success';
+        } catch (error) {
+            console.error('Error fetching post data:', error);
+            model.postDetailData.status = 'error';
+        }
     }
 
     reaction(watchCurrentPostIdCB, fetchPostDataCB);

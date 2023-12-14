@@ -127,6 +127,7 @@ const model = observable({
   },
   postDetailData: {
     currentPostID: null,
+    status: null, // Has one of the values, 'loading, 'success' or 'error' depening on the state of the fetching
     comment: "",
     data: {
       id: null, // post id
