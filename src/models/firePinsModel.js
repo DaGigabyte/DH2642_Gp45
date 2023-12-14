@@ -1,6 +1,6 @@
 import { observable, reaction, action } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
-import { savePostToFirestore, readPostFromFirestore, queryNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore, queryCommentsByPostId } from "../firebase/firebaseModel";
+import { savePostToFirestore, queryNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
 
 const model = observable({
   count: 1,
@@ -168,17 +168,10 @@ const model = observable({
       favoritePosts: [],
     },
     setFavoritePosts: action(function(posts) {
-      console.debug("current favoritesPageData.data.favoritePosts: ", this.data.favoritePosts);
-      console.debug("setting favoritesPageData.data.favoritePosts to: ", posts);
       this.data.favoritePosts = posts;
-      console.debug("new favoritesPageData.data.favoritePosts: ", this.data.favoritePosts);
     }),
     fetchFavoritePosts: async function() {
-      console.debug("this.data.favoritesPosts.length:", this.data.favoritePosts.length);
-  
-      // Access the uid of the current user
       const uid = model.user.uid;
-  
       const posts = await queryFavoritePosts(this.data.favoritePosts.length + 4, uid);
       this.setFavoritePosts(posts);
     },
@@ -186,15 +179,6 @@ const model = observable({
   uuid: uuidv4(),
 });
 
-// Reaction to fetch post data when currentPostID changes
-reaction(
-  () => model.postDetailData.currentPostID,
-  async (newPostID) => {
-      const postData = await readPostFromFirestore(newPostID);
-      const postComments = await queryCommentsByPostId(newPostID);
-      model.postDetailData.setData({ ...postData, comments: postComments });
-  }
-);
 
 
 export default model;
