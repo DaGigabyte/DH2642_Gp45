@@ -109,13 +109,13 @@ function DetailedPostView(props) {
                     {/* Interaction buttons */}
                     <div className="flex justify-end items-center mt-auto">
                         <div className="pr-1 text-md font-light">dislikes: {props.nofDislikes}</div>
-                        <div title="Click to dislike" onClick={handleDislikeClickACB} className="postModifyingButtons hover:bg-gray-200">
+                        <button title="Click to dislike" onClick={handleDislikeClickACB} className="postModifyingButtons hover:bg-gray-200" disabled={props.currentUID ? false:true}>
                             <BiDislike size="40" className={props.isDislikedByUser ? "text-pins-primary" : "text-black"} />
-                        </div>
+                        </button>
                         <div className="pl-4 pr-1 text-md font-light">likes: {props.nofLikes}</div>
-                        <div title="Click to like" onClick={handleLikeClickACB} className="postModifyingButtons hover:bg-gray-200">
+                        <button title="Click to like" onClick={handleLikeClickACB} className="postModifyingButtons hover:bg-gray-200" disabled={props.currentUID ? false:true}>
                             <BiLike size="40" className={props.isLikedByUser ? "text-pins-primary" : "text-black"} />
-                        </div>
+                        </button>
                     </div>
                 </div>
             </div>

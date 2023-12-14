@@ -2,8 +2,6 @@ import { observer } from "mobx-react-lite";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DetailPostView from "../views/DetailPostView";
-import React from 'react';
-import { toast, ToastContainer } from 'react-toastify';
 import { newCommentCreatedToast } from "../utils/toastify"
 
 function DetailsPresenter(props) {
@@ -21,29 +19,22 @@ function DetailsPresenter(props) {
 
   /* change state of like */
   function changeLikeStateForUserACB() {
-    const currentUser = props.model.user.uid;
-    const currentPost = props.modelpostDetailData.data.id;
-
-    alert("User " + currentUser + " likes post: " + currentPost)
+    props.model.postDetailData.likePost();
   }
 
   /* change state of dislike */
   function changeDislikeStateForUserACB() {
-    const currentUser = props.model.user.uid;
-    const currentPost = props.modelpostDetailData.data.id;
-
-    alert("User " + currentUser + " dislikes post: " + currentPost)
+    props.model.postDetailData.dislikePost();
   }
 
   /* user want to store the comment */
   function userPostsComment() {
-    alert("submit comment: " + props.model.postDetailData.comment);
-    props.model.postDetailData.setComment("");
+    props.model.postDetailData.postComment();
     newCommentCreatedToast();
-    // props.postdetaildata.setComment
+    props.model.postDetailData.setComment("");
   }
-  const post = props.model.postDetailData.data;
 
+  const post = props.model.postDetailData.data;
   /* conditional rendering */
   function verifyCurrentPost() {
     if (!post)//TODO BYT
@@ -58,7 +49,7 @@ function DetailsPresenter(props) {
         userDislikesPost={changeDislikeStateForUserACB}
         userLikesPost={changeLikeStateForUserACB}
         nofLikes={post.likes}
-        nofDislikes={0/* .length not working anymore */}
+        nofDislikes={post.dislikedBy ? post.dislikedBy.length : "?"}
         isLikedByUser={post.likedBy?.includes(props.model.user.uid)}
         isDislikedByUser={post.dislikedBy?.includes(props.model.user.uid)}
         postComments={[

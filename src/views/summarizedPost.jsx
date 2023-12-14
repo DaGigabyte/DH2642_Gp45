@@ -80,11 +80,28 @@ export default function SummarizedPost(props) {
 
         {/* LikeButtons  xl:absolute xl:bottom-5 xl:right-10*/}
         <div className="flex justify-end items-center mt-auto">
-          <div title="Click to comment" onClick={handleCommentClickACB} className="postModifyingButtons"><BiCommentDetail size="40" /></div>
+          <button title={props.currentUID ? "Click to comment" : "Log in to access"}
+            onClick={handleCommentClickACB}
+            className="postModifyingButtons"
+            disabled={props.currentUID ? false : true}>
+            <BiCommentDetail size="40" />
+          </button>
+
           <div className="pl-4 pr-1 text-s font-light">dislikes: {props.nofDislikes}</div>
-          <div title="Click to dislike" onClick={handleDislikeClickACB} className="postModifyingButtons"><BiDislike size="40" className={props.currentUserDislike ? "text-pins-primary" : "text-black"} /></div>
+          <button title={props.currentUID ? "Click to dislike" : "Log in to access"}
+            onClick={handleDislikeClickACB}
+            className="postModifyingButtons"
+            disabled={props.currentUID ? false : true}>
+            <BiDislike size="40" className={props.currentUserDislikes ? "text-pins-primary" : "text-black"} />
+          </button>
+
           <div className="pl-4 pr-1 text-s font-light">likes: {props.nofLikes}</div>
-          <div title="Click to like" onClick={handleLikeClickACB} className="postModifyingButtons"><BiLike size="40" className={props.currentUserLike ? "text-pins-primary" : "text-black"} /></div>
+          <button title={props.currentUID ? "Click to like" : "Log in to access"}
+            onClick={handleLikeClickACB}
+            className="postModifyingButtons"
+            disabled={props.currentUID ? false : true}>
+            <BiLike size="40" className={props.currentUserLikes ? "text-pins-primary" : "text-black"} />
+          </button>
         </div>
       </div>
 

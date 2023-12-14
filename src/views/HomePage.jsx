@@ -69,14 +69,15 @@ function HomePage(props) {
         postId={post.id}
         postTitle={post.title}
         postBody={post.content}
-        nofLikes={post.likedBy.length /* can we do things like this */}
-        nofDislikes={post.dislikedBy.length /* can we do things like this */}
-        currentUserLikes={post.likedBy?.includes(props.currentUID) /* can we do things like this */}
-        currentUserDislikes={post.likedBy?.includes(props.currentUID) /* can we do things like this */}
+        nofLikes={post.likes}
+        nofDislikes={post.dislikedBy.length}
+        currentUID={props.currentUID}
+        currentUserLikes={post.likedBy?.includes(props.currentUID)}
+        currentUserDislikes={post.dislikedBy?.includes(props.currentUID)}
         selectPost={() => { props.selectPost(post.id) }}
         likePost={() => { props.likePost(post.id) }}
         dislikePost={() => { props.dislikePost(post.id) }}
-        commentOnPost={() => { props.commentOnCurrentPost(post)}}
+        commentOnPost={() => { props.commentOnCurrentPost(post) }}
       />
     )
   }

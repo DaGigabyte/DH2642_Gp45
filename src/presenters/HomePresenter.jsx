@@ -15,20 +15,23 @@ function HomePresenter(props) {
     props.model.postDetailData.setCurrentPostID(postId);
   }
   function userlikesPostACB(postId) {
-    alert('User likes post' + postId)
+    props.model.postDetailData.setCurrentPostID(postId);
+    props.model.postDetailData.likePost();
   }
   function userdislikesPostACB(postId) {
-    alert('User dislikes post' + postId)
+    props.model.postDetailData.setCurrentPostID(postId);
+    props.model.postDetailData.dislikePost();
   }
 
   /* FOR COMMENT Modal*/
-  const [comment, setComment] = useState("");
   const [commentModalOpen, setCommentModalOpen] = useState(false);
-  //TODO Fix correct storing
-  function handleSubmittedComment() {
+
+  /* CB to post the comment when user  */
+  function handleSubmittedCommentACB() {
     setCommentModalOpen(false);
-    alert("User \"" + props.model.user.uid + "\" wants to store comment \"" + comment + "\" on post: " + post.id);
-    setComment("");
+    props.model.postDetailData.setCurrentPostID(post.id);
+    props.model.postDetailData.postComment();
+    props.model.postDetailData.setComment("");
     newCommentCreatedToast();
   }
 
@@ -57,9 +60,9 @@ function HomePresenter(props) {
         isUserConfirmed={props.model.user.uid ? true : false}
         isOpen={commentModalOpen}
         setOpen={setCommentModalOpen}
-        text={comment}
-        userEntersComment={(res) => setComment(res)}
-        storeComment={handleSubmittedComment}
+        text={props.model.postDetailData.comment}
+        userEntersComment={(res) => props.model.postDetailData.setComment(res)}
+        storeComment={handleSubmittedCommentACB}
       />
     </>
   );
