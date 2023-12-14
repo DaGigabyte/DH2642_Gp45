@@ -1,6 +1,6 @@
 import { observable, reaction, action } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
-import { savePostToFirestore, queryNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
+import { savePostToFirestore, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
 
 const model = observable({
   count: 1,
@@ -100,7 +100,7 @@ const model = observable({
   homePageData: {
     data: {
       topRatedPosts: [],
-      newestPosts: await queryNewestPosts(4),
+      newestPosts: await queryMoreNewestPosts(4),
     },
     setTopRatedPosts: action(function(posts) {
       console.debug("current homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
@@ -121,8 +121,8 @@ const model = observable({
     },
     fetchNewestPosts: async function() {
       console.debug("this.data.newestPosts.length:", this.data.newestPosts.length);
-      const posts = await queryNewestPosts(this.data.newestPosts.length + 4);
-      this.setNewestPosts(posts);
+      const morePosts = await queryMoreNewestPosts(4);
+      this.setNewestPosts([...this.data.newestPosts, ...morePosts]);
     },
   },
   postDetailData: {
