@@ -156,7 +156,9 @@ const model = observable({
       const commentObj = {
         content: this.comment,
         createdAt: new Date(),
-        createdBy: model.user.uid
+        createdBy: model.user.uid,
+        displayName: model.user.data.displayName,
+        profilePicture: model.user.data.profilePicture
       };
       await saveCommentToFireStore(commentObj, this.currentPostID);
     },

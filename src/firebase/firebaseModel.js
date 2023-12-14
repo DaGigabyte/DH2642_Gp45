@@ -250,13 +250,8 @@ async function unfollowUserFirestore(uidFollowed, uidUnfollower) {
     }
 }
 
-async function saveCommentToFireStore(uid, postId, comment) {
+async function saveCommentToFireStore(commentObj, postId) {
     const path = "Posts/" + postId + "/Comments";
-    const commentObj = {
-        content: comment,
-        createdAt: new Date(),
-        createdBy: uid
-    };
     const docRef = await addDoc(collection(db, path), commentObj);
     console.debug("saveCommentToFirestore: Document written with ID: ", docRef.id);
 }
