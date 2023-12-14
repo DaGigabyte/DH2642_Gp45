@@ -7,7 +7,6 @@ import { newCommentCreatedToast } from "../utils/toastify"
 
 function HomePresenter(props) {
   let data = props.model.homePageData.data;
-  useEffect(() => { loadMorePostACB(); }, [])
   function loadMorePostACB() {
     props.model.homePageData.fetchNewestPosts();
   }
