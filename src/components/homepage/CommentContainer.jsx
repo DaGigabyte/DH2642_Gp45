@@ -22,7 +22,7 @@ export default function CommentContainer(props) {
             </div>)
         }
         else return (<>
-            <textarea className="w-full border rounded-xl p-2 content-start min-h-[6rem] disabled:opacity-50 disabled:cursor-not-allowed hover:disabled:bg-gray-200 hover:disabled:border-gray-300" disabled>Log in to enter text</textarea>
+            <textarea className="w-full border rounded-xl p-2 content-start min-h-[6rem] disabled:opacity-50 disabled:cursor-not-allowed hover:disabled:bg-gray-200 hover:disabled:border-gray-300" defaultValue="Log in to enter text" disabled></textarea>
             <button className="mt-2 purpleButton text-xl font-medium text-center disabled:opacity-50 disabled:cursor-not-allowed  hover:disabled:border-gray-300" disabled>Log in to post a comment</button>
         </>)
     }
