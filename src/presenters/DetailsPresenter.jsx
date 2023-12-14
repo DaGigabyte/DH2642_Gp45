@@ -4,48 +4,45 @@ import { useEffect, useState } from "react";
 import DetailPostView from "../views/DetailPostView";
 import React from 'react';
 import { toast, ToastContainer } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
+import { newCommentCreatedToast } from "../utils/toastify"
 
 function DetailsPresenter(props) {
   const { pid } = useParams();
-  const [post, setPost] = useState(null);
 
   useEffect(() => {
-    props.model.homePageData.setCurrentPostID(pid);
-    props.model.homePageData.getCurrentPost()
-      .then((currentPost) => {
-        setPost(currentPost);
-        document.title = currentPost?.title;
-      });
+    props.model.postDetailData.setCurrentPostID(pid);
   }, [pid]);
 
+  useEffect(() => {
+    document.title = props.model.postDetailData.data?.title;
+  }, [props.model.postDetailData.data.title]);
 
-  /* comments */
-  const [comment, setComment] = useState("");
+
+
+  /* change state of like */
   function changeLikeStateForUserACB() {
     const currentUser = props.model.user.uid;
-    const currentPost = post;
+    const currentPost = props.modelpostDetailData.data.id;
 
     alert("User " + currentUser + " likes post: " + currentPost)
   }
+
+  /* change state of dislike */
   function changeDislikeStateForUserACB() {
     const currentUser = props.model.user.uid;
-    const currentPost = post;
+    const currentPost = props.modelpostDetailData.data.id;
 
     alert("User " + currentUser + " dislikes post: " + currentPost)
   }
 
+  /* user want to store the comment */
   function userPostsComment() {
-    try {
-      alert("submit comment: " + comment);
-      setComment(null);
-      toast.success("Comment Posted!");
-      // props.postdetaildata.setComment
-    }
-    catch (error) {
-      toast.error("There was an issue posting the comment");
-    }
+    alert("submit comment: " + props.model.postDetailData.comment);
+    props.model.postDetailData.setComment("");
+    newCommentCreatedToast();
+    // props.postdetaildata.setComment
   }
+  const post = props.model.postDetailData.data;
 
   /* conditional rendering */
   function verifyCurrentPost() {
@@ -55,13 +52,13 @@ function DetailsPresenter(props) {
       <DetailPostView
         post={post}//TODO BYT props.model.postddetaildata.data.
         currentUID={props.model.user.uid}
-        commentText={comment}
-        userEntersComment={setComment}
+        commentText={props.model.postDetailData.comment}
+        userEntersComment={(res) => { props.model.postDetailData.setComment(res) }}
         storeComment={userPostsComment}
         userDislikesPost={changeDislikeStateForUserACB}
         userLikesPost={changeLikeStateForUserACB}
-        nofLikes={post.likedBy.length}
-        nofDislikes={post.dislikedBy.length}
+        nofLikes={post.likes}
+        nofDislikes={0/* .length not working anymore */}
         isLikedByUser={post.likedBy?.includes(props.model.user.uid)}
         isDislikedByUser={post.dislikedBy?.includes(props.model.user.uid)}
         postComments={[
@@ -72,22 +69,7 @@ function DetailsPresenter(props) {
   }
 
   {/* General return*/ }
-  return (
-    <>
-      {verifyCurrentPost()}
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light" />
-
-    </>)
+  return (verifyCurrentPost())
 }
 
 export default observer(DetailsPresenter);

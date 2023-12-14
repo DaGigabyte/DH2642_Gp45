@@ -16,7 +16,7 @@ function DetailedPostView(props) {
         if (props.currentUID) {
             return (
                 /*logged in users activates button by typing*/
-                <div  className="w-full flex flex-col lg:flex-row gap-1 items-end justify-items-end mb-4">
+                <div className="w-full flex flex-col lg:flex-row gap-1 items-end justify-items-end mb-4">
                     <textarea
                         className="w-full border rounded-xl p-2 bg-pins-light content-start min-h-[3rem]"
                         id="commentBox"
@@ -37,9 +37,9 @@ function DetailedPostView(props) {
 
     /* Renders the comments of the displayed post */
     function renderCommentSection() {
-        if (props.postComments.length<1)
+        if (props.postComments.length < 1)
             return (
-            <div className="rounded-xl shadow text-center p-3  text-lg font-medium ">Be the first to comment on this!</div>)
+                <div className="rounded-xl shadow text-center p-3 text-lg font-medium bg-pins-light">Be the first to comment on this!</div>)
         else {
             return (props.postComments.map(renderCommentCB))
         }
@@ -87,16 +87,17 @@ function DetailedPostView(props) {
                     <img className="w-full h-full object-cover" src={props.post.posterPath} alt="/" />
                 </div>
                 {/* user and text container */}
-                <div className="flex flex-col w-full mt-6">
+                <div className="flex flex-col w-full mt-6 pl-4">
 
                     {/* user profile */}
                     <span className="text-3xl w-fit rounded-full py-1 pr-3 mb-3 hover:cursor-pointer hover:shadow hover:bg-pins-light transition duration-300"
                         onClick={() => { alert("Navigate to profile, firebase user id is missing") }}
                         title="Go to Profile">
-                        <ProfileBox
+                        {/* User dont exist anymore? */}
+                        {props.post.user && <ProfileBox
                             picture={props.post.user.profilePicture ? props.post.user.profilePicture : defaultPic}
                             nick={props.post.user.displayName}
-                        />
+                        />}
                     </span>
 
                     {/* Title */}

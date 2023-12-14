@@ -171,9 +171,8 @@ function readPostFromFirestore(postId) {
 }
 
 async function likePostFirestore(uid, postId) {
-    const path = "Posts/" + postId;
-
     try {
+        const path = "Posts/" + postId;
         const docRef = doc(db, path);
         const docSnapshot = await getDoc(docRef);
 
@@ -194,9 +193,8 @@ async function likePostFirestore(uid, postId) {
 }
 
 async function dislikePostFirestore(uid, postId) {
-    const path = "Posts/" + postId;
-
     try {
+        const path = "Posts/" + postId;
         const docRef = doc(db, path);
         const docSnapshot = await getDoc(docRef);
 
@@ -217,9 +215,8 @@ async function dislikePostFirestore(uid, postId) {
 }
 
 async function followUserFirestore(uidFollowed, uidFollower) {
-    const path = "Users/" + uidFollowed;
-
     try {
+        const path = "Users/" + uidFollowed;
         const docRef = doc(db, path);
         const docSnapshot = await getDoc(docRef);
 
@@ -236,9 +233,8 @@ async function followUserFirestore(uidFollowed, uidFollower) {
 }
 
 async function unfollowUserFirestore(uidFollowed, uidUnfollower) {
-    const path = "Users/" + uidFollowed;
-
     try {
+        const path = "Users/" + uidFollowed;
         const docRef = doc(db, path);
         const docSnapshot = await getDoc(docRef);
 
@@ -359,5 +355,45 @@ async function queryTopPosts(amountOfPosts) {
     return posts; // return posts to caller
 }
 
+async function queryFavoritePosts(amountOfPosts, uid) {
 
-export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, savePostToFirestore, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryTopPosts, queryUsername };
+    let followsArray = [];
+
+    // Get the 'follows' array of the user logged in
+    try {
+        const user = await readUserFromFirestore(uid);
+        followsArray = [...user.follows];
+    } catch (error) {
+        console.error("Error fetching user following data:", error);
+    }
+
+    // If user is not following anyone return an empty array
+    if (followsArray.length === 0) {
+        return [];
+    }
+
+    // Fetch posts created by users in the 'follows' array and order on upload date in descending order
+    const q = query(
+        collection(db, 'Posts'), 
+        orderBy('createdAt', 'desc'), 
+        where('createdBy', 'in', followsArray),
+        limit(amountOfPosts)
+    );
+    const querySnapshot = await getDocs(q);
+    const posts = [];
+
+    for (const doc of querySnapshot.docs) {
+        const postData = doc.data();
+        try {
+            const user = await readUserFromFirestore(postData.createdBy);
+            posts.push({ id: doc.id, user: user, ...postData });
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    }
+
+    console.debug("queryFavoritePosts: Current posts: ", posts);
+    return posts;
+}
+
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, savePostToFirestore, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };

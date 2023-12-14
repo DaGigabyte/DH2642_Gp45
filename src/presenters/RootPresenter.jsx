@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite";
 import RootView from "../views/RootView";
 import { signInACB, signOutACB } from "../firebase/firebaseModel";
 import { searchMovie } from "../services/firePinsSource";
+import { newPostCreatedToast } from "../utils/toastify";
 
 // Enum for search API source
 const sourceENUM = {
@@ -72,6 +73,12 @@ function RootPresenter(props) {
       setSearchTextTMDB("");
       // Reset search results
       setSearchResultsTMDB([]);
+
+      // Fetch new posts
+      props.model.homePageData.fetchNewestPosts();
+
+      // Notify user of new post creation
+      newPostCreatedToast();
     }
   }
 

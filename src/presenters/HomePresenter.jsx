@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import HomePage from "../views/HomePage";
 import CommentModal from "../components/modal/CommentModal"
 import React from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
+import { newCommentCreatedToast } from "../utils/toastify"
 
 function HomePresenter(props) {
   let data = props.model.homePageData.data;
@@ -13,7 +12,7 @@ function HomePresenter(props) {
     props.model.homePageData.fetchNewestPosts();
   }
   function userSelectsPostACB(postId) {
-    props.model.homePageData.setCurrentPostID(postId);
+    props.model.postDetailData.setCurrentPostID(postId);
   }
   function userlikesPostACB(postId) {
     alert('User likes post' + postId)
@@ -27,25 +26,19 @@ function HomePresenter(props) {
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   //TODO Fix correct storing
   function handleSubmittedComment() {
-    try {
-      setCommentModalOpen(false);
-      alert("User \"" + props.model.user.uid + "\" wants to store comment \"" + comment + "\" on post: "+post.id);
-      setComment("");
-      toast.success("Comment Posted!");
-    }
-    catch (error) {
-      toast.error("There was an issue posting the comment");
-    }
+    setCommentModalOpen(false);
+    alert("User \"" + props.model.user.uid + "\" wants to store comment \"" + comment + "\" on post: " + post.id);
+    setComment("");
+    newCommentCreatedToast();
   }
 
-  /*  */
+  /* local state of post for commentmodal */
   const [post, setPost] = useState(null);
   function openCommentModalACB(post) {
     setPost(post)
     setCommentModalOpen(true);
   }
 
- 
 
   return (
     <>
@@ -59,7 +52,6 @@ function HomePresenter(props) {
         dislikePost={userdislikesPostACB}
         commentOnCurrentPost={openCommentModalACB}
       />
-
       <CommentModal
         post={post}
         isUserConfirmed={props.model.user.uid ? true : false}
@@ -69,17 +61,6 @@ function HomePresenter(props) {
         userEntersComment={(res) => setComment(res)}
         storeComment={handleSubmittedComment}
       />
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light" />
     </>
   );
 }
