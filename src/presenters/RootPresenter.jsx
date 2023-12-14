@@ -72,6 +72,9 @@ function RootPresenter(props) {
       setSearchTextTMDB("");
       // Reset search results
       setSearchResultsTMDB([]);
+
+      // Fetch new posts
+      props.model.homePageData.fetchNewestPosts();
     }
   }
 
