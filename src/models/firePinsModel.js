@@ -38,7 +38,8 @@ const model = observable({
     data: {
       fullName: "",
       displayName: "",
-      displayNameInsensitive: ""
+      displayNameInsensitive: "",
+      bio: ""
     },
     setFullName: action(function(name) {
       console.debug("setting userSettingsData.fullName to: ", name);
@@ -52,7 +53,10 @@ const model = observable({
       const nameLowerCase = name?.toLowerCase();
       console.debug("setting userSettingsData.displayNameInsensitive to: " + nameLowerCase);
       this.data.displayNameInsensitive = nameLowerCase;
-    })
+    }),
+    setBio: action(function(bio) {
+      this.data.bio = bio;
+    }), 
   },
   storeUpdates: action(function() {
     console.debug(this);
