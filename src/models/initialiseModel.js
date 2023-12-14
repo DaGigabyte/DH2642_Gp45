@@ -1,4 +1,5 @@
 import { connectToFirestore, readPostFromFirestore, queryCommentsByPostId } from "../firebase/firebaseModel";
+import resolvePromise from "./resolvePromise";
 import { reaction } from "mobx";
 
 function settingsReaction(model) {
@@ -19,20 +20,14 @@ function currentPostIdReaction(model) {
     function watchCurrentPostIdCB() {
         return [model.postDetailData.currentPostID];
     }
-
-    async function fetchPostDataCB([newPostId]) {
-        model.postDetailData.status = 'loading';
-        try {
-            const postData = await readPostFromFirestore(newPostId);
-            const postComments = await queryCommentsByPostId(newPostId);
-            model.postDetailData.setData({ ...postData, comments: postComments });
-            model.postDetailData.status = 'success';
-        } catch (error) {
-            console.error('Error fetching post data:', error);
-            model.postDetailData.status = 'error';
-        }
+    async function readPostwithComments(postId) {
+        const postData = await readPostFromFirestore(postId);
+        const postComments = await queryCommentsByPostId(postId);
+        return { ...postData, comments: postComments };
     }
-
+    async function fetchPostDataCB([newPostId]) {
+        resolvePromise(readPostwithComments(newPostId), model.postDetailData.promiseState);
+    }
     reaction(watchCurrentPostIdCB, fetchPostDataCB);
 }
 
