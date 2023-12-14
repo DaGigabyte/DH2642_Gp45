@@ -10,7 +10,7 @@ function NewPostCreateNewPostButton(props) {
   // Conditional create new post button
   function handleCreateNewPostButton() {
     if (props.selectedMovieID === null) {
-      return "Select a movie";
+      return "Search & Select a movie";
     } else if (props.newPostCaption === "") {
       return "Add a caption";
     } else {
