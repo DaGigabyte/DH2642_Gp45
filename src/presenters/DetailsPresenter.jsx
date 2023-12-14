@@ -15,6 +15,10 @@ function DetailsPresenter(props) {
     document.title = props.model.postDetailData.data?.title;
   }, [props.model.postDetailData.data.title]);
 
+  useEffect(() => {
+    document.title = props.model.postDetailData.data?.title;
+  }, [props.model.postDetailData.data.title]);
+
 
 
   /* change state of like */

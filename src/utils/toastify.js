@@ -4,6 +4,5 @@ import { toast } from "react-toastify";
 export const newPostCreatedToast = () =>
   toast.success("Your post was successfully created.");
 
-
 export const newCommentCreatedToast = () =>
   toast.success("Your comment was posted.");
