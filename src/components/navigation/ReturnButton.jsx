@@ -18,7 +18,7 @@ export default function ReturnButton(props) {
         <div onClick={() => { navigate(-1) }}
             title="Return to previous page"
             className="absolute top-4 right-4 p-2 shadow rounded-xl cursor-pointer
-                  hover:shadow-lg hover:bg-slate-300">
+                  hover:shadow-lg hover:bg-slate-300 backdrop-blur-sm">
             <IoCloseOutline size={props.size} />
         </div>)
 }

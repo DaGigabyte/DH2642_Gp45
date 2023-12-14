@@ -8,14 +8,14 @@
 export default function ProfileBox(props) {
   return (
     <div className="flex items-center space-x-4">
-      <span className="mr-2">
+      <span className="shrink-0">
         <img
           src={props.picture}
           alt="profile picture"
-          className="w-16 h-16 rounded-full"
+          className="w-14 h-14 rounded-full"
         />
       </span>
-      <span className="text-3xl">{props.nick}</span>
+      <span className="text-3xl truncate">{props.nick}</span>
     </div>
   );
 }
