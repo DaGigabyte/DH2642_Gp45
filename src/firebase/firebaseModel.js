@@ -300,7 +300,11 @@ async function queryCommentsByPostId(postId) {
 }
 
 async function queryPostByUserUid(userUid) {
-    const q = query(collection(db, "Posts"), where("createdBy", "==", userUid));
+    const q = query(
+        collection(db, "Posts"), 
+        where("createdBy", "==", userUid),
+        orderBy("createdAt", "desc")
+    );
     return getDocs(q)
     .then((querySnapshot) => { // querySnapshot is an array of documents
         const posts = [];
