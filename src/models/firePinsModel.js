@@ -184,19 +184,32 @@ const model = observable({
       this.setFavoritePosts(posts);
     },
   },
-  numberOfNewPost: 0,
-  newPostsData: [{}], // array of new posts
-  setNewPostsData: action(function(posts) {
-    console.debug("current newPostsData: ", this.newPostsData);
-    console.debug("setting newPostsData to: ", posts);
-    this.newPostsData = posts;
-    console.debug("new newPostsData: ", this.newPostsData);
-    setNumberOfNewPost(numberOfNewPost + 1);
-  }),
-  updateWithNewPosts: function() {
-    setNewestPosts({...newPostData, ...this.homePageData.data.newestPosts});
-    setNumberOfNewPost(0);
-    setNewPostData([{}]);
+  newPostsData: {
+    numberOfNewPost: 0,
+    data: [], // array of new posts
+    setNumberOfNewPost: action(function(number) {
+      console.debug("setting numberOfNewPost to: ", number);
+      this.numberOfNewPost = number;
+    }),
+    setNewPostsData: action(function(posts) {
+      console.debug("current newPostsData: ", this.newPostsData);
+      console.debug("setting newPostsData to: ", posts);
+      this.data = posts;
+      console.debug("new newPostsData: ", this.data);
+      this.setNumberOfNewPost(this.data.length);
+    }),
+    addNewPost: action(function(post) {
+      console.debug("adding new post: ", post);
+      this.setNewPostsData([post, ...this.data]);
+      model.updateHomePageDataWithNewPosts();
+    }),
+  },
+  /**
+   * Updates the homePageData.newestPosts with the new posts and clears the newPostsData.data
+   */
+  updateHomePageDataWithNewPosts: function() {
+    this.homePageData.setNewestPosts([...this.newPostsData.data, ...this.homePageData.data.newestPosts]);
+    this.newPostsData.setNewPostsData([]);
   },
   listOfGenre: await listOfGenre(),
   uuid: uuidv4(),
