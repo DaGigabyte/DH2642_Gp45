@@ -1,4 +1,5 @@
 // Team profile pic
+import Jasper from "../assets/team/jasper.png";
 import Zia from "../assets/team/zia-mohseni.png";
 
 // Team members array
@@ -11,9 +12,11 @@ const teamMembers = [
   },
   {
     id: 2,
-    name: "Pak Long Wong (Jasper)",
+    name: "Jasper",
     role: "Back-end Developer",
-    image: "https://avatars.githubusercontent.com/u/57797989?v=4",
+    image: Jasper,
+    about:
+      "I like learning new programming languages and collaborating with other bright minds. It has been so much fun studying this course as an exchange student.",
   },
   {
     id: 3,
