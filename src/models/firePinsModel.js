@@ -287,6 +287,15 @@ const model = observable({
     this.homePageData.setNewestPosts([...this.newPostsData.data, ...this.homePageData.data.newestPosts]);
     this.newPostsData.setNewPostsData([]);
   },
+  /**
+   * get post locally from homePageData.newestPosts
+   * @param {Number} postID 
+   * @returns {Object} post with the corresponding postID
+   */
+  getPostFromModel: function(postID) {
+    const post = this.homePageData.data.newestPosts.find(post => post.id === postID) || this.homePageData.data.topRatedPosts.find(post => post.id === postID) || this.favoritesPageData.data.favoritePosts.find(post => post.id === postID);
+    return post;
+  },
   listOfTMDBgenre: await listOfGenre(),
   /**
    * Converts a TMDB genre ID to a string of the genre name

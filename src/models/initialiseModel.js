@@ -26,7 +26,11 @@ function currentPostIdReaction(model) {
         return { ...postData, comments: postComments };
     }
     async function fetchPostDataCB([newPostId]) {
-        resolvePromise(readPostwithComments(newPostId), model.postDetailData.promiseState);
+        const post = model.getPostFromModel(newPostId);
+        if (post) // If post is already in the model, just set promiseState.data to the post
+            model.postDetailData.promiseState.setData(post);
+        else  // Otherwise, fetch the post from Firestore
+            resolvePromise(readPostwithComments(newPostId), model.postDetailData.promiseState);
         // Reset the comment to an empty string
         model.postDetailData.comment = "";
     }
