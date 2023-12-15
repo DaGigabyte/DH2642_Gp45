@@ -119,7 +119,7 @@ const model = observable({
   homePageData: {
     data: {
       topRatedPosts: [],
-      newestPosts: await queryMoreNewestPosts(4),
+      newestPosts: [],
     },
     setTopRatedPosts: action(function(posts) {
       console.debug("current homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
@@ -287,7 +287,16 @@ const model = observable({
     this.homePageData.setNewestPosts([...this.newPostsData.data, ...this.homePageData.data.newestPosts]);
     this.newPostsData.setNewPostsData([]);
   },
-  listOfTMDBgenre: await listOfGenre(),
+  /**
+   * get post locally from homePageData.newestPosts
+   * @param {Number} postID 
+   * @returns {Object} post with the corresponding postID
+   */
+  getPostFromModel: function(postID) {
+    const post = this.homePageData.data.newestPosts.find(post => post.id === postID) || this.homePageData.data.topRatedPosts.find(post => post.id === postID) || this.favoritesPageData.data.favoritePosts.find(post => post.id === postID);
+    return post;
+  },
+  listOfTMDBgenre: [],
   /**
    * Converts a TMDB genre ID to a string of the genre name
    * @param {Number} TMDBgenreID 

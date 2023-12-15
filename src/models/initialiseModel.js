@@ -1,6 +1,7 @@
 import { connectToFirestore, readPostFromFirestore, queryCommentsByPostId, readUserFromFirestore, queryPostByUserUid } from "../firebase/firebaseModel";
 import resolvePromise from "./resolvePromise";
 import { reaction } from "mobx";
+import { listOfGenre } from "../services/firePinsSource";
 
 function settingsReaction(model) {
     console.debug("settingsReaction");
@@ -20,13 +21,19 @@ function currentPostIdReaction(model) {
     function watchCurrentPostIdCB() {
         return [model.postDetailData.currentPostID];
     }
-    async function readPostwithComments(postId) {
+    async function readPostwithComments(postId) { // Fetch post data and comments from Firestore
         const postData = await readPostFromFirestore(postId);
         const postComments = await queryCommentsByPostId(postId);
         return { ...postData, comments: postComments };
     }
+    async function appendCommentsToPost(post) { // Fetch comments from Firestore and append to post
+        const postComments = await queryCommentsByPostId(post.id);
+        return { ...post, comments: postComments };
+    }
     async function fetchPostDataCB([newPostId]) {
-        resolvePromise(readPostwithComments(newPostId), model.postDetailData.promiseState);
+        const post = model.getPostFromModel(newPostId);
+        const promiseToBeResolved = post ? appendCommentsToPost(post) : readPostwithComments(newPostId); // If post is already in the model, just set promiseState.data to the post, otherwise fetch the post from Firestore
+        resolvePromise(promiseToBeResolved, model.postDetailData.promiseState);
         // Reset the comment to an empty string
         model.postDetailData.comment = "";
     }
@@ -64,10 +71,12 @@ function currentProfileUidReaction(model) {
     reaction(watchCurrentProfileUidCB, fetchProfileDataCB);
 }
 
-export default function initialiseModel(model) {
+export default async function initialiseModel(model) {
     console.debug("initialiseModel");
     connectToFirestore(model);
     settingsReaction(model);
     currentPostIdReaction(model);
     currentProfileUidReaction(model);
+    model.homePageData.fetchNewestPosts();
+    Object.assign(model, {listOfTMDBgenre: await listOfGenre()});
 }
