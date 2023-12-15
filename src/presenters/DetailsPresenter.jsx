@@ -12,14 +12,8 @@ function DetailsPresenter(props) {
   }, [pid]);
 
   useEffect(() => {
-    document.title = props.model.postDetailData.data?.title;
-  }, [props.model.postDetailData.data.title]);
-
-  useEffect(() => {
-    document.title = props.model.postDetailData.data?.title;
-  }, [props.model.postDetailData.data.title]);
-
-
+    document.title = props.model.postDetailData.promiseState.data?.title;
+  }, [props.model.postDetailData.promiseState.data?.title]);
 
   /* change state of like */
   function changeLikeStateForUserACB() {
@@ -38,7 +32,7 @@ function DetailsPresenter(props) {
     props.model.postDetailData.setComment("");
   }
 
-  const post = props.model.postDetailData.data;
+  const post = props.model.postDetailData.promiseState.data;
   /* conditional rendering */
   function verifyCurrentPost() {
     if (!post)
