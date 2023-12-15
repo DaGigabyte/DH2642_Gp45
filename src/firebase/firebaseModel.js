@@ -107,8 +107,28 @@ function connectToFirestore(model) {
             unsubscribeOnSnapshotUser(); // Stop listening to the user document
         }
     }
+    function updateNewestPostsFromFirestoreReaction(model) {
+        const posts = collection(db, "Posts");
+        const q = query(posts, orderBy("createdAt", "desc"), limit(1));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                    const postData = change.doc.data();
+                    console.debug("updateNewestPostsFromFirestoreReaction: New post added to Firestore, updating MobX store\n change.doc.data(): ", postData);
+                    readUserFromFirestore(postData.createdBy)
+                        .then((user) => {
+                            model.newPostsData.addNewPost({ id: change.doc.id, user: user, ...postData });
+                        })
+                        .catch((error) => {
+                            console.error("updateNewestPostsFromFirestoreReaction: Error fetching user data:", error);
+                        });
+                }
+            });
+        });
+    }
     onAuthStateChanged(auth, onAuthStateChangedCB);
     reaction(watchUserCB, callSaveUserToFirestoreCB);
+    updateNewestPostsFromFirestoreReaction(model);
 }
 
 function readUserFromFirestore(uid) {
@@ -300,7 +320,11 @@ async function queryCommentsByPostId(postId) {
 }
 
 async function queryPostByUserUid(userUid) {
-    const q = query(collection(db, "Posts"), where("createdBy", "==", userUid));
+    const q = query(
+        collection(db, "Posts"), 
+        where("createdBy", "==", userUid),
+        orderBy("createdAt", "desc")
+    );
     return getDocs(q)
     .then((querySnapshot) => { // querySnapshot is an array of documents
         const posts = [];

@@ -1,5 +1,6 @@
 import { observable, reaction, action } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
+import { listOfGenre } from "../services/firePinsSource";
 import { savePostToFirestore, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
 
 const model = observable({
@@ -28,6 +29,14 @@ const model = observable({
       console.debug("current user.data: ", this.data);
       console.debug("setting user.data to: ", data);
       this.data = data;
+    }),
+    appendToFollows: action(function (uid) {
+      if (!this.data.follows.includes(uid)) {
+        this.data.follows = [...this.data.follows, (uid)];
+      }
+    }),
+    removeFromFollows: action(function (uid) {
+      this.data.follows = this.data.follows.filter((uidInFollows) => uidInFollows !== uid);
     }),
   },
   setUser: action(function(userObj) {
@@ -129,26 +138,36 @@ const model = observable({
     currentPostID: null,
     status: null, // Has one of the values, 'loading, 'success' or 'error' depening on the state of the fetching
     comment: "",
-    data: {
-      id: null, // post id
-      user: null, // user object from user who created post
-      content: null,
-      createdAt: null,
-      createdBy: null,
-      dislikedBy: null,
-      likedBy: null,
-      likes: null,
-      modifiedAt: null,
-      posterPath: null,
-      source: null,
-      title: null,
-      comments: null, // Array of comments on the post
+    promiseState: {
+      promise: null,
+      data: {
+        id: null, // post id
+        user: null, // user object from user who created post
+        content: null,
+        createdAt: null,
+        createdBy: null,
+        dislikedBy: null,
+        likedBy: null,
+        likes: null,
+        modifiedAt: null,
+        posterPath: null,
+        source: null,
+        title: null,
+        comments: null, // Array of comments on the post
+      },
+      error: null,
+      setPromise: action(function(promise) {
+        this.promise = promise;
+      }),
+      setData: action(function(data) {
+        this.data = data;
+      }),
+      setError: action(function(error) {
+        this.error = error;
+      }),
     },
     setCurrentPostID: action(async function(postID) {
       this.currentPostID = postID;
-    }),
-    setData: action(function(data) {
-      this.data = data;
     }),
     setComment: action(function(comment) {
       this.comment = comment;
@@ -170,6 +189,54 @@ const model = observable({
       await dislikePostFirestore(model.user.uid, this.currentPostID);
     }
   },
+  profilePageData: {
+    currentProfileUid: null,
+    promiseState: {
+      promise: null,
+      data: {
+        profilePicture: null,
+        displayName: null,
+        bio: null,
+        followedBy: [],
+        follows: [],
+        followingAmt: null, // Amount of accounts that the profile is following
+        followerAmt: null, // Amount of followers of the account
+        ownAccount: null, // Boolean for if the profile is the users own
+        isFollwing: null, // Boolean for if the user is following the profile
+        isLoggedIn: null, // If the user browsing is currently logged in
+        posts: [], // Array of posts created by the user
+      },
+      error: null,
+      setPromise: action(function(promise) {
+        this.promise = promise;
+      }),
+      setData: action(function(data) {
+        this.data = data;
+      }),
+      setError: action(function(error) {
+        this.error = error;
+      }),
+    },
+    setCurrentProfileUid: action(function(uid) {
+      this.currentProfileUid = uid;
+    }),
+    followUser: async function () {
+      try {
+          await followUserFirestore(this.currentProfileUid, model.user.uid);
+          model.user.appendToFollows(this.currentProfileUid);
+      } catch (error) {
+          console.error('Error following user:', error);
+      }
+    },
+    unfollowUser: async function () {
+      try {
+          await unfollowUserFirestore(this.currentProfileUid, model.user.uid);
+          model.user.removeFromFollows(this.currentProfileUid);
+      } catch (error) {
+          console.error('Error unfollowing user:', error);
+      }
+    },
+  },
   favoritesPageData: {
     data: {
       favoritePosts: [],
@@ -182,7 +249,35 @@ const model = observable({
       const posts = await queryFavoritePosts(this.data.favoritePosts.length + 4, uid);
       this.setFavoritePosts(posts);
     },
-  },  
+  },
+  newPostsData: {
+    numberOfNewPost: 0,
+    data: [], // array of new posts
+    setNumberOfNewPost: action(function(number) {
+      console.debug("setting numberOfNewPost to: ", number);
+      this.numberOfNewPost = number;
+    }),
+    setNewPostsData: action(function(posts) {
+      console.debug("current newPostsData: ", this.newPostsData);
+      console.debug("setting newPostsData to: ", posts);
+      this.data = posts;
+      console.debug("new newPostsData: ", this.data);
+      this.setNumberOfNewPost(this.data.length);
+    }),
+    addNewPost: action(function(post) {
+      console.debug("adding new post: ", post);
+      this.setNewPostsData([post, ...this.data]);
+      model.updateHomePageDataWithNewPosts();
+    }),
+  },
+  /**
+   * Updates the homePageData.newestPosts with the new posts and clears the newPostsData.data
+   */
+  updateHomePageDataWithNewPosts: function() {
+    this.homePageData.setNewestPosts([...this.newPostsData.data, ...this.homePageData.data.newestPosts]);
+    this.newPostsData.setNewPostsData([]);
+  },
+  listOfGenre: await listOfGenre(),
   uuid: uuidv4(),
 });
 

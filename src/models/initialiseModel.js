@@ -1,4 +1,5 @@
-import { connectToFirestore, readPostFromFirestore, queryCommentsByPostId } from "../firebase/firebaseModel";
+import { connectToFirestore, readPostFromFirestore, queryCommentsByPostId, readUserFromFirestore, queryPostByUserUid } from "../firebase/firebaseModel";
+import resolvePromise from "./resolvePromise";
 import { reaction } from "mobx";
 
 function settingsReaction(model) {
@@ -19,21 +20,48 @@ function currentPostIdReaction(model) {
     function watchCurrentPostIdCB() {
         return [model.postDetailData.currentPostID];
     }
-
+    async function readPostwithComments(postId) {
+        const postData = await readPostFromFirestore(postId);
+        const postComments = await queryCommentsByPostId(postId);
+        return { ...postData, comments: postComments };
+    }
     async function fetchPostDataCB([newPostId]) {
-        model.postDetailData.status = 'loading';
-        try {
-            const postData = await readPostFromFirestore(newPostId);
-            const postComments = await queryCommentsByPostId(newPostId);
-            model.postDetailData.setData({ ...postData, comments: postComments });
-            model.postDetailData.status = 'success';
-        } catch (error) {
-            console.error('Error fetching post data:', error);
-            model.postDetailData.status = 'error';
-        }
+        resolvePromise(readPostwithComments(newPostId), model.postDetailData.promiseState);
+        // Reset the comment to an empty string
+        model.postDetailData.comment = "";
+    }
+    reaction(watchCurrentPostIdCB, fetchPostDataCB);
+}
+
+// Reaction to fetch profile data when currentPostID changes
+function currentProfileUidReaction(model) {
+    function watchCurrentProfileUidCB() {
+        return [model.profilePageData.currentProfileUid];
     }
 
-    reaction(watchCurrentPostIdCB, fetchPostDataCB);
+    async function readProfileWithPosts(uid) {
+        const { profilePicture, displayName, bio, followedBy, follows } = await readUserFromFirestore(uid);
+        const userPosts = await queryPostByUserUid(uid);
+        return {
+            profilePicture,
+            displayName,
+            bio,
+            followedBy,
+            follows,
+            followerAmt: followedBy.length,
+            followingAmt: follows.length,
+            ownAccount: model.user.uid === uid,
+            isFollowing: model.user.data.follows.includes(uid),
+            isLoggedIn: model.user.uid,
+            posts: userPosts,
+        };
+    }
+
+    async function fetchProfileDataCB([newUid]) {
+        resolvePromise(readProfileWithPosts(newUid), model.profilePageData.promiseState);
+    }
+
+    reaction(watchCurrentProfileUidCB, fetchProfileDataCB);
 }
 
 export default function initialiseModel(model) {
@@ -41,4 +69,5 @@ export default function initialiseModel(model) {
     connectToFirestore(model);
     settingsReaction(model);
     currentPostIdReaction(model);
+    currentProfileUidReaction(model);
 }

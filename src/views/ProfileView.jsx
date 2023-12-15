@@ -9,6 +9,7 @@ import ProfileBanner from "../components/layout/ProfileBanner";
  * @param {int} props.followingAmt - Amount following
  * @param {boolean} props.ownAccount - True if the user logged in owns the profile
  * @param {boolean} props.following - True if the user logged in follows the account of the profile
+ * @param {boolean} props.isLoggedIn - True if the user is logged in
  * @param {Function} props.profileButtonClick - Custom event called when the button in the profile is pressed, depending on the state it might be a follow or unfollow
  * @returns {React.Element} A render of a profile
  */
@@ -23,7 +24,8 @@ function ProfileView(props) {
             followingAmt={props.followingAmt} 
             profileButtonClick={props.profileButtonClick} 
             ownAccount={props.ownAccount} 
-            follows={props.follows}
+            following={props.follows}
+            isLoggedIn={props.isLoggedIn}
         />
         <h2 className="font-semibold text-5xl w-full text-center mt-10 mb-4">Pins</h2>
       </div>
