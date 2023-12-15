@@ -180,8 +180,8 @@ async function likePostFirestore(uid, postId) {
             const { likedBy, dislikedBy, likes } = docSnapshot.data();
 
             const updatedDislikedBy = dislikedBy.filter((dislikeUid) => dislikeUid !== uid);
-            const updatedLikedBy = likedBy.includes(uid) ? likedBy : [...likedBy, uid];
-            const updatedLikes = likedBy.includes(uid) ? likes : likes + 1;
+            const updatedLikedBy = likedBy.includes(uid) ? likedBy.filter((likeUid) => likeUid !== uid) : [...likedBy, uid];
+            const updatedLikes = likedBy.includes(uid) ? likes - 1 : likes + 1;
 
             await updateDoc(docRef, { likedBy: updatedLikedBy, dislikedBy: updatedDislikedBy, likes: updatedLikes });
         } else {
@@ -201,11 +201,10 @@ async function dislikePostFirestore(uid, postId) {
         if (docSnapshot.exists()) {
             const { likedBy, dislikedBy, likes } = docSnapshot.data();
 
-            const updatedDislikedBy = dislikedBy.includes(uid) ? dislikedBy : [...dislikedBy, uid];
-            const updatedLikedBy = likedBy.filter((likedBy) => likedBy !== uid);
-            const updatedLikes = dislikedBy.includes(uid) ? likes : likes - 1;
+            const updatedDislikedBy = dislikedBy.includes(uid) ? dislikedBy.filter((dislikeUid) => dislikeUid !== uid) : [...dislikedBy, uid];
+            const updatedLikedBy = likedBy.filter((likeUid) => likeUid !== uid);
 
-            await updateDoc(docRef, { likedBy: updatedLikedBy, dislikedBy: updatedDislikedBy, likes: updatedLikes });
+            await updateDoc(docRef, { likedBy: updatedLikedBy, dislikedBy: updatedDislikedBy });
         } else {
             console.error("dislikePostFirestore: Post not found");
         }
@@ -301,7 +300,11 @@ async function queryCommentsByPostId(postId) {
 }
 
 async function queryPostByUserUid(userUid) {
-    const q = query(collection(db, "Posts"), where("createdBy", "==", userUid));
+    const q = query(
+        collection(db, "Posts"), 
+        where("createdBy", "==", userUid),
+        orderBy("createdAt", "desc")
+    );
     return getDocs(q)
     .then((querySnapshot) => { // querySnapshot is an array of documents
         const posts = [];

@@ -41,11 +41,11 @@ function DetailsPresenter(props) {
   const post = props.model.postDetailData.data;
   /* conditional rendering */
   function verifyCurrentPost() {
-    if (!post)//TODO BYT
+    if (!post)
       return <h1>Loading Post</h1>
     return (
       <DetailPostView
-        post={post}//TODO BYT props.model.postddetaildata.data.
+        post={post}
         currentUID={props.model.user.uid}
         commentText={props.model.postDetailData.comment}
         userEntersComment={(res) => { props.model.postDetailData.setComment(res) }}
