@@ -1,80 +1,38 @@
 import { observer } from "mobx-react-lite";
 import ProfileView from "../views/ProfileView";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
-import { readUserFromFirestore } from "../firebase/firebaseModel";
 
 function ProfilePresenter(props) {
     const { uid } = useParams();
 
-    const [loading, setLoading] = useState(true);
-    const [profileData, setProfileData] = useState();
-
     useEffect(() => {
-        setLoading(true);
-        readUserFromFirestore(uid)
-            .then((data) => {
-                setProfileData({
-                    profilePicture: data?.profilePicture,
-                    username: data?.displayName,
-                    bio: data?.bio,
-                    followerAmt: countFollowersOrFollowing(data.followedBy),
-                    followingAmt: countFollowersOrFollowing(data.follows),
-                    follows: data.follows
-                });
-                document.title = data?.displayName;
-            })
-            .catch((error) => {
-                console.error(error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+        props.model.profilePageData.setCurrentProfileUid(uid);
     }, [uid]);
 
-    function countFollowersOrFollowing(accounts) {
-        return accounts.length;
-    }
-
-    function ownAccountCheck() {
-        if (uid === props.model.user.uid) {
-            return true;
-        }
-        return false;
-    }
-
-    function followsCheck() {
-        if (profileData.follows.includes(uid)) {
-            return true;
-        }
-        return false;
-    }
+    useEffect(() => {
+        document.title = props.model.profilePageData.promiseState.data?.displayName;
+    }, [props.model.profilePageData.promiseState.data?.displayName]);
 
     function profileButtonClick() {
-        console.log("follow/unfollow");
-    }
-
-    if (loading) {
-        return (
-            <div>
-                <img
-                    src="https://brfenergi.se/iprog/loading.gif"
-                    alt="Loading"
-                />
-            </div>
-        );
+        if (!props.model.profilePageData.promiseState.data?.isFollowing) {
+            props.model.profilePageData.followUser()
+        } else {
+            props.model.profilePageData.unfollowUser()
+        }
     }
 
     return (
         <ProfileView
-            picture={profileData?.profilePicture}
-            username={profileData?.username}
-            bio={profileData?.bio}
-            followerAmt={profileData?.followerAmt}
-            followingAmt={profileData?.followingAmt}
+            picture={props.model.profilePageData.promiseState.data?.profilePicture}
+            username={props.model.profilePageData.promiseState.data?.displayName}
+            bio={props.model.profilePageData.promiseState.data?.bio}
+            followerAmt={props.model.profilePageData.promiseState.data?.followerAmt}
+            followingAmt={props.model.profilePageData.promiseState.data?.followingAmt}
             profileButtonClick={profileButtonClick}
-            ownAccount={ownAccountCheck()}
-            follows={followsCheck()}
+            ownAccount={props.model.profilePageData.promiseState.data?.ownAccount}
+            follows={props.model.profilePageData.promiseState.data?.isFollowing}
+            isLoggedIn={props.model.profilePageData.promiseState.data?.isLoggedIn}
         />
     );
 }

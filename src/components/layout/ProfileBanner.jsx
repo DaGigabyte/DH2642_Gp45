@@ -9,6 +9,7 @@ import FollowButton from "./FollowButton";
  * @param {int} props.followingAmt - Amount following
  * @param {boolean} props.ownAccount - True if the user logged in owns the profile
  * @param {boolean} props.following - True if the user logged in follows the account of the profile
+ * @param {boolean} props.isLoggedIn- True if the user is logged in
  * @param {Function} props.profileButtonClick - Custom event called when the button in the profile is pressed, depending on the state it might be a follow or unfollow
  * @returns {React.Element} A component that renders a profile banner
  */
@@ -28,7 +29,7 @@ export default function ProfileBanner(props) {
             <div className="text-lg mb-4 mr-5 max-h-[140px] h-[140px] overflow-auto whitespace-pre-line">
                 {props.bio}
             </div>
-            {props.ownAccount ? "" : <FollowButton text={props.following ? "Unfollow" : "Follow"} onUserClick={props.profileButtonClick}/>}
+            {props.ownAccount || !props.isLoggedIn ? "" : <FollowButton text={props.following ? "Unfollow" : "Follow"} onUserClick={props.profileButtonClick}/>}
         </div>
       </div>
     );
