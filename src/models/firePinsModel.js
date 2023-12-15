@@ -1,5 +1,6 @@
 import { observable, reaction, action } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
+import { listOfGenre } from "../services/firePinsSource";
 import { savePostToFirestore, queryNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
 
 const model = observable({
@@ -248,7 +249,35 @@ const model = observable({
       const posts = await queryFavoritePosts(this.data.favoritePosts.length + 4, uid);
       this.setFavoritePosts(posts);
     },
-  },  
+  },
+  newPostsData: {
+    numberOfNewPost: 0,
+    data: [], // array of new posts
+    setNumberOfNewPost: action(function(number) {
+      console.debug("setting numberOfNewPost to: ", number);
+      this.numberOfNewPost = number;
+    }),
+    setNewPostsData: action(function(posts) {
+      console.debug("current newPostsData: ", this.newPostsData);
+      console.debug("setting newPostsData to: ", posts);
+      this.data = posts;
+      console.debug("new newPostsData: ", this.data);
+      this.setNumberOfNewPost(this.data.length);
+    }),
+    addNewPost: action(function(post) {
+      console.debug("adding new post: ", post);
+      this.setNewPostsData([post, ...this.data]);
+      model.updateHomePageDataWithNewPosts();
+    }),
+  },
+  /**
+   * Updates the homePageData.newestPosts with the new posts and clears the newPostsData.data
+   */
+  updateHomePageDataWithNewPosts: function() {
+    this.homePageData.setNewestPosts([...this.newPostsData.data, ...this.homePageData.data.newestPosts]);
+    this.newPostsData.setNewPostsData([]);
+  },
+  listOfGenre: await listOfGenre(),
   uuid: uuidv4(),
 });
 
