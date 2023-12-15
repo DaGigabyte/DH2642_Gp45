@@ -11,7 +11,7 @@ import avatar from "../assets/default-avatar.jpg"
 export default function ProfileBox(props) {
   return (
     <div className="flex items-center space-x-4 ">
-      <span className={props.size ? `w-${props.size} h-${props.size} rounded-full shrink-0 overflow-hidden` : "w-14 h-14 rounded-full shrink-0 overflow-hidden"}>
+      <span className={props.size ? `w-${props.size} h-${props.size} max-w-[56px] max-h-[56px]  rounded-full shrink-0 overflow-hidden ` : "w-14p h-14 rounded-full shrink-0 overflow-hidden"}>
         <img
           src={props.picture? props.picture : avatar}
           alt=""
