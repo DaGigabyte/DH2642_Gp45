@@ -70,8 +70,8 @@ const model = observable({
       title: "",
       content: "",
       posterPath: "",
-      source: "",
-      TMDBgenreID: "",
+      TMDBsourceID: null,
+      TMDBgenreID: [],
       TMDBdateOfMovieRelease: "",
       postDescription: ""
     },
