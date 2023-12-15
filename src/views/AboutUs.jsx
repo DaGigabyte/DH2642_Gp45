@@ -1,6 +1,37 @@
+// Team profile pic
+import Zia from "../assets/team/zia-mohseni.png";
+
+// Team members array
+const teamMembers = [
+  {
+    id: 1,
+    name: "Emanuel Wilches Brandt",
+    role: "Back-end Developer",
+    image: "https://avatars.githubusercontent.com/u/57797989?v=4",
+  },
+  {
+    id: 2,
+    name: "Pak Long Wong (Jasper)",
+    role: "Back-end Developer",
+    image: "https://avatars.githubusercontent.com/u/57797989?v=4",
+  },
+  {
+    id: 3,
+    name: "Pontus Morin",
+    role: "Frontend Developer",
+    image: "https://avatars.githubusercontent.com/u/57797989?v=4",
+  },
+  {
+    id: 4,
+    name: "Zia Mohseni",
+    role: "Frontend Developer",
+    image: Zia,
+  },
+];
+
 function AboutUs() {
   return (
-    <div className="max-w-6xl">
+    <div className="flex flex-col space-y-10 md:space-y-20 md:pt-10 max-w-6xl">
       {/* About the team */}
       <div className="flex flex-col items-center space-y-10">
         <h1>About The Team</h1>
@@ -17,6 +48,26 @@ function AboutUs() {
           explore the world of web development and bring our classroom theories
           to life!
         </p>
+      </div>
+      {/* Meet the team */}
+      <div className="flex flex-col items-center space-y-10">
+        <h1>Meet The Team!</h1>
+        <div className="flex flex-wrap justify-center">
+          {teamMembers.map((member) => (
+            <div
+              key={member.id}
+              className="flex flex-col items-center space-y-5 bg-white p-3 rounded-lg mb-10 mr-10"
+            >
+              <img
+                className="rounded-full w-48 h-48"
+                src={member.image}
+                alt={member.name}
+              />
+              <h2 className="text-lg">{member.name}</h2>
+              <p className="text-lg">{member.role}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
