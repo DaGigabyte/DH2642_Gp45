@@ -338,9 +338,13 @@ async function queryPostByUserUid(userUid) {
         console.error("Error getting documents: ", error);
     });
 }
-
-async function queryNewestPosts(amountOfPosts) {
-    const q = query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), limit(amountOfPosts));
+/**
+ * Return an array of n more posts after the last post in the array of posts returned by the previous call to this function.
+ * @param {Number} nMorePosts 
+ * @returns {Array} Array of posts in the form { id: String, user: Object, ...postData }
+ */
+async function queryMoreNewestPosts(nMorePosts) {
+    const q = queryMoreNewestPosts.lastVisiblePost ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(queryMoreNewestPosts.lastVisiblePost), limit(nMorePosts)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), limit(nMorePosts));
     const querySnapshot = await getDocs(q);
     const posts = [];
     for (const doc of querySnapshot.docs) {
@@ -352,7 +356,8 @@ async function queryNewestPosts(amountOfPosts) {
             console.error("Error fetching user data:", error);
         }
     }
-    console.debug("queryNewestPosts: Current posts: ", posts);
+    queryMoreNewestPosts.lastVisiblePost = querySnapshot.docs[querySnapshot.docs.length-1];
+    console.debug("queryMoreNewestPosts: Current posts: ", posts);
     return posts; // return posts to caller
 }
 
@@ -414,4 +419,4 @@ async function queryFavoritePosts(amountOfPosts, uid) {
     return posts;
 }
 
-export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, savePostToFirestore, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, queryCommentsByPostId, queryNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, savePostToFirestore, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, queryCommentsByPostId, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };
