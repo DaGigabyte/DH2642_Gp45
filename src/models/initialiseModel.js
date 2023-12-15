@@ -21,14 +21,18 @@ function currentPostIdReaction(model) {
     function watchCurrentPostIdCB() {
         return [model.postDetailData.currentPostID];
     }
-    async function readPostwithComments(postId) {
+    async function readPostwithComments(postId) { // Fetch post data and comments from Firestore
         const postData = await readPostFromFirestore(postId);
         const postComments = await queryCommentsByPostId(postId);
         return { ...postData, comments: postComments };
     }
+    async function appendCommentsToPost(post) { // Fetch comments from Firestore and append to post
+        const postComments = await queryCommentsByPostId(post.id);
+        return { ...post, comments: postComments };
+    }
     async function fetchPostDataCB([newPostId]) {
         const post = model.getPostFromModel(newPostId);
-        const promiseToBeResolved = post ? Promise.resolve(post) : readPostwithComments(newPostId); // If post is already in the model, just set promiseState.data to the post, otherwise fetch the post from Firestore
+        const promiseToBeResolved = post ? appendCommentsToPost(post) : readPostwithComments(newPostId); // If post is already in the model, just set promiseState.data to the post, otherwise fetch the post from Firestore
         resolvePromise(promiseToBeResolved, model.postDetailData.promiseState);
         // Reset the comment to an empty string
         model.postDetailData.comment = "";
