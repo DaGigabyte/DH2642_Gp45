@@ -1,6 +1,5 @@
 import ProfileBox from "./profilePicAndNick"
 import ReturnButton from "../components/navigation/ReturnButton.jsx"
-import defaultPic from "../assets/default-avatar.jpg"
 import { BiLike, BiDislike } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
 /**
@@ -50,10 +49,12 @@ function DetailedPostView(props) {
             /* container */
             <div key={comment.createdAt.nanoseconds + comment.createdBy} className="flex flex-col border rounded-xl p-3 pl-6 pr-6 gap-2 mb-1">
                 {/* user profile */}
-                <div className="flex gap-4 items-center">
-                    <img src={comment.profilePicture? comment.profilePicture : defaultPic} alt="/" className=" rounded-full h-12 w-12"></img>
-                    <span className="text-start text-xl font-medium">{comment.displayName? comment.displayName: "anonymous"}</span>
-                </div>
+                <ProfileBox
+                    picture={comment.profilePicture}
+                    nick={comment.displayName? comment.displayName: "anonymous"}
+                    size="12"
+                    textSize="xl"
+                />
                
                 {/* comment */}
                 <div className="border bg-pins-light bg-opacity-30 rounded p-3 shadow">
@@ -91,11 +92,11 @@ function DetailedPostView(props) {
 
                     {/* user profile */}
                     <span className="text-3xl w-fit rounded-full py-1 pr-3 mb-3 hover:cursor-pointer hover:shadow hover:bg-pins-light transition duration-300"
-                        onClick={() => { alert("Navigate to profile, firebase user id is missing") }}
+                        onClick={() => { navigate("/profile/"+props.post.createdBy) }}
                         title="Go to Profile">
                         {/* User dont exist anymore? */}
                         {props.post.user && <ProfileBox
-                            picture={props.post.user.profilePicture ? props.post.user.profilePicture : defaultPic}
+                            picture={props.post.user.profilePicture}
                             nick={props.post.user.displayName}
                         />}
                     </span>

@@ -1,5 +1,6 @@
 import { BiLike, BiDislike, BiCommentDetail } from "react-icons/bi";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import Profile from "./profilePicAndNick"
 /**
  * A general component for post diplaying a preview
  * @param {Object} props - Props for the SummarizedPost component.
@@ -63,15 +64,14 @@ export default function SummarizedPost(props) {
       <div className="flex flex-col pl-3 pt-6 pr-3 w-full">
 
         {/* Profile and name */}
-        <div className="flex items-end pb-3 space-x-4">
-          <span className="mr-2">
-            <img src={props.picture} alt="profile picture" className="w-14 h-14 rounded-full" />
-          </span>
-          <span className="text-3xl">{props.nickName}</span>
-        </div>
+        <Profile 
+        picture={props.picture}
+        nick={props.nickName}
+        size="14"
+        textSize="3xl"/>
 
         {/* Post Content */}
-        <span className="text-2xl line-clamp-1 font-semibold">
+        <span className="text-2xl line-clamp-1 font-semibold mt-3">
           {props.postTitle}
         </span>
         <span className="text-lg line-clamp-3 font-normal">
