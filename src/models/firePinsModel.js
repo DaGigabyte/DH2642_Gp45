@@ -109,7 +109,7 @@ const model = observable({
   homePageData: {
     data: {
       topRatedPosts: [],
-      newestPosts: [],
+      newestPosts: await queryNewestPosts(4),
     },
     setTopRatedPosts: action(function(posts) {
       console.debug("current homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
