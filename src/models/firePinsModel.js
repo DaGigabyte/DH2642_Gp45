@@ -119,7 +119,7 @@ const model = observable({
   homePageData: {
     data: {
       topRatedPosts: [],
-      newestPosts: await queryMoreNewestPosts(4),
+      newestPosts: [],
     },
     setTopRatedPosts: action(function(posts) {
       console.debug("current homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
@@ -296,7 +296,7 @@ const model = observable({
     const post = this.homePageData.data.newestPosts.find(post => post.id === postID) || this.homePageData.data.topRatedPosts.find(post => post.id === postID) || this.favoritesPageData.data.favoritePosts.find(post => post.id === postID);
     return post;
   },
-  listOfTMDBgenre: await listOfGenre(),
+  listOfTMDBgenre: [],
   /**
    * Converts a TMDB genre ID to a string of the genre name
    * @param {Number} TMDBgenreID 

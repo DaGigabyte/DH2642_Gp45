@@ -1,6 +1,7 @@
 import { connectToFirestore, readPostFromFirestore, queryCommentsByPostId, readUserFromFirestore, queryPostByUserUid } from "../firebase/firebaseModel";
 import resolvePromise from "./resolvePromise";
 import { reaction } from "mobx";
+import { listOfGenre } from "../services/firePinsSource";
 
 function settingsReaction(model) {
     console.debug("settingsReaction");
@@ -66,10 +67,12 @@ function currentProfileUidReaction(model) {
     reaction(watchCurrentProfileUidCB, fetchProfileDataCB);
 }
 
-export default function initialiseModel(model) {
+export default async function initialiseModel(model) {
     console.debug("initialiseModel");
     connectToFirestore(model);
     settingsReaction(model);
     currentPostIdReaction(model);
     currentProfileUidReaction(model);
+    model.homePageData.fetchNewestPosts();
+    Object.assign(model, {listOfTMDBgenre: await listOfGenre()});
 }
