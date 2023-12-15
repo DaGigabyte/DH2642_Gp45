@@ -110,20 +110,26 @@ function connectToFirestore(model) {
     function updateNewestPostsFromFirestoreReaction(model) {
         const posts = collection(db, "Posts");
         const q = query(posts, orderBy("createdAt", "desc"), limit(1));
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            querySnapshot.docChanges().forEach((change) => {
-                if (change.type === "added") {
-                    const postData = change.doc.data();
-                    console.debug("updateNewestPostsFromFirestoreReaction: New post added to Firestore, updating MobX store\n change.doc.data(): ", postData);
-                    readUserFromFirestore(postData.createdBy)
-                        .then((user) => {
-                            model.newPostsData.addNewPost({ id: change.doc.id, user: user, ...postData });
-                        })
-                        .catch((error) => {
-                            console.error("updateNewestPostsFromFirestoreReaction: Error fetching user data:", error);
-                        });
+        function updateNewestPostsFromFirestoreCB(change) {
+            if (change.type === "added") {
+                if (updateNewestPostsFromFirestoreCB.firstRun === undefined) { // First run, i.e. initial data from Firestore
+                    updateNewestPostsFromFirestoreCB.firstRun = true;
+                    console.debug("updateNewestPostsFromFirestoreReaction: Initial data from Firestore, not updating MobX store");
+                    return;
                 }
-            });
+                const postData = change.doc.data();
+                console.debug("updateNewestPostsFromFirestoreReaction: New post added to Firestore, updating MobX store\n change.doc.data(): ", postData);
+                readUserFromFirestore(postData.createdBy)
+                    .then((user) => {
+                        model.newPostsData.addNewPost({ id: change.doc.id, user: user, ...postData });
+                    })
+                    .catch((error) => {
+                        console.error("updateNewestPostsFromFirestoreReaction: Error fetching user data:", error);
+                    });
+            }
+        }
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.docChanges().forEach(updateNewestPostsFromFirestoreCB);
         });
     }
     onAuthStateChanged(auth, onAuthStateChangedCB);
