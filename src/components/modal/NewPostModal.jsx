@@ -23,6 +23,7 @@ function NewPostModal(props) {
       </Modal.Button>
       <Modal.Content title="Create New Post">
         <CreateNewPostContainer
+          isSearching={props.isSearching}
           searchTextTMDB={props.searchTextTMDB}
           setSearchTextTMDB={props.setSearchTextTMDB}
           searchResultsTMDB={props.searchResultsTMDB}

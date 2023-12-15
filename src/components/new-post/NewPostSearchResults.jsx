@@ -1,3 +1,5 @@
+// Suspense animation
+import SuspenseAnimation from "../global/SuspenseAnimation";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 // import required modules
@@ -9,7 +11,10 @@ import "swiper/css/pagination";
 
 function NewPostSearchResults(props) {
   return (
-    <div>
+    <div className="relative min-h-[100px]">
+      {/* Suspense animation */}
+      <SuspenseAnimation loading={props.isSearching} />
+      {/* Showing result */}
       <Swiper
         slidesPerView="auto"
         spaceBetween={20}
@@ -55,7 +60,9 @@ function NewPostSearchResults(props) {
             );
           })
         ) : (
-          <p className="text-center">No results found</p>
+          <p className="text-center">
+            {props.isSearching ? "" : "No results found"}
+          </p>
         )}
       </Swiper>
     </div>
