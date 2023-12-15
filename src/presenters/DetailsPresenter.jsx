@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DetailPostView from "../views/DetailPostView";
 import { newCommentCreatedToast } from "../utils/toastify"
+import SuspenseAnimation from "../components/global/SuspenseAnimation";
 
 function DetailsPresenter(props) {
   const { pid } = useParams();
@@ -36,9 +37,13 @@ function DetailsPresenter(props) {
   /* conditional rendering */
   function verifyCurrentPost() {
     if (!post)
-      return <h1>Loading Post</h1>
-    return (
-      <DetailPostView
+      return (
+      <>
+        <SuspenseAnimation loading={props.model.postDetailData.promiseState} />
+      </>)
+    else{
+      return (
+        <DetailPostView
         post={post}
         currentUID={props.model.user.uid}
         commentText={props.model.postDetailData.comment}
@@ -50,11 +55,9 @@ function DetailsPresenter(props) {
         nofDislikes={post.dislikedBy ? post.dislikedBy.length : "?"}
         isLikedByUser={post.likedBy?.includes(props.model.user.uid)}
         isDislikedByUser={post.dislikedBy?.includes(props.model.user.uid)}
-        postComments={[
-
-        ]}
-      />
-    )
+        />
+        )
+      }  
   }
 
   {/* General return*/ }
