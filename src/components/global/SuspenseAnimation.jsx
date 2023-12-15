@@ -1,7 +1,7 @@
 // SVG animation for Suspense fallback
 import Loader from "../../assets/svg-loaders/ball-triangle.svg";
 
-function SuspensAnimation({ loading }) {
+function SuspenseAnimation({ loading }) {
   return (
     <>
       {loading && (
@@ -14,4 +14,4 @@ function SuspensAnimation({ loading }) {
   );
 }
 
-export default SuspensAnimation;
+export default SuspenseAnimation;

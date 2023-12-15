@@ -48,6 +48,7 @@ function RootView(props) {
             {/* Create new post button */}
             {props.uid ? (
               <NewPostModal
+                isSearching={props.isSearching}
                 searchTextTMDB={props.searchTextTMDB}
                 setSearchTextTMDB={props.setSearchTextTMDB}
                 searchResultsTMDB={props.searchResultsTMDB}

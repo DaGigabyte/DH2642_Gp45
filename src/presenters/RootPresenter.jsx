@@ -14,6 +14,7 @@ const sourceENUM = {
 
 function RootPresenter(props) {
   // State for search movie
+  const [isSearching, setIsSearching] = useState(false);
   const [searchTextTMDB, setSearchTextTMDB] = useState("");
   const [searchResultsTMDB, setSearchResultsTMDB] = useState([]);
   const [selectedMovieID, setSelectedMovieID] = useState(null);
@@ -84,6 +85,7 @@ function RootPresenter(props) {
 
   // Handle search movie depending on search API source use async/await
   async function handleSearchMovie() {
+    setIsSearching(true);
     if (searchApiSource === sourceENUM.TMDB) {
       const results = await searchMovie(searchTextTMDB);
       setSearchResultsTMDB(results);
@@ -94,6 +96,7 @@ function RootPresenter(props) {
     } else {
       console.log("No search API source selected");
     }
+    setIsSearching(false);
   }
 
   // Search for movies in TMDB on searchTextTMDB change
@@ -122,6 +125,7 @@ function RootPresenter(props) {
       }}
       onSignIn={signInACB}
       onSignOut={signOutACB}
+      isSearching={isSearching}
       searchTextTMDB={searchTextTMDB}
       setSearchTextTMDB={handleSetSearchText}
       searchResultsTMDB={searchResultsTMDB}
