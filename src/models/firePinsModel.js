@@ -1,4 +1,4 @@
-import { observable, reaction, action } from "mobx";
+import { observable, reaction, action, set } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import { listOfGenre } from "../services/firePinsSource";
 import { savePostToFirestore, queryNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
@@ -78,27 +78,37 @@ const model = observable({
       title: "",
       content: "",
       posterPath: "",
-      source: "",
+      TMDBsourceID: null,
+      TMDBgenreID: [],
+      TMDBdateOfMovieRelease: "",
       postDescription: ""
     },
     setTitle: action(function(title) {
-      console.debug("setting createPostEditor.title to: ", title);
+      console.debug("setting createPostEditor.data.title to: ", title);
       this.data.title = title;
     }),
     setContent: action(function(content) {
-      console.debug("setting createPostEditor.content to: ", content);
+      console.debug("setting createPostEditor.data.content to: ", content);
       this.data.content = content;
     }),
     setPosterPath: action(function(posterPath) {
-      console.debug("setting createPostEditor.posterPath to: ", posterPath);
+      console.debug("setting createPostEditor.data.posterPath to: ", posterPath);
       this.data.posterPath = posterPath;
     }),
     setSource: action(function (source) {
-      console.debug("setting createPostEditor.source to: ", source);
+      console.debug("setting createPostEditor.data.source to: ", source);
       this.data.source = source;
     }),
+    setTMDBgenre: action(function (TMDBgenre) {
+      console.debug("setting createPostEditor.data.TMDBgenre to: ", TMDBgenre);
+      this.data.TMDBgenre = TMDBgenre;
+    }),
+    setTMDBdateOfMovieRelease: action(function (TMDBdateOfMovieRelease) {
+      console.debug("setting createPostEditor.data.TMDBdateOfMovieRelease to: ", TMDBdateOfMovieRelease);
+      this.data.TMDBdateOfMovieRelease = TMDBdateOfMovieRelease;
+    }),
     setPostDescription: action(function (postDescription) {
-      console.debug("setting createPostEditor.postDescription to: ", postDescription);
+      console.debug("setting createPostEditor.data.postDescription to: ", postDescription);
       this.data.postDescription = postDescription;
     }),
   },
@@ -277,7 +287,16 @@ const model = observable({
     this.homePageData.setNewestPosts([...this.newPostsData.data, ...this.homePageData.data.newestPosts]);
     this.newPostsData.setNewPostsData([]);
   },
-  listOfGenre: await listOfGenre(),
+  listOfTMDBgenre: await listOfGenre(),
+  /**
+   * Converts a TMDB genre ID to a string of the genre name
+   * @param {Number} TMDBgenreID 
+   * @returns {String} genre name
+   */
+  TMDBgenreToString: function(TMDBgenreID) {
+    const genre = this.listOfTMDBGenre.find(genre => genre.id === TMDBgenreID);
+    return genre.name;
+  },
   uuid: uuidv4(),
 });
 

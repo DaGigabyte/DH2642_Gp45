@@ -77,7 +77,7 @@ function searchMovie(searchQuery) {
 }
 
 function listOfGenre() {
-    const url = 'https://api.themoviedb.org/3/genre/movie/list?language=en';
+    const url = TMDB_BASE_URL + 'genre/movie/list?language=en';
     const options = {
     method: 'GET',
     headers: {
@@ -87,9 +87,14 @@ function listOfGenre() {
     };
 
     return fetch(url, options)
-    .then(res => res.json())
+    .then(res => {
+        if (!res.ok) {
+            throw new Error('http error, status code: ' + res.status);
+        }
+        return res.json();
+    })
     .then(json => {
-        console.log("listOfGenre():", json);
+        console.debug("listOfGenre():", json);
         return json.genres;
     })
     .catch(err => console.error('error:' + err));
