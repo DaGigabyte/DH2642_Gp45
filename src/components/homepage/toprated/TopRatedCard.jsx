@@ -8,7 +8,7 @@ export default function TopRatedCard(post) {
 
   return (
     <img
-      onClick={() => {post.selectPost()}}//TODO correct routing need postmodel
+      onClick={() => { post.selectPost() }}//TODO correct routing need postmodel
       src={post.postPicture}
       alt="Post Cover"
       className="h-[400px] aspect-[1/2]  mr-3 inline-block  cursor-pointer rounded-2xl 
