@@ -1,4 +1,4 @@
-import ProfileBox from "./profilePicAndNick"
+import UserProfileCard from "../components/global/UserProfileCard.jsx"
 import ReturnButton from "../components/navigation/ReturnButton.jsx"
 import { BiLike, BiDislike } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
@@ -49,7 +49,7 @@ function DetailedPostView(props) {
             /* container */
             <div key={comment.createdAt.nanoseconds + comment.createdBy} className="flex flex-col border rounded-xl p-3 pl-6 pr-6 gap-2 mb-1">
                 {/* user profile */}
-                <ProfileBox
+                <UserProfileCard
                     picture={comment.profilePicture}
                     nick={comment.displayName? comment.displayName: "anonymous"}
                     size="12"
@@ -95,7 +95,7 @@ function DetailedPostView(props) {
                         onClick={() => { navigate("/profile/"+props.post.createdBy) }}
                         title="Go to Profile">
                         {/* User dont exist anymore? */}
-                        {props.post.user && <ProfileBox
+                        {props.post.user && <UserProfileCard
                             picture={props.post.user.profilePicture}
                             nick={props.post.user.displayName}
                         />}

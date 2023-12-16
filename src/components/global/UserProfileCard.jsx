@@ -1,4 +1,4 @@
-import avatar from "../assets/default-avatar.jpg"
+import avatar from "../../assets/default-avatar.jpg"
 /**
  * Component for settings, also used in general post
  * @param {Object} props - The properties passed to the ProfileBox component.
@@ -13,7 +13,7 @@ export default function ProfileBox(props) {
     <div className="flex items-center space-x-4 ">
       <span className={props.size ? `w-${props.size} h-${props.size} max-w-[56px] max-h-[56px]  rounded-full shrink-0 overflow-hidden ` : "w-14p h-14 rounded-full shrink-0 overflow-hidden"}>
         <img
-          src={props.picture? props.picture : avatar}
+          src={props.picture ? props.picture : avatar}
           alt=""
           className="w-full h-full content-cover"
         />

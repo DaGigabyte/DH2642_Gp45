@@ -1,5 +1,5 @@
 import InputBox from "./settingsInputBox";
-import ProfileBox from "./profilePicAndNick";
+import UserProfileCard from "../components/global/UserProfileCard.jsx"
 import ReturnButton from "../components/navigation/ReturnButton.jsx";
 /**
  * Used for updating username and nickname for the user.
@@ -36,7 +36,7 @@ export default function SettingsView(props) {
       <ReturnButton size="25" />
       <div className="text-black ">
         <span className="text-5xl mb-8 block">Settings</span>
-        <ProfileBox picture={props.profilePicture || ""} nick={props.nickName || ""} />
+        <UserProfileCard picture={props.profilePicture || ""} nick={props.nickName || ""} />
         <span className="text-3xl mt-6 mb-2 block">Full Name</span>
         <InputBox inputId="fullNameInput" text={props.fullName || ""} onInputChange={nameChangeACB} />
         <span className="text-3xl mb-2 mt-6 block">Nickname</span>
