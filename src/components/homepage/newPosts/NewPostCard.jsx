@@ -21,7 +21,7 @@ import Profile from "../../global/UserProfileCard"
  * @param {Function} props.commentOnPost - function to change the component state of the comment Modal open
  * @returns {React.Element} A component displaying a summarized post preview.
  */
-export default function SummarizedPost(props) {
+export default function NewPostCard(props) {
   const navigate = useNavigate();
   /*OnClick ACBs*/
   function handlePostClickACB() {
