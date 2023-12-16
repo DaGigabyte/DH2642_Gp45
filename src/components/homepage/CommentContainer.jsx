@@ -1,4 +1,4 @@
-import { FaCircleCheck } from "react-icons/fa6";
+import ProfileBox from "../../views/profilePicAndNick";
 
 /**
  * @param {Object}      props.post The shown post
@@ -44,15 +44,10 @@ export default function CommentContainer(props) {
                 <div className="flex flex-col pl-1 w-full pb-1">    
 
                         {/* Profile and name */}
-                        <div className="flex items-end pb-4 space-x-4">
-                            <span className="mr-2">
-                                <img src={props.post.user.profilePicture} alt="profile picture" className="w-16 h-16 shrink-0 rounded-full" />
-                            </span>
-                            <span className="text-3xl">{props.post.user.displayName}</span>
-                        </div>
+                        <ProfileBox picture={props.post.user.profilePicture} size="16" nick={props.post.user.displayName}/>
 
                         {/* Post Content */}
-                        <span className="text-2xl line-clamp-1 font-semibold">
+                        <span className="text-2xl line-clamp-1  pt-2 font-semibold">
                             {props.post.title}
                         </span>
                         <span className="text-lg line-clamp-3 font-normal">
@@ -72,15 +67,5 @@ export default function CommentContainer(props) {
                 {verifyUserForComment()}
             </div>
 
-            {/* Overlay to confirm post upload */}{/* 
-            <div className={props.confirmPost ?
-                "absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white min-w-max min-h-fit p-5 rounded-xl items-center justify-center flex border border-gray-400 shadow-xl gap-4" : "hidden"} >
-                <div className="flex flex-col justify-center rounded-xl p-3 ">
-                    <p className="text-xl font-medium">Comment Posted</p>
-                    <p className="text-lg font-medium">Returning in 3s</p>
-                </div>
-                <FaCircleCheck size="50" color="green" />
-            </div>
-                */}
         </div>)
 }
