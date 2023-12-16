@@ -1,6 +1,6 @@
 import { BiLike, BiDislike, BiCommentDetail } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import Profile from "./profilePicAndNick"
+import Profile from "../../../views/profilePicAndNick"
 /**
  * A general component for post diplaying a preview
  * @param {Object} props - Props for the SummarizedPost component.
