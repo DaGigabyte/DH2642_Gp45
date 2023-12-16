@@ -1,4 +1,4 @@
-import { connectToFirestore, readPostFromFirestore, queryCommentsByPostId, readUserFromFirestore, queryPostByUserUid } from "../firebase/firebaseModel";
+import { connectToFirestore, readPostFromFirestore, queryCommentsByPostId, readUserFromFirestore, profileDataListener, queryPostByUserUid } from "../firebase/firebaseModel";
 import resolvePromise from "./resolvePromise";
 import { reaction } from "mobx";
 import { listOfGenre } from "../services/firePinsSource";
@@ -40,35 +40,31 @@ function currentPostIdReaction(model) {
     reaction(watchCurrentPostIdCB, fetchPostDataCB);
 }
 
-// Reaction to fetch profile data when currentPostID changes
+// Reaction to fetch profile data when currentProifileUid changes
 function currentProfileUidReaction(model) {
     function watchCurrentProfileUidCB() {
         return [model.profilePageData.currentProfileUid];
     }
 
-    async function readProfileWithPosts(uid) {
-        const { profilePicture, displayName, bio, followedBy, follows } = await readUserFromFirestore(uid);
+    async function readPosts(uid) {
         const userPosts = await queryPostByUserUid(uid);
-        return {
-            profilePicture,
-            displayName,
-            bio,
-            followedBy,
-            follows,
-            followerAmt: followedBy.length,
-            followingAmt: follows.length,
-            ownAccount: model.user.uid === uid,
-            isFollowing: model.user.data.follows.includes(uid),
-            isLoggedIn: model.user.uid,
-            posts: userPosts,
-        };
+        return { posts: userPosts };
     }
 
-    async function fetchProfileDataCB([newUid]) {
-        resolvePromise(readProfileWithPosts(newUid), model.profilePageData.promiseState);
+    function extractProfileBannerData({ profilePicture, displayName, bio, followedBy, follows }) {
+        return { profilePicture, displayName, bio, followedBy, follows };
     }
 
-    reaction(watchCurrentProfileUidCB, fetchProfileDataCB);
+    async function onCurrentProfileUidChangeCB([newUid]) {
+        //model.profilePageData.unsubscribeProfileData?.();
+        model.profilePageData.unsubscribePostsData?.();
+        model.profilePageData.setUnsubscribeProfileData(profileDataListener(newUid, (profileData) => {
+            model.profilePageData.profileBannerPromiseState.setData(extractProfileBannerData(profileData));
+        }));
+        //resolvePromise(readPosts(newUid), model.profilePageData.userPostsPromiseState);
+    }
+
+    reaction(watchCurrentProfileUidCB, onCurrentProfileUidChangeCB);
 }
 
 export default async function initialiseModel(model) {

@@ -30,14 +30,6 @@ const model = observable({
       console.debug("setting user.data to: ", data);
       this.data = data;
     }),
-    appendToFollows: action(function (uid) {
-      if (!this.data.follows.includes(uid)) {
-        this.data.follows = [...this.data.follows, (uid)];
-      }
-    }),
-    removeFromFollows: action(function (uid) {
-      this.data.follows = this.data.follows.filter((uidInFollows) => uidInFollows !== uid);
-    }),
   },
   setUser: action(function(userObj) {
     console.debug("setting user to: ", userObj);
@@ -201,7 +193,9 @@ const model = observable({
   },
   profilePageData: {
     currentProfileUid: null,
-    promiseState: {
+    unsubscribeProfileData: null, // Function to unsubsribe from profile data listener
+    unsubscribePostsData: null, // Function to unsubscribe from user posts data listener
+    profileBannerPromiseState: {
       promise: null,
       data: {
         profilePicture: null,
@@ -209,11 +203,21 @@ const model = observable({
         bio: null,
         followedBy: [],
         follows: [],
-        followingAmt: null, // Amount of accounts that the profile is following
-        followerAmt: null, // Amount of followers of the account
-        ownAccount: null, // Boolean for if the profile is the users own
-        isFollwing: null, // Boolean for if the user is following the profile
-        isLoggedIn: null, // If the user browsing is currently logged in
+      },
+      error: null,
+      setPromise: action(function(promise) {
+        this.promise = promise;
+      }),
+      setData: action(function(data) {
+        this.data = data;
+      }),
+      setError: action(function(error) {
+        this.error = error;
+      }),
+    },
+    userPostsPromiseState: {
+      promise: null,
+      data: {
         posts: [], // Array of posts created by the user
       },
       error: null,
@@ -230,10 +234,15 @@ const model = observable({
     setCurrentProfileUid: action(function(uid) {
       this.currentProfileUid = uid;
     }),
+    setUnsubscribeProfileData: action(function(unsubscribeFunc) {
+      this.unsubscribeProfileData = unsubscribeFunc;
+    }),
+    setUnsubscribePostsData: action(function(unsubscribeFunc) {
+      this.unsubscribePostsData = unsubscribeFunc;
+    }),
     followUser: async function () {
       try {
           await followUserFirestore(this.currentProfileUid, model.user.uid);
-          model.user.appendToFollows(this.currentProfileUid);
       } catch (error) {
           console.error('Error following user:', error);
       }
@@ -241,7 +250,6 @@ const model = observable({
     unfollowUser: async function () {
       try {
           await unfollowUserFirestore(this.currentProfileUid, model.user.uid);
-          model.user.removeFromFollows(this.currentProfileUid);
       } catch (error) {
           console.error('Error unfollowing user:', error);
       }

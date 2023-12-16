@@ -163,6 +163,18 @@ function saveUserToFirestore(userObj, uuid) {
     setDoc(userDoc, {...userObj.data, uuid: uuid});
 }
 
+async function profileDataListener(uid, onUpdate) {
+    if (!uid) {
+        throw new Error("uid is falsy");
+    }
+    // Subscribe to real-time updates using onSnapshot
+    return onSnapshot(doc(db, "Users", uid), (doc) => {
+        if (doc.exists()) {
+            onUpdate(doc.data(), uid);
+        }
+    });
+}
+
 async function savePostToFirestore(postObj, userUid) {
     const postObjWithMetadata = {...postObj, createdBy: userUid, createdAt: new Date(), modifiedAt: new Date(), likedBy: [], dislikedBy: [], likes: 0};
     const docRef = await addDoc(collection(db, "Posts"), postObjWithMetadata);
@@ -241,16 +253,31 @@ async function dislikePostFirestore(uid, postId) {
 
 async function followUserFirestore(uidFollowed, uidFollower) {
     try {
-        const path = "Users/" + uidFollowed;
-        const docRef = doc(db, path);
-        const docSnapshot = await getDoc(docRef);
+        const followedPath = "Users/" + uidFollowed;
+        const followerPath = "Users/" + uidFollower;
 
-        if (docSnapshot.exists()) {
-            const { followedBy } = docSnapshot.data();
-            const updatedFollowedBy = followedBy.includes(uidFollower) ? followedBy : [...followedBy, uidFollower];
-            await updateDoc(docRef, { followedBy: updatedFollowedBy });
+        // Update the follower user's follows array
+        const followerDocRef = doc(db, followerPath);
+        const followerDocSnapshot = await getDoc(followerDocRef);
+
+        if (followerDocSnapshot.exists()) {
+            const { follows } = followerDocSnapshot.data();
+            const updatedFollows = follows.includes(uidFollowed) ? follows : [...follows, uidFollowed];
+            await updateDoc(followerDocRef, { follows: updatedFollows });
         } else {
-            console.error("followUserFirestore: User not found");
+            console.error("followUserFirestore: Follower user not found");
+        }
+
+        // Update the followed user's followedBy array
+        const followedDocRef = doc(db, followedPath);
+        const followedDocSnapshot = await getDoc(followedDocRef);
+
+        if (followedDocSnapshot.exists()) {
+            const { followedBy } = followedDocSnapshot.data();
+            const updatedFollowedBy = followedBy.includes(uidFollower) ? followedBy : [...followedBy, uidFollower];
+            await updateDoc(followedDocRef, { followedBy: updatedFollowedBy });
+        } else {
+            console.error("followUserFirestore: Followed user not found");
         }
     } catch (error) {
         console.error("Error updating user:", error);
@@ -259,14 +286,29 @@ async function followUserFirestore(uidFollowed, uidFollower) {
 
 async function unfollowUserFirestore(uidFollowed, uidUnfollower) {
     try {
-        const path = "Users/" + uidFollowed;
-        const docRef = doc(db, path);
-        const docSnapshot = await getDoc(docRef);
+        const unfollowerPath = "Users/" + uidUnfollower;
+        const followedPath = "Users/" + uidFollowed;
+        // Update follows array of uidUnfollower
+        const docRefUnfollower = doc(db, unfollowerPath);
+        const docSnapshotUnfollower = await getDoc(docRefUnfollower);
 
-        if (docSnapshot.exists()) {
-            const { followedBy } = docSnapshot.data();
+        if (docSnapshotUnfollower.exists()) {
+            const { follows } = docSnapshotUnfollower.data();
+            const updatedFollows = follows.filter((uidFollowed) => uidFollowed !== uidFollowed);
+            await updateDoc(docRefUnfollower, { follows: updatedFollows });
+        } else {
+            console.error("unfollowUserFirestore: User not found");
+            return;
+        }
+
+        // Update followedBy array of uidFollowed
+        const docRefFollowed = doc(db, followedPath);
+        const docSnapshotFollowed = await getDoc(docRefFollowed);
+
+        if (docSnapshotFollowed.exists()) {
+            const { followedBy } = docSnapshotFollowed.data();
             const updatedFollowedBy = followedBy.filter((uidFollower) => uidFollower !== uidUnfollower);
-            await updateDoc(docRef, { followedBy: updatedFollowedBy });
+            await updateDoc(docRefFollowed, { followedBy: updatedFollowedBy });
         } else {
             console.error("unfollowUserFirestore: User not found");
         }
@@ -425,4 +467,4 @@ async function queryFavoritePosts(amountOfPosts, uid) {
     return posts;
 }
 
-export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, savePostToFirestore, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, queryCommentsByPostId, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, savePostToFirestore, profileDataListener, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, queryCommentsByPostId, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };

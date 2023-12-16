@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import ProfileView from "../views/ProfileView";
 import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
+import model from "../models/firePinsModel";
 
 function ProfilePresenter(props) {
     const { uid } = useParams();
@@ -11,28 +12,34 @@ function ProfilePresenter(props) {
     }, [uid]);
 
     useEffect(() => {
-        document.title = props.model.profilePageData.promiseState.data?.displayName;
-    }, [props.model.profilePageData.promiseState.data?.displayName]);
+        document.title = props.model.profilePageData.profileBannerPromiseState.data?.displayName;
+    }, [props.model.profilePageData.profileBannerPromiseState.data?.displayName]);
 
     function profileButtonClick() {
-        if (!props.model.profilePageData.promiseState.data?.isFollowing) {
-            props.model.profilePageData.followUser()
+        if (!model.user.data.follows.includes(uid)) {
+            props.model.profilePageData.followUser();
         } else {
-            props.model.profilePageData.unfollowUser()
+            props.model.profilePageData.unfollowUser();
         }
+    }
+
+    const profileBannerData = props.model.profilePageData.profileBannerPromiseState.data;
+
+    if(!profileBannerData) {
+        return ("ADAODOIAJDOIADOIADOIAJDIAJOIDJAJDAOIJDAOIJDOIAJDOIAJDOIA");
     }
 
     return (
         <ProfileView
-            picture={props.model.profilePageData.promiseState.data?.profilePicture}
-            username={props.model.profilePageData.promiseState.data?.displayName}
-            bio={props.model.profilePageData.promiseState.data?.bio}
-            followerAmt={props.model.profilePageData.promiseState.data?.followerAmt}
-            followingAmt={props.model.profilePageData.promiseState.data?.followingAmt}
+            picture={profileBannerData?.profilePicture}
+            username={profileBannerData?.displayName}
+            bio={profileBannerData?.bio}
+            followerAmt={profileBannerData?.followedBy.length}
+            followingAmt={profileBannerData?.follows.length}
             profileButtonClick={profileButtonClick}
-            ownAccount={props.model.profilePageData.promiseState.data?.ownAccount}
-            follows={props.model.profilePageData.promiseState.data?.isFollowing}
-            isLoggedIn={props.model.profilePageData.promiseState.data?.isLoggedIn}
+            ownAccount={model.user?.uid === uid}
+            follows={model.user?.data?.follows?.includes(uid)}
+            isLoggedIn={props.model.user.uid}
         />
     );
 }
