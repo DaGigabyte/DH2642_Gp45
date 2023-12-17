@@ -1,7 +1,7 @@
 import { observable, reaction, action, set } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import { listOfGenre } from "../services/firePinsSource";
-import { savePostToFirestore, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
+import { savePostToFirestore, removePostFromFirestore, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
 
 const model = observable({
   count: 1,
@@ -189,6 +189,9 @@ const model = observable({
     },
     dislikePost: async function () {
       await dislikePostFirestore(model.user.uid, this.currentPostID);
+    },
+    removePost: async function () {
+      await removePostFromFirestore(this.currentPostID);
     }
   },
   profilePageData: {
