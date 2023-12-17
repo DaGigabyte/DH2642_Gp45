@@ -56,8 +56,9 @@ function currentProfileUidReaction(model) {
     }
 
     async function onCurrentProfileUidChangeCB([newUid]) {
-        //model.profilePageData.unsubscribeProfileData?.();
-        model.profilePageData.unsubscribePostsData?.();
+        model.profilePageData.unsubscribeProfileData?.();
+        model.profilePageData.profileBannerPromiseState.setData(null);
+        //model.profilePageData.unsubscribePostsData?.();
         model.profilePageData.setUnsubscribeProfileData(profileDataListener(newUid, (profileData) => {
             model.profilePageData.profileBannerPromiseState.setData(extractProfileBannerData(profileData));
         }));

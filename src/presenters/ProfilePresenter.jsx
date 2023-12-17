@@ -26,7 +26,7 @@ function ProfilePresenter(props) {
     const profileBannerData = props.model.profilePageData.profileBannerPromiseState.data;
 
     if(!profileBannerData) {
-        return ("ADAODOIAJDOIADOIADOIAJDIAJOIDJAJDAOIJDAOIJDOIAJDOIAJDOIA");
+        return ("Implement proper suspense here");
     }
 
     return (

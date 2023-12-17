@@ -163,7 +163,7 @@ function saveUserToFirestore(userObj, uuid) {
     setDoc(userDoc, {...userObj.data, uuid: uuid});
 }
 
-async function profileDataListener(uid, onUpdate) {
+function profileDataListener(uid, onUpdate) {
     if (!uid) {
         throw new Error("uid is falsy");
     }
