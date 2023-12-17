@@ -13,8 +13,8 @@ function DetailsPresenter(props) {
   }, [pid]);
 
   useEffect(() => {
-    document.title = props.model.postDetailData.promiseState.data?.title;
-  }, [props.model.postDetailData.promiseState.data?.title]);
+    document.title = props.model.postDetailData.postData?.title;
+  }, [props.model.postDetailData.postData?.title]);
 
   /* change state of like */
   function changeLikeStateForUserACB() {
@@ -33,18 +33,19 @@ function DetailsPresenter(props) {
     props.model.postDetailData.setComment("");
   }
 
-  const post = props.model.postDetailData.promiseState.data;
+  const post = props.model.postDetailData.postData;
   /* conditional rendering */
   function verifyCurrentPost() {
     if (!post)
       return (
-      <>
-        <SuspenseAnimation loading={props.model.postDetailData.promiseState} />
-      </>)
+      <div className="mt-10">
+        <SuspenseAnimation loading={props.model.postDetailData} />
+      </div>)
     else{
       return (
         <DetailPostView
         post={post}
+        comments={props.model.postDetailData.postComments}
         currentUID={props.model.user.uid}
         commentText={props.model.postDetailData.comment}
         userEntersComment={(res) => { props.model.postDetailData.setComment(res) }}

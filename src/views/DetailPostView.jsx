@@ -1,5 +1,6 @@
 import UserProfileCard from "../components/global/UserProfileCard.jsx"
 import ReturnButton from "../components/navigation/ReturnButton.jsx"
+import SuspenseAnimation from "../components/global/SuspenseAnimation";
 import { BiLike, BiDislike } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
 /**
@@ -36,11 +37,18 @@ function DetailedPostView(props) {
 
     /* Renders the comments of the displayed post */
     function renderCommentSection() {
-        if (!props.post.comments || props.post.comments.length < 1)
+        if (props.comments === null)
+            return (
+                <div className="relative mt-10">
+                    <SuspenseAnimation loading={true} />
+                </div>
+            )
+
+        if (!props.comments || props.comments.length < 1)
             return (
                 <div className="rounded-xl shadow text-center p-3 text-lg font-medium bg-pins-light">Be the first to comment on this!</div>)
         else {
-            return (props.post.comments.map(renderCommentCB))
+            return (props.comments.map(renderCommentCB))
         }
     }
     /* CB to render each comment*/
@@ -51,11 +59,11 @@ function DetailedPostView(props) {
                 {/* user profile */}
                 <UserProfileCard
                     picture={comment.profilePicture}
-                    nick={comment.displayName? comment.displayName: "anonymous"}
+                    nick={comment.displayName ? comment.displayName : "anonymous"}
                     size="12"
                     textSize="xl"
                 />
-               
+
                 {/* comment */}
                 <div className="border bg-pins-light bg-opacity-30 rounded p-3 shadow">
                     <p>{comment.content}</p>
@@ -92,7 +100,7 @@ function DetailedPostView(props) {
 
                     {/* user profile */}
                     <span className="text-3xl w-fit rounded-full py-1 pr-3 mb-3 hover:cursor-pointer hover:shadow hover:bg-pins-light transition duration-300"
-                        onClick={() => { navigate("/profile/"+props.post.createdBy) }}
+                        onClick={() => { navigate("/profile/" + props.post.createdBy) }}
                         title="Go to Profile">
                         {/* User dont exist anymore? */}
                         {props.post.user && <UserProfileCard
@@ -110,11 +118,11 @@ function DetailedPostView(props) {
                     {/* Interaction buttons */}
                     <div className="flex justify-end items-center mt-auto">
                         <div className="pr-1 text-md font-light">dislikes: {props.nofDislikes}</div>
-                        <button title="Click to dislike" onClick={handleDislikeClickACB} className="postModifyingButtons hover:bg-gray-200" disabled={props.currentUID ? false:true}>
+                        <button title="Click to dislike" onClick={handleDislikeClickACB} className="postModifyingButtons hover:bg-gray-200" disabled={props.currentUID ? false : true}>
                             <BiDislike size="40" className={props.isDislikedByUser ? "text-pins-primary" : "text-black"} />
                         </button>
                         <div className="pl-4 pr-1 text-md font-light">likes: {props.nofLikes}</div>
-                        <button title="Click to like" onClick={handleLikeClickACB} className="postModifyingButtons hover:bg-gray-200" disabled={props.currentUID ? false:true}>
+                        <button title="Click to like" onClick={handleLikeClickACB} className="postModifyingButtons hover:bg-gray-200" disabled={props.currentUID ? false : true}>
                             <BiLike size="40" className={props.isLikedByUser ? "text-pins-primary" : "text-black"} />
                         </button>
                     </div>
