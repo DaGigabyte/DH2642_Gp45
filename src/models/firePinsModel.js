@@ -140,34 +140,35 @@ const model = observable({
     currentPostID: null,
     status: null, // Has one of the values, 'loading, 'success' or 'error' depening on the state of the fetching
     comment: "",
-    promiseState: {
-      promise: null,
-      data: {
-        id: null, // post id
-        user: null, // user object from user who created post
-        content: null,
-        createdAt: null,
-        createdBy: null,
-        dislikedBy: null,
-        likedBy: null,
-        likes: null,
-        modifiedAt: null,
-        posterPath: null,
-        source: null,
-        title: null,
-        comments: null, // Array of comments on the post
-      },
-      error: null,
-      setPromise: action(function(promise) {
-        this.promise = promise;
-      }),
-      setData: action(function(data) {
-        this.data = data;
-      }),
-      setError: action(function(error) {
-        this.error = error;
-      }),
+    postData: {
+      id: null, // post id
+      user: null, // user object from user who created post
+      content: null,
+      createdAt: null,
+      createdBy: null,
+      dislikedBy: null,
+      likedBy: null,
+      likes: null,
+      modifiedAt: null,
+      posterPath: null,
+      source: null,
+      title: null,
     },
+    unsubscribePostData: null,
+    setPostData: action(function(postData) {
+      this.postData = postData;
+    }),
+    setUnsubscribePostData: action(function(unsubscribeFunc) {
+      this.unsubscribePostData = unsubscribeFunc;
+    }),
+    postComments: null, // Array of comments on the post
+    unsubscribePostCommentsData: null,
+    setPostComments: action(function(comments) {
+      this.postComments = comments;
+    }),
+    setUnsubscribePostCommentsData: action(function(unsubscribeFunc) {
+      this.unsubscribePostCommentsData = unsubscribeFunc;
+    }),
     setCurrentPostID: action(async function(postID) {
       this.currentPostID = postID;
     }),

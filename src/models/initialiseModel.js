@@ -1,4 +1,4 @@
-import { connectToFirestore, readPostFromFirestore, queryCommentsByPostId, readUserFromFirestore, profileDataListener, queryPostByUserUid } from "../firebase/firebaseModel";
+import { connectToFirestore, postDataListener, postCommentsDataListener, profileDataListener, queryPostByUserUid } from "../firebase/firebaseModel";
 import resolvePromise from "./resolvePromise";
 import { reaction } from "mobx";
 import { listOfGenre } from "../services/firePinsSource";
@@ -18,26 +18,34 @@ function settingsReaction(model) {
 
 // Reaction to fetch post data when currentPostID changes
 function currentPostIdReaction(model) {
+    const postData = model.postDetailData;
+
     function watchCurrentPostIdCB() {
-        return [model.postDetailData.currentPostID];
+        return [postData.currentPostID];
     }
-    async function readPostwithComments(postId) { // Fetch post data and comments from Firestore
-        const postData = await readPostFromFirestore(postId);
-        const postComments = await queryCommentsByPostId(postId);
-        return { ...postData, comments: postComments };
-    }
-    async function appendCommentsToPost(post) { // Fetch comments from Firestore and append to post
-        const postComments = await queryCommentsByPostId(post.id);
-        return { ...post, comments: postComments };
-    }
-    async function fetchPostDataCB([newPostId]) {
+
+    async function onCurrentPostIdChangeCB([newPostId]) {
+        // If the post data is available immediately set it in the model
         const post = model.getPostFromModel(newPostId);
-        const promiseToBeResolved = post ? appendCommentsToPost(post) : readPostwithComments(newPostId); // If post is already in the model, just set promiseState.data to the post, otherwise fetch the post from Firestore
-        resolvePromise(promiseToBeResolved, model.postDetailData.promiseState);
+        post && postData.setPostData(post);
+
+        // Subsribe to changes in the current post
+        postData.unsubscribePostData?.();
+        postData.setPostData(null);
+        postData.setUnsubscribePostData(postDataListener(newPostId, (postDetails) => {
+            postData.setPostData(postDetails);
+        }));
+
+        // Subscribe to changes in the comments of the current post
+        postData.unsubscribePostCommentsData?.();
+        postData.setPostComments(null);
+        postData.setUnsubscribePostCommentsData(postCommentsDataListener(newPostId, (comments) => {
+            postData.setPostComments(comments);
+        }));
         // Reset the comment to an empty string
-        model.postDetailData.comment = "";
+        postData.comment = "";
     }
-    reaction(watchCurrentPostIdCB, fetchPostDataCB);
+    reaction(watchCurrentPostIdCB, onCurrentPostIdChangeCB);
 }
 
 // Reaction to fetch profile data when currentProifileUid changes

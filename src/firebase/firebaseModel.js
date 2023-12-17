@@ -193,31 +193,31 @@ async function removePostFromFirestore(postId) {
     });
 }
 
-function readPostFromFirestore(postId) {
-    if (!postId) {
-        throw new Error("pid is falsy");
-    }
-    const docRef = doc(db, "Posts", postId);
-    return getDoc(docRef)
-        .then(async (docSnapshot) => {
-            if (docSnapshot.exists()) { // Document for this post exists on Firestore
-                console.debug("readPostFromFirestore: Post exists on Firestore, reading data");
+function postDataListener(postId, onUpdate) {
+    try {
+        if (!postId) {
+            throw new Error("postId is falsy");
+        }
+        const docRef = doc(db, "Posts", postId);
+
+        return onSnapshot(docRef, async (docSnapshot) => {
+            if (docSnapshot.exists()) {
+                console.debug("postDataListener: Post exists on Firestore, reading data");
                 const postData = docSnapshot.data();
                 try {
                     const user = await readUserFromFirestore(postData.createdBy);
-                    return { id: docSnapshot.id, user: user, ...postData };
+                    const postDetails = { id: docSnapshot.id, user, ...postData };
+                    onUpdate(postDetails);
                 } catch (error) {
-                    console.error("readPostFromFirestore: Error fetching user data:", error);
+                    console.error("postDataListener: Error fetching user data:", error);
                 }
-            } else { // Document for this post does not exist on Firestore
-                console.debug("readPostFromFirestore: No such post!");
-                return null;
+            } else {
+                console.debug("postDataListener: No such post!");
             }
-        })
-        .catch((error) => {
-            console.error("Error getting document:", error);
-            throw new Error("Error getting document");
         });
+    } catch (error) {
+        console.error("Error reading post document:", error);
+    }
 }
 
 async function likePostFirestore(uid, postId) {
@@ -360,22 +360,18 @@ async function queryUsername(username) {
     });
 }
 
-async function queryCommentsByPostId(postId) {
-    const path = "Posts/" + postId + "/Comments";
+function postCommentsDataListener(postId, onUpdate) {
     const q = query(
-        collection(db, path), 
+        collection(db, "Posts", postId, "Comments"), 
         orderBy("createdAt", "desc")
     );
-    return getDocs(q)
-    .then((querySnapshot) => { // querySnapshot is an array of documents
+    return onSnapshot(q, (querySnapshot) => {
         const comments = [];
         querySnapshot.forEach((doc) => {
             comments.push(doc.data());
         });
-        console.debug("queryCommentsByPostId: Current comments: ", comments);
-        return comments; // return comments to caller
-    })
-    .catch((error) => {
+        onUpdate(comments); 
+    }, (error) => {
         console.error("Error getting documents: ", error);
     });
 }
@@ -480,4 +476,4 @@ async function queryFavoritePosts(amountOfPosts, uid) {
     return posts;
 }
 
-export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, readPostFromFirestore, removePostFromFirestore, savePostToFirestore, profileDataListener, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, queryCommentsByPostId, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };
+export { connectToFirestore, signInACB, signOutACB, readUserFromFirestore, postDataListener, removePostFromFirestore, savePostToFirestore, profileDataListener, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, postCommentsDataListener, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };
