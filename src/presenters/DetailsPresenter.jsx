@@ -31,7 +31,7 @@ function DetailsPresenter(props) {
     setPopUpIsOpen(true);
   }
   function confirmDelete() {
-    console.log("DELETION:", popUpAction, "CONFIRM:", popUpAction === deleteTypes.COMMENT)
+
     if (popUpAction === deleteTypes.PIN) {
       setPopUpIsOpen(false)
       navigate("/");
