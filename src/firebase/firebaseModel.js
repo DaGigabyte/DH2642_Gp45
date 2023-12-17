@@ -253,8 +253,9 @@ async function dislikePostFirestore(uid, postId) {
 
             const updatedDislikedBy = dislikedBy.includes(uid) ? dislikedBy.filter((dislikeUid) => dislikeUid !== uid) : [...dislikedBy, uid];
             const updatedLikedBy = likedBy.filter((likeUid) => likeUid !== uid);
+            const updatedLikes = likedBy.includes(uid) ? likes - 1 : likes;
 
-            await updateDoc(docRef, { likedBy: updatedLikedBy, dislikedBy: updatedDislikedBy });
+            await updateDoc(docRef, { likedBy: updatedLikedBy, dislikedBy: updatedDislikedBy, likes: updatedLikes });
         } else {
             console.error("dislikePostFirestore: Post not found");
         }
