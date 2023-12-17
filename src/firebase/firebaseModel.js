@@ -364,6 +364,7 @@ async function queryCommentsByPostId(postId) {
     const path = "Posts/" + postId + "/Comments";
     const q = query(
         collection(db, path), 
+        orderBy("createdAt", "desc")
     );
     return getDocs(q)
     .then((querySnapshot) => { // querySnapshot is an array of documents
