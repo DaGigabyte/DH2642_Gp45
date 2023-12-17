@@ -6,3 +6,9 @@ export const newPostCreatedToast = () =>
 
 export const newCommentCreatedToast = () =>
   toast.success("Your comment was posted.");
+
+export const postDeletedToast = () =>
+  toast.success("The Pin was deleted.");
+
+export const commentDeletedToast = () =>
+  toast.success("The comment was deleted.");
