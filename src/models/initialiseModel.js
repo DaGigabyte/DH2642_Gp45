@@ -31,7 +31,7 @@ function currentPostIdReaction(model) {
 
         // Subsribe to changes in the current post
         postData.unsubscribePostData?.();
-        postData.setPostData(null);
+        !post && postData.setPostData(null);
         postData.setUnsubscribePostData(postDataListener(newPostId, (postDetails) => {
             postData.setPostData(postDetails);
         }));
@@ -50,13 +50,10 @@ function currentPostIdReaction(model) {
 
 // Reaction to fetch profile data when currentProifileUid changes
 function currentProfileUidReaction(model) {
-    function watchCurrentProfileUidCB() {
-        return [model.profilePageData.currentProfileUid];
-    }
+    const profileData = model.profilePageData;
 
-    async function readPosts(uid) {
-        const userPosts = await queryPostByUserUid(uid);
-        return { posts: userPosts };
+    function watchCurrentProfileUidCB() {
+        return [profileData.currentProfileUid];
     }
 
     function extractProfileBannerData({ profilePicture, displayName, bio, followedBy, follows }) {
@@ -64,13 +61,14 @@ function currentProfileUidReaction(model) {
     }
 
     async function onCurrentProfileUidChangeCB([newUid]) {
-        model.profilePageData.unsubscribeProfileData?.();
-        model.profilePageData.profileBannerPromiseState.setData(null);
-        //model.profilePageData.unsubscribePostsData?.();
-        model.profilePageData.setUnsubscribeProfileData(profileDataListener(newUid, (profileData) => {
-            model.profilePageData.profileBannerPromiseState.setData(extractProfileBannerData(profileData));
+        // Subscribe to changes in the current profile
+        profileData.unsubscribeProfileData?.();
+        profileData.profileBannerPromiseState.setData(null);
+        profileData.setUnsubscribeProfileData(profileDataListener(newUid, (data) => {
+            profileData.profileBannerPromiseState.setData(extractProfileBannerData(data));
         }));
-        //resolvePromise(readPosts(newUid), model.profilePageData.userPostsPromiseState);
+        
+        //model.profilePageData.unsubscribePostsData?.();
     }
 
     reaction(watchCurrentProfileUidCB, onCurrentProfileUidChangeCB);
