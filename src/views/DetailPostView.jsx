@@ -1,6 +1,7 @@
 import UserProfileCard from "../components/global/UserProfileCard.jsx"
 import ReturnButton from "../components/navigation/ReturnButton.jsx"
 import SuspenseAnimation from "../components/global/SuspenseAnimation";
+import DeletePostButton from "../components/global/DeletePostButton.jsx";
 import { BiLike, BiDislike } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
 /**
@@ -64,9 +65,17 @@ function DetailedPostView(props) {
                     textSize="xl"
                 />
 
-                {/* comment */}
-                <div className="border bg-pins-light bg-opacity-30 rounded p-3 shadow">
-                    <p>{comment.content}</p>
+                <div className="flex w-full">
+
+                    {/* comment */}
+                    <p className="border bg-pins-light bg-opacity-30 rounded p-3 shadow w-full">{comment.content}</p>
+
+                    {/* Only visible if uid = post.uid */}
+                    {props.currentUID === comment.createdBy &&
+                        <div className="flex justify-end mt-auto pr-1">
+                            <DeletePostButton handleOnClick={() => props.handleDeleteRequest(props.deleteTypes.COMMENT)} />
+                        </div>
+                    }
                 </div>
             </div>
         )
@@ -81,7 +90,6 @@ function DetailedPostView(props) {
     function handleLikeClickACB() {
         props.userLikesPost();
     }
-
 
     return (
         /* Full rended container */
@@ -112,8 +120,17 @@ function DetailedPostView(props) {
                     {/* Title */}
                     <div className="text-3xl">{props.post.title}</div>
 
-                    {/* content */}
-                    <div className="text-lg max-h-96 overflow-y-scroll scrollbar-hide">{props.post.content}</div>
+                    {/* content and remove button*/}
+                    <div className="flex flex-col h-full pb-2">
+                        <p className="text-lg max-h-96 overflow-y-scroll scrollbar-hide">{props.post.content}</p>
+
+                        {/* Only visible if uid = post.uid */}
+                        {props.currentUID === props.post.createdBy &&
+                            <div className="flex justify-end mt-auto pr-1">
+                                <DeletePostButton handleOnClick={() => props.handleDeleteRequest(props.deleteTypes.PIN)} />
+                            </div>
+                        }
+                    </div>
 
                     {/* Interaction buttons */}
                     <div className="flex justify-end items-center mt-auto">
