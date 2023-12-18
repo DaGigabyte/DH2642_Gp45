@@ -87,13 +87,13 @@ const model = observable({
       console.debug("setting createPostEditor.data.posterPath to: ", posterPath);
       this.data.posterPath = posterPath;
     }),
-    setSource: action(function (source) {
-      console.debug("setting createPostEditor.data.source to: ", source);
-      this.data.source = source;
+    setTMDBsourceID: action(function (source) {
+      console.debug("setting createPostEditor.data.TMDBsourceID to: ", source);
+      this.data.TMDBsourceID = source;
     }),
-    setTMDBgenre: action(function (TMDBgenre) {
-      console.debug("setting createPostEditor.data.TMDBgenre to: ", TMDBgenre);
-      this.data.TMDBgenre = TMDBgenre;
+    setTMDBgenreID: action(function (TMDBgenre) {
+      console.debug("setting createPostEditor.data.TMDBgenreID to: ", TMDBgenre);
+      this.data.TMDBgenreID = TMDBgenre;
     }),
     setTMDBdateOfMovieRelease: action(function (TMDBdateOfMovieRelease) {
       console.debug("setting createPostEditor.data.TMDBdateOfMovieRelease to: ", TMDBdateOfMovieRelease);
