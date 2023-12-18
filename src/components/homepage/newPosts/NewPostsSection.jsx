@@ -1,8 +1,6 @@
-
 import InfiniteScroll from 'react-infinite-scroller';
 import Post from "./NewPostCard"
 import defaultProfile from "../../../assets/default-avatar.jpg"
-
 import SuspenseAnimation from "../../global/SuspenseAnimation"
 /**
  * 
@@ -41,14 +39,13 @@ export default function NewPostSection(props) {
       />
     )
   }
-
   return (
     <>
       <p className="text-3xl font-semibold pt-5">New Posts</p>
       <InfiniteScroll
         pageStart={0}
         loadMore={() => props.loadMorePosts()}
-        hasMore={true /***************************************** METHOD TO CHECK THIS ****************************************/}
+        hasMore={true /******************************** METHOD TO CHECK THIS ********************************/}
         initialLoad={false}
         loader={<div className="relative p-10" key={0}>
           <SuspenseAnimation loading={true} /></div>}

@@ -38,10 +38,10 @@ h1 {
 
 @layer utilities{
   .purpleButton {
-    color: #e9e2ec; /* Equivalent to text-violet-50 in Tailwind */
-    background-color: #7f5af0; /* Equivalent to bg-violet-500 in Tailwind */
-    padding: 0.5rem 1.25rem; /* Equivalent to px-5 py-2 in Tailwind */
-    border-radius: 1rem; /* Equivalent to rounded-2xl in Tailwind */
+    color: #e9e2ec;
+    background-color: #7f5af0;
+    padding: 0.5rem 1.25rem; 
+    border-radius: 1rem; 
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); 
     transition: transform 0.3s ease; 
   }
@@ -50,8 +50,12 @@ h1 {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
 
-  /*Used in  */
   .postModifyingButtons{
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    font-size: 20px;
+    line-height: 28px;
     border-radius: 9999px;
     padding: 0.5rem;
     border-width: 1px;
@@ -59,8 +63,7 @@ h1 {
     border-color: #fff;
     border-style: solid;
     transition-property: color, background-color, border-color;
-    transition-duration: 0.4s; 
-    
+    transition-duration: 0.4s;  
   }
   .postModifyingButtons:hover{
     border-color: #8D66FC;

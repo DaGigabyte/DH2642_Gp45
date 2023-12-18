@@ -1,4 +1,5 @@
 import { BiLike, BiDislike, BiCommentDetail } from "react-icons/bi";
+import { IoAddOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import Profile from "../../global/UserProfileCard"
 /**
@@ -41,7 +42,6 @@ export default function NewPostCard(props) {
     event.stopPropagation();
     props.likePost();
   }
-
   /* React Component*/
   return (
     <div
@@ -78,31 +78,33 @@ export default function NewPostCard(props) {
           {props.postBody}
         </span>
 
-        {/* LikeButtons  xl:absolute xl:bottom-5 xl:right-10*/}
-        <div className="flex justify-end items-center mt-auto">
+        {/* Interaction buttons*/}
+        <div className="flex gap-5 items-center justify-end mt-auto">
           <button title={props.currentUID ? "Click to comment" : "Log in to access"}
             onClick={handleCommentClickACB}
             className="postModifyingButtons"
             disabled={props.currentUID ? false : true}>
+            <IoAddOutline />
             <BiCommentDetail size="40" />
           </button>
 
-          <div className="pl-4 pr-1 text-s font-light">dislikes: {props.nofDislikes}</div>
-          <button title={props.currentUID ? "Click to dislike" : "Log in to access"}
-            onClick={handleDislikeClickACB}
-            className="postModifyingButtons"
-            disabled={props.currentUID ? false : true}>
-            <BiDislike size="40" className={props.currentUserDislikes ? "text-pins-primary" : "text-black"} />
-          </button>
-
-          <div className="pl-4 pr-1 text-s font-light">likes: {props.nofLikes}</div>
           <button title={props.currentUID ? "Click to like" : "Log in to access"}
             onClick={handleLikeClickACB}
             className="postModifyingButtons"
             disabled={props.currentUID ? false : true}>
+            {props.nofLikes}
             <BiLike size="40" className={props.currentUserLikes ? "text-pins-primary" : "text-black"} />
           </button>
+
+          <button title={props.currentUID ? "Click to dislike" : "Log in to access"}
+            onClick={handleDislikeClickACB}
+            className="postModifyingButtons"
+            disabled={props.currentUID ? false : true}>
+            <p>{props.nofDislikes}</p>
+            <BiDislike size="40" className={props.currentUserDislikes ? "text-pins-primary" : "text-black"} />
+          </button>
         </div>
+        
       </div>
 
       {/* Source Badge */}
