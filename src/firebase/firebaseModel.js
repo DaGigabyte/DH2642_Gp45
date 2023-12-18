@@ -23,7 +23,8 @@ import {
     limit,
     startAfter,
     onSnapshot,
-    updateDoc
+    updateDoc,
+    endBefore
 } from "firebase/firestore";
 import { reaction } from "mobx";
 
@@ -107,10 +108,10 @@ function connectToFirestore(model) {
             model.user.setData({});
             unsubscribeOnSnapshotUser(); // Stop listening to the user document
         }
-    }
+    /*
     function updateNewestPostsFromFirestoreReaction(model) {
         const posts = collection(db, "Posts");
-        const q = query(posts, orderBy("createdAt", "desc"), limit(1));
+        const q = query(posts, orderBy("createdAt", "desc"), endBefore());
         function updateNewestPostsFromFirestoreCB(change) {
             if (change.type === "added") {
                 if (updateNewestPostsFromFirestoreCB.firstRun === undefined) { // First run, i.e. initial data from Firestore
@@ -128,14 +129,16 @@ function connectToFirestore(model) {
                         console.error("updateNewestPostsFromFirestoreReaction: Error fetching user data:", error);
                     });
             }
+            
         }
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             querySnapshot.docChanges().forEach(updateNewestPostsFromFirestoreCB);
         });
     }
+    */
     onAuthStateChanged(auth, onAuthStateChangedCB);
     reaction(watchUserCB, callSaveUserToFirestoreCB);
-    updateNewestPostsFromFirestoreReaction(model);
+    // updateNewestPostsFromFirestoreReaction(model);
 }
 
 function readUserFromFirestore(uid) {
@@ -401,21 +404,43 @@ async function queryPostByUserUid(userUid) {
  * @param {Number} nMorePosts 
  * @returns {Array} Array of posts in the form { id: String, user: Object, ...postData }
  */
-async function queryMoreNewestPosts(nMorePosts) {
+async function queryMoreNewestPosts(nMorePosts, startAfterCreatedAt) {
     const q = queryMoreNewestPosts.lastVisiblePost ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(queryMoreNewestPosts.lastVisiblePost), limit(nMorePosts)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), limit(nMorePosts));
-    const querySnapshot = await getDocs(q);
-    const posts = [];
-    for (const doc of querySnapshot.docs) {
-        const postData = doc.data();
-        try {
-            const user = await readUserFromFirestore(postData.createdBy);
-            posts.push({ id: doc.id, user: user, ...postData });
-        } catch (error) {
-            console.error("Error fetching user data:", error);
+    async function onSnapshotACB(querySnapshot) {
+        querySnapshot.docChanges().forEach((change) => {
+            if (change.type === "added") {
+                const postData = change.doc.data();
+                try {
+                    const user = readUserFromFirestore(postData.createdBy);
+                    posts.push({ id: change.doc.id, user: user, ...postData });
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
+            }
+            if (change.type === "deleted") {
+                const postId = change.doc.id;
+                posts = posts.filter((post) => post.id !== postId);
+            }
+        });
+        posts = [];
+        for (const doc of querySnapshot.docs) {
+            const postData = doc.data();
+            try {
+                const user = await readUserFromFirestore(postData.createdBy);
+                posts.push({ id: doc.id, user: user, ...postData });
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
         }
+        queryMoreNewestPosts.lastVisiblePost = querySnapshot.docs[querySnapshot.docs.length-1];
+        console.debug("queryMoreNewestPosts: Current posts: ", posts);
+        return posts; // return posts to caller
     }
+    const posts = [];
+    const unsub = onSnapshot(q, onSnapshotACB);
     queryMoreNewestPosts.lastVisiblePost = querySnapshot.docs[querySnapshot.docs.length-1];
     console.debug("queryMoreNewestPosts: Current posts: ", posts);
+    const listenerObj = { unsub: unsub, posts: posts};
     return posts; // return posts to caller
 }
 

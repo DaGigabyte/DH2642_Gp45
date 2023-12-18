@@ -2,6 +2,7 @@ import { observable, reaction, action, set } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import { listOfGenre } from "../services/firePinsSource";
 import { savePostToFirestore, removePostFromFirestore, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
+import NewestPostListenerManager from "../firebase/newestPostListenerManager";
 
 const model = observable({
   count: 1,
@@ -132,8 +133,7 @@ const model = observable({
     },
     fetchNewestPosts: async function() {
       console.debug("this.data.newestPosts.length:", this.data.newestPosts.length);
-      const morePosts = await queryMoreNewestPosts(4);
-      this.setNewestPosts([...this.data.newestPosts, ...morePosts]);
+      NewestPostListenerManager.addNewestPostsListener();
     },
   },
   postDetailData: {
@@ -321,6 +321,6 @@ const model = observable({
   uuid: uuidv4(),
 });
 
-
+const newestPostListenerManager = new NewestPostListenerManager(model);
 
 export default model;
