@@ -15,9 +15,8 @@ class NewestPostListenerManager {
         });
     }
     
-    setListeners = action((listeners) =>
-        this.listeners = listeners
-    )
+    setListeners = action((listeners) => this.listeners = listeners);
+    setListenerPostAt = action((post, index) => this.listeners[index].post = post);
     
     addNewestPostsListener() {
         console.debug('NewestPostListenerManager: addNewestPostsListener');
@@ -33,6 +32,13 @@ class NewestPostListenerManager {
                     console.debug('NewestPostListenerManager: added', listener.post);
                     this.setListeners([...this.listeners, listener]);
                     console.debug('NewestPostListenerManager: this.listeners', this.listeners);
+                }
+                if (change.type === 'modified') {
+                    const postData = change.doc.data();
+                    const index = this.listeners.findIndex((listener)=>listener.post.id === change.doc.id);
+                    const updatedPost = { ...this.listeners[index].post, ...postData };
+                    this.setListenerPostAt(updatedPost, index);
+                    console.debug('NewestPostListenerManager: modified', updatedPost);
                 }
                 if (change.type === 'removed') {
                     // Todo: remove listener from listeners
