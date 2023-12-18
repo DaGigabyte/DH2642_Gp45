@@ -21,7 +21,7 @@ class NewestPostListenerManager {
     addNewestPostsListener() {
         console.debug('NewestPostListenerManager: addNewestPostsListener');
         const lastListenerDocs = this.listeners[this.listeners.length - 1]?.post;
-        const q = lastListenerDocs ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(lastListenerDocs.createdAt), limit(1)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), limit(1));
+        const q = lastListenerDocs ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(lastListenerDocs.createdAt), limit(1)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(new Date()), limit(1));
         const listener = {unsub: null, post: null};
         listener.unsub = onSnapshot(q, (querySnapshot) => {
             querySnapshot.docChanges().forEach(async (change) => {
