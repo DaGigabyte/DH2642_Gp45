@@ -70,6 +70,7 @@ const model = observable({
       title: "",
       content: "",
       posterPath: "",
+      source: "",
       TMDBsourceID: null,
       TMDBgenreID: [],
       TMDBdateOfMovieRelease: "",
@@ -86,6 +87,10 @@ const model = observable({
     setPosterPath: action(function(posterPath) {
       console.debug("setting createPostEditor.data.posterPath to: ", posterPath);
       this.data.posterPath = posterPath;
+    }),
+    setSource: action(function(source) {
+      console.debug("setting createPostEditor.data.source to: ", source);
+      this.data.source = source;
     }),
     setTMDBsourceID: action(function (source) {
       console.debug("setting createPostEditor.data.TMDBsourceID to: ", source);
