@@ -113,6 +113,7 @@ const model = observable({
     data: {
       topRatedPosts: [],
       newestPosts: [],
+      newestPostsBeforeTimeOfConstruction: [],
     },
     setTopRatedPosts: action(function(posts) {
       console.debug("current homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
@@ -125,6 +126,12 @@ const model = observable({
       console.debug("setting homePageData.data.newestPosts to: ", posts);
       this.data.newestPosts = posts;
       console.debug("new homePageData.data.newestPosts: ", this.data.newestPosts);
+    }),
+    setNewestPostsBeforeTimeOfConstruction: action(function(posts) {
+      console.debug("current homePageData.data.newestPostsBeforeTimeOfConstruction: ", this.data.newestPostsBeforeTimeOfConstruction);
+      console.debug("setting homePageData.data.newestPostsBeforeTimeOfConstruction to: ", posts);
+      this.data.newestPostsBeforeTimeOfConstruction = posts;
+      console.debug("new homePageData.data.newestPostsBeforeTimeOfConstruction: ", this.data.newestPostsBeforeTimeOfConstruction);
     }),
     fetchTopPosts: async function() {
       console.debug("this.data.topRatedPosts.length:", this.data.topRatedPosts.length);
@@ -289,7 +296,7 @@ const model = observable({
     addNewPost: action(function(post) {
       console.debug("adding new post: ", post);
       this.setNewPostsData([post, ...this.data]);
-      model.updateHomePageDataWithNewPosts();
+      // model.updateHomePageDataWithNewPosts();
     }),
   },
   /**

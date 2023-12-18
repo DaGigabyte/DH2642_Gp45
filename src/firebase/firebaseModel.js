@@ -135,7 +135,7 @@ function connectToFirestore(model) {
     }
     onAuthStateChanged(auth, onAuthStateChangedCB);
     reaction(watchUserCB, callSaveUserToFirestoreCB);
-    updateNewestPostsFromFirestoreReaction(model);
+    // updateNewestPostsFromFirestoreReaction(model);
 }
 
 function readUserFromFirestore(uid) {

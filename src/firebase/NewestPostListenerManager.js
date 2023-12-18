@@ -1,4 +1,4 @@
-import { collection, onSnapshot, query, orderBy, startAfter, limit } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, startAfter, endBefore, limit } from "firebase/firestore";
 import { db } from "./firebaseModel";
 import { readUserFromFirestore } from "./firebaseModel";
 import { makeAutoObservable, reaction, action } from "mobx";
@@ -6,13 +6,16 @@ import { makeAutoObservable, reaction, action } from "mobx";
 class NewestPostListenerManager {
     constructor(model) {
         this.model = model;
+        this.newerThanConstructionPosts = [];
         this.listeners = [];
+        this.timeOfConstruction = new Date();
         makeAutoObservable(this);
         reaction(()=>this.listeners.map(l => l.post), ()=> {
             console.debug('NewestPostListenerManager: reaction', this.listeners);
             const postArr = this.listeners.map(l => l.post).filter(p => p!==null);
-            model.homePageData.setNewestPosts(postArr)
+            model.homePageData.setNewestPostsBeforeTimeOfConstruction(postArr)
         });
+        this.updateNewestPostsFromFirestoreListener(model);
     }
     
     setListeners = action((listeners) => this.listeners = listeners);
@@ -21,7 +24,7 @@ class NewestPostListenerManager {
     addNewestPostsListener() {
         console.debug('NewestPostListenerManager: addNewestPostsListener');
         const lastListenerDocs = this.listeners[this.listeners.length - 1]?.post;
-        const q = lastListenerDocs ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(lastListenerDocs.createdAt), limit(1)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(new Date()), limit(1));
+        const q = lastListenerDocs ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(lastListenerDocs.createdAt), limit(1)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(this.timeOfConstruction), limit(1));
         const listener = {unsub: null, post: null};
         listener.unsub = onSnapshot(q, (querySnapshot) => {
             querySnapshot.docChanges().forEach(async (change) => {
@@ -50,10 +53,25 @@ class NewestPostListenerManager {
         });
     }
     addFourNewestPostsListener() {
+        console.debug('NewestPostListenerManager: addFourNewestPostsListener');
         setTimeout(this.addNewestPostsListener.bind(this), 1000);
         setTimeout(this.addNewestPostsListener.bind(this), 2000);
     }
-    
+    updateNewestPostsFromFirestoreListener(model) {
+        const posts = collection(db, "Posts");
+        const q = query(posts, orderBy("createdAt", "desc"), endBefore(this.timeOfConstruction));
+        
+        const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+            const postArr = [];
+            for (const doc of querySnapshot.docs) {
+                const postData = doc.data();
+                const user = await readUserFromFirestore(postData.createdBy);
+                const post = { id: doc.id, user, ...postData };
+                postArr.push(post);
+            }
+            model.newPostsData.setNewPostsData(postArr);
+        });
+    }
     removeListener(postId) {
         this.listeners = this.listeners.filter(l => l !== listener);
     }
