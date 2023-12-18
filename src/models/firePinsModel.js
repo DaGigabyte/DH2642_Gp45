@@ -140,7 +140,7 @@ const model = observable({
     },
     fetchNewestPosts: async function() {
       console.debug("this.data.newestPosts.length:", this.data.newestPosts.length);
-      newestPostListenerManager.addFourNewestPostsListener();
+      newestPostListenerManager.addNewestPostsListener();
     },
   },
   postDetailData: {
