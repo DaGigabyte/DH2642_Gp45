@@ -27,8 +27,10 @@ class NewestPostListenerManager {
         const q = lastListenerDocs ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(lastListenerDocs.createdAt), limit(1)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(this.timeOfConstruction), limit(1));
         const listener = {unsub: null, post: null};
         listener.unsub = onSnapshot(q, (querySnapshot) => {
-            querySnapshot.docChanges().forEach(async (change) => {
+            querySnapshot.docChanges().forEach(async function changeACB(change) {
                 if (change.type === 'added') {
+                    if (changeACB.toBeDeleted === true)
+                        return;
                     const postData = change.doc.data();
                     const user = await readUserFromFirestore(postData.createdBy);
                     listener.post = { id: change.doc.id, user, ...postData };
@@ -47,9 +49,10 @@ class NewestPostListenerManager {
                     // Todo: remove listener from listeners
                     console.debug('NewestPostListenerManager: removed');
                     listener.unsub();
+                    changeACB.toBeDeleted = true;
                     this.removeListener(change.doc.id);
                 }
-            });
+            }.bind(this));
         });
     }
     addFourNewestPostsListener() {
@@ -73,7 +76,8 @@ class NewestPostListenerManager {
         });
     }
     removeListener(postId) {
-        this.listeners = this.listeners.filter(l => l !== listener);
+        console.debug('NewestPostListenerManager: removeListener', postId);
+        this.listeners = this.listeners.filter(l => l.post.id !== postId);
     }
 }
 
