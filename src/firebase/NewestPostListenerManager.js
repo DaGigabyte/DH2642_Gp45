@@ -1,20 +1,28 @@
-import { onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, startAfter, limit } from "firebase/firestore";
+import { db } from "./firebaseModel";
 import { readUserFromFirestore } from "./firebaseModel";
-import { makeAutoObservable, autorun } from "mobx";
+import { makeAutoObservable, reaction, action } from "mobx";
 
 class NewestPostListenerManager {
     constructor(model) {
         this.model = model;
         this.listeners = [];
         makeAutoObservable(this);
-        autorun(() => {
-            model.homePageData.setNewestPosts(this.listeners.map(l => l.post));
+        reaction(()=>this.listeners.map(l => l.post), ()=> {
+            console.debug('NewestPostListenerManager: reaction', this.listeners);
+            const postArr = this.listeners.map(l => l.post).filter(p => p!==null);
+            model.homePageData.setNewestPosts(postArr)
         });
     }
     
+    setListeners = action((listeners) =>
+        this.listeners = listeners
+    )
+    
     addNewestPostsListener() {
+        console.debug('NewestPostListenerManager: addNewestPostsListener');
         const lastListenerDocs = this.listeners[this.listeners.length - 1]?.post;
-        const q = lastListenerDocs ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(lastListenerDocs.docRef), limit(1)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), limit(1));
+        const q = lastListenerDocs ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(lastListenerDocs.createdAt), limit(1)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), limit(1));
         const listener = {unsub: null, post: null};
         listener.unsub = onSnapshot(q, (querySnapshot) => {
             querySnapshot.docChanges().forEach(async (change) => {
@@ -23,6 +31,8 @@ class NewestPostListenerManager {
                     const user = await readUserFromFirestore(postData.createdBy);
                     listener.post = { id: change.doc.id, user, ...postData };
                     console.debug('NewestPostListenerManager: added', listener.post);
+                    this.setListeners([...this.listeners, listener]);
+                    console.debug('NewestPostListenerManager: this.listeners', this.listeners);
                 }
                 if (change.type === 'removed') {
                     // Todo: remove listener from listeners
@@ -32,7 +42,10 @@ class NewestPostListenerManager {
                 }
             });
         });
-        this.listeners.push(listener);
+    }
+    addFourNewestPostsListener() {
+        setTimeout(this.addNewestPostsListener.bind(this), 1000);
+        setTimeout(this.addNewestPostsListener.bind(this), 2000);
     }
     
     removeListener(postId) {

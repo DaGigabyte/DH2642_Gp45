@@ -1,7 +1,7 @@
 import { observable, reaction, action, set } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import { listOfGenre } from "../services/firePinsSource";
-import { savePostToFirestore, removePostFromFirestore, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
+import { savePostToFirestore, removePostFromFirestore, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
 import NewestPostListenerManager from "../firebase/newestPostListenerManager";
 
 const model = observable({
@@ -133,7 +133,7 @@ const model = observable({
     },
     fetchNewestPosts: async function() {
       console.debug("this.data.newestPosts.length:", this.data.newestPosts.length);
-      NewestPostListenerManager.addNewestPostsListener();
+      newestPostListenerManager.addFourNewestPostsListener();
     },
   },
   postDetailData: {
