@@ -1,7 +1,8 @@
 import { observable, reaction, action, set } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import { listOfGenre } from "../services/firePinsSource";
-import { savePostToFirestore, removePostFromFirestore, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
+import { savePostToFirestore, removePostFromFirestore, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
+import NewestPostListenerManager from "../firebase/NewestPostListenerManager";
 
 const model = observable({
   count: 1,
@@ -117,6 +118,7 @@ const model = observable({
     data: {
       topRatedPosts: [],
       newestPosts: [],
+      newestPostsBeforeTimeOfConstruction: [],
     },
     setTopRatedPosts: action(function(posts) {
       console.debug("current homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
@@ -130,14 +132,19 @@ const model = observable({
       this.data.newestPosts = posts;
       console.debug("new homePageData.data.newestPosts: ", this.data.newestPosts);
     }),
+    setNewestPostsBeforeTimeOfConstruction: action(function(posts) {
+      console.debug("current homePageData.data.newestPostsBeforeTimeOfConstruction: ", this.data.newestPostsBeforeTimeOfConstruction);
+      console.debug("setting homePageData.data.newestPostsBeforeTimeOfConstruction to: ", posts);
+      this.data.newestPostsBeforeTimeOfConstruction = posts;
+      console.debug("new homePageData.data.newestPostsBeforeTimeOfConstruction: ", this.data.newestPostsBeforeTimeOfConstruction);
+    }),
     fetchTopPosts: async function() {
       const posts = await queryTopPosts(12); // Hardcoded posts fetched once when app is initialised
-      this.setNewestPosts(posts);
+      this.setTopRatedPosts(posts);
     },
     fetchNewestPosts: async function() {
       console.debug("this.data.newestPosts.length:", this.data.newestPosts.length);
-      const morePosts = await queryMoreNewestPosts(4);
-      this.setNewestPosts([...this.data.newestPosts, ...morePosts]);
+      newestPostListenerManager.addNewestPostsListener();
     },
   },
   postDetailData: {
@@ -293,7 +300,6 @@ const model = observable({
     addNewPost: action(function(post) {
       console.debug("adding new post: ", post);
       this.setNewPostsData([post, ...this.data]);
-      model.updateHomePageDataWithNewPosts();
     }),
   },
   /**
@@ -325,6 +331,6 @@ const model = observable({
   uuid: uuidv4(),
 });
 
-
+const newestPostListenerManager = new NewestPostListenerManager(model);
 
 export default model;

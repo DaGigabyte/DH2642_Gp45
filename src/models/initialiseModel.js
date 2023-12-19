@@ -72,6 +72,17 @@ function currentProfileUidReaction(model) {
     reaction(watchCurrentProfileUidCB, onCurrentProfileUidChangeCB);
 }
 
+function combineLatestPosts(model) {
+    function watchCB() {
+        return [model.homePageData.data.newestPostsBeforeTimeOfConstruction, model.newPostsData.data];
+    }
+    function updateNewestPostsCB() {
+        const newestPosts = [...model.newPostsData.data, ...model.homePageData.data.newestPostsBeforeTimeOfConstruction];
+        model.homePageData.setNewestPosts(newestPosts);
+    }
+    reaction(watchCB, updateNewestPostsCB);
+}
+
 export default async function initialiseModel(model) {
     console.debug("initialiseModel");
     connectToFirestore(model);
@@ -79,6 +90,6 @@ export default async function initialiseModel(model) {
     currentPostIdReaction(model);
     currentProfileUidReaction(model);
     model.homePageData.fetchTopPosts();
-    model.homePageData.fetchNewestPosts();
+    combineLatestPosts(model);
     Object.assign(model, {listOfTMDBgenre: await listOfGenre()});
 }
