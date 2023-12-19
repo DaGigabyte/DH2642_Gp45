@@ -2,7 +2,7 @@ import { observable, reaction, action, set } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import { listOfGenre } from "../services/firePinsSource";
 import { savePostToFirestore, removePostFromFirestore, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
-import NewestPostListenerManager from "../firebase/newestPostListenerManager";
+import NewestPostListenerManager from "../firebase/NewestPostListenerManager";
 
 const model = observable({
   count: 1,
