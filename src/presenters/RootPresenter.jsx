@@ -62,6 +62,10 @@ function RootPresenter(props) {
       props.model.createPostEditor.setPostDescription(
         selectedMovieObject.overview
       );
+      props.model.createPostEditor.setTMDBsourceID(selectedMovieObject.id);
+      props.model.createPostEditor.setTMDBgenreID(
+        selectedMovieObject.genre_ids
+      );
 
       // Create new post
       props.model.createPost();
@@ -76,9 +80,6 @@ function RootPresenter(props) {
       setSearchTextTMDB("");
       // Reset search results
       setSearchResultsTMDB([]);
-
-      // Fetch new posts
-      props.model.homePageData.fetchNewestPosts();
 
       // Notify user of new post creation
       newPostCreatedToast();
