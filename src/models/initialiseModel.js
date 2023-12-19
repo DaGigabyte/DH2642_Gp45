@@ -1,4 +1,4 @@
-import { connectToFirestore, postDataListener, postCommentsDataListener, profileDataListener, queryPostByUserUid } from "../firebase/firebaseModel";
+import { connectToFirestore, postDataListener, postCommentsDataListener, profileDataListener, userPostsListener } from "../firebase/firebaseModel";
 import resolvePromise from "./resolvePromise";
 import { reaction } from "mobx";
 import { listOfGenre } from "../services/firePinsSource";
@@ -67,7 +67,11 @@ function currentProfileUidReaction(model) {
             profileData.profileBannerPromiseState.setData(extractProfileBannerData(data));
         }));
         
-        //model.profilePageData.unsubscribePostsData?.();
+        profileData.unsubscribePostsData?.();
+        profileData.setUserPosts(null);
+        profileData.setUnsubscribePostsData(userPostsListener(newUid, (posts) => {
+            profileData.setUserPosts(posts);
+        }));
     }
 
     reaction(watchCurrentProfileUidCB, onCurrentProfileUidChangeCB);

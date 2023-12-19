@@ -366,23 +366,20 @@ function postCommentsDataListener(postId, onUpdate) {
     });
 }
 
-async function queryPostByUserUid(userUid) {
+function userPostsListener(userUid, onUpdate) {
     const q = query(
         collection(db, "Posts"), 
         where("createdBy", "==", userUid),
         orderBy("createdAt", "desc")
     );
-    return getDocs(q)
-    .then((querySnapshot) => { // querySnapshot is an array of documents
+
+    return onSnapshot(q, (querySnapshot) => {
         const posts = [];
         querySnapshot.forEach((doc) => {
             posts.push(doc.data());
         });
         console.debug("queryPostByUserUid: Current posts: ", posts);
-        return posts; // return posts to caller
-    })
-    .catch((error) => {
-        console.error("Error getting documents: ", error);
+        onUpdate(posts);
     });
 }
 /**
@@ -466,4 +463,4 @@ async function queryFavoritePosts(amountOfPosts, uid) {
     return posts;
 }
 
-export { db, connectToFirestore, signInACB, signOutACB, readUserFromFirestore, postDataListener, removePostFromFirestore, savePostToFirestore, profileDataListener, saveCommentToFireStore, removeCommentFromFirestore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, postCommentsDataListener, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };
+export { db, connectToFirestore, signInACB, signOutACB, readUserFromFirestore, postDataListener, removePostFromFirestore, savePostToFirestore, profileDataListener, saveCommentToFireStore, removeCommentFromFirestore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, userPostsListener, postCommentsDataListener, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };

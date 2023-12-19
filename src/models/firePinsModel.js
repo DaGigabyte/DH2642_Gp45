@@ -233,22 +233,10 @@ const model = observable({
         this.error = error;
       }),
     },
-    userPostsPromiseState: {
-      promise: null,
-      data: {
-        posts: [], // Array of posts created by the user
-      },
-      error: null,
-      setPromise: action(function(promise) {
-        this.promise = promise;
-      }),
-      setData: action(function(data) {
-        this.data = data;
-      }),
-      setError: action(function(error) {
-        this.error = error;
-      }),
-    },
+    userPosts: {},
+    setUserPosts: action(function(data) {
+      this.data = data;
+    }),
     setCurrentProfileUid: action(function(uid) {
       this.currentProfileUid = uid;
     }),
