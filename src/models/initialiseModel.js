@@ -12,6 +12,7 @@ function settingsReaction(model) {
         console.debug("copyUserToUserSettingsDataCB: model.user.data changed, copying to model.userSettingsData.data");
         model.userSettingsData.setFullName(model.user.data.fullName);
         model.userSettingsData.setDisplayName(model.user.data.displayName);
+        model.userSettingsData.setBio(model.user.data.bio);
     }
     reaction(watchUserCB, copyUserToUserSettingsDataCB);
 }
