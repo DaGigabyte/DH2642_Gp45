@@ -375,8 +375,14 @@ function userPostsListener(userUid, onUpdate) {
 
     return onSnapshot(q, (querySnapshot) => {
         const posts = [];
-        querySnapshot.forEach((doc) => {
-            posts.push(doc.data());
+        querySnapshot.forEach(async (doc) => {
+            const postData = doc.data();
+            try {
+                const user = await readUserFromFirestore(postData.createdBy);
+                posts.push({ id: doc.id, user: user, ...postData});
+            } catch {
+                console.error("Error fetching user data: ", erorr);
+            }
         });
         console.debug("queryPostByUserUid: Current posts: ", posts);
         onUpdate(posts);
