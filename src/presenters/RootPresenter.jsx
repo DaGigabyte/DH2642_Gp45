@@ -29,10 +29,15 @@ function RootPresenter(props) {
 
   // Handle select movie
   function handleSelectMovie(movieID) {
-    setSelectedMovieID(movieID);
-    setSelectedMovieObject(
-      searchResultsTMDB.find((movie) => movie.id === movieID)
-    );
+    if (selectedMovieID !== movieID) {
+      setSelectedMovieID(movieID);
+      setSelectedMovieObject(
+        searchResultsTMDB.find((movie) => movie.id === movieID)
+      );
+    } else {
+      setSelectedMovieID(null);
+      setSelectedMovieObject(null);
+    }
   }
 
   // Handle select search API source
