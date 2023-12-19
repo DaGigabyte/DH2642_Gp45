@@ -1,7 +1,7 @@
 import { collection, onSnapshot, query, orderBy, startAfter, endBefore, limit } from "firebase/firestore";
 import { db } from "./firebaseModel";
 import { readUserFromFirestore } from "./firebaseModel";
-import { makeAutoObservable, reaction, action, autorun } from "mobx";
+import { makeAutoObservable, reaction, action, when } from "mobx";
 
 class NewestPostListenerManager {
     constructor(model) {
@@ -17,6 +17,10 @@ class NewestPostListenerManager {
             model.homePageData.setNewestPostsBeforeTimeOfConstruction(postArr)
         });
         this.updateNewestPostsFromFirestoreListener(model);
+        when(()=>this.readyForAddingNewestPostsListener, ()=>this.addNewestPostsListener());
+        when(()=>this.readyForAddingNewestPostsListener, ()=>this.addNewestPostsListener());
+        when(()=>this.readyForAddingNewestPostsListener, ()=>this.addNewestPostsListener());
+        when(()=>this.readyForAddingNewestPostsListener, ()=>this.addNewestPostsListener());
     }
     
     setListeners = action((listeners) => this.listeners = listeners);
