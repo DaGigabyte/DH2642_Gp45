@@ -329,7 +329,7 @@ async function queryUsername(username) {
     const q = query(
         collection(db, "Users"), 
         where("displayNameInsensitive", ">=", username.toLowerCase()), 
-        where("displayNameInsensitive", "<=", username + "\uf8ff")
+        where("displayNameInsensitive", "<=", username.toLowerCase() + "\uf8ff")
     );
     return getDocs(q)
     .then((querySnapshot) => { // querySnapshot is an array of documents
