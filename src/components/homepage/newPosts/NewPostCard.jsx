@@ -1,7 +1,8 @@
 import { BiLike, BiDislike, BiCommentDetail } from "react-icons/bi";
 import { IoAddOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import Profile from "../../global/UserProfileCard"
+import Profile from "../../global/UserProfileCard";
+
 /**
  * A general component for post diplaying a preview
  * @param {Object} props - Props for the SummarizedPost component.
@@ -24,30 +25,35 @@ import Profile from "../../global/UserProfileCard"
  */
 export default function NewPostCard(props) {
   const navigate = useNavigate();
+
   /*OnClick ACBs*/
   function handlePostClickACB() {
     props.selectPost();
 
     navigate("post/" + props.postId);
   }
+
   function handleCommentClickACB(event) {
     event.stopPropagation();
     props.commentOnPost();
   }
+
   function handleDislikeClickACB(event) {
     event.stopPropagation();
     props.dislikePost();
   }
+
   function handleLikeClickACB(event) {
     event.stopPropagation();
     props.likePost();
   }
+
   /* React Component*/
   return (
     <div
       className="relative flex flex-col xl:flex-row space-x-4 w-full text-black text-left 
           rounded-xl border border-gray-300 p-3 bg-white shadow hover:shadow-xl cursor-pointer 
-             hover:bg-gray-200 transition duration-300 mb-5"
+             hover:bg-gray-200 transition duration-300 mb-5 disable-selection"
       onClick={handlePostClickACB}
       title="Click to view post"
     >
@@ -62,13 +68,13 @@ export default function NewPostCard(props) {
 
       {/* Text container */}
       <div className="flex flex-col pl-3 pt-6 pr-3 w-full">
-
         {/* Profile and name */}
         <Profile
           picture={props.picture}
           nick={props.nickName}
           size="14"
-          textSize="3xl" />
+          textSize="3xl"
+        />
 
         {/* Post Content */}
         <span className="text-2xl line-clamp-1 font-semibold mt-3">
@@ -80,36 +86,54 @@ export default function NewPostCard(props) {
 
         {/* Interaction buttons*/}
         <div className="flex gap-5 items-center justify-end mt-auto">
-          <button title={props.currentUID ? "Click to comment" : "Log in to access"}
+          <button
+            title={props.currentUID ? "Click to comment" : "Log in to access"}
             onClick={handleCommentClickACB}
             className="postModifyingButtons"
-            disabled={props.currentUID ? false : true}>
+            disabled={props.currentUID ? false : true}
+          >
             <IoAddOutline />
             <BiCommentDetail size="40" />
           </button>
 
-          <button title={props.currentUID ? "Click to like" : "Log in to access"}
+          <button
+            title={props.currentUID ? "Click to like" : "Log in to access"}
             onClick={handleLikeClickACB}
             className="postModifyingButtons"
-            disabled={props.currentUID ? false : true}>
+            disabled={props.currentUID ? false : true}
+          >
             {props.nofLikes}
-            <BiLike size="40" className={props.currentUserLikes ? "text-pins-primary" : "text-black"} />
+            <BiLike
+              size="40"
+              className={
+                props.currentUserLikes ? "text-pins-primary" : "text-black"
+              }
+            />
           </button>
 
-          <button title={props.currentUID ? "Click to dislike" : "Log in to access"}
+          <button
+            title={props.currentUID ? "Click to dislike" : "Log in to access"}
             onClick={handleDislikeClickACB}
             className="postModifyingButtons"
-            disabled={props.currentUID ? false : true}>
+            disabled={props.currentUID ? false : true}
+          >
             <p>{props.nofDislikes}</p>
-            <BiDislike size="40" className={props.currentUserDislikes ? "text-pins-primary" : "text-black"} />
+            <BiDislike
+              size="40"
+              className={
+                props.currentUserDislikes ? "text-pins-primary" : "text-black"
+              }
+            />
           </button>
         </div>
-        
       </div>
 
       {/* Source Badge */}
       <div className="absolute top-0 right-0 rounded-tr-xl rounded-bl-xl overflow-hidden">
-        <div className="bg-pins-primary py-2 px-8 text-xl text-white"> TMDB</div>
+        <div className="bg-pins-primary py-2 px-8 text-xl text-white">
+          {" "}
+          TMDB
+        </div>
       </div>
     </div>
   );

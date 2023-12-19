@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DetailPostView from "../views/DetailPostView";
 import ConfirmationPopupModal from "../components/modal/ConfirmationPopupModal";
-import { newCommentCreatedToast, postDeletedToast, commentDeletedToast } from "../utils/toastify"
+import {
+  newCommentCreatedToast,
+  postDeletedToast,
+  commentDeletedToast,
+} from "../utils/toastify";
 import SuspenseAnimation from "../components/global/SuspenseAnimation";
 
 function DetailsPresenter(props) {
@@ -20,36 +24,32 @@ function DetailsPresenter(props) {
   }, [props.model.postDetailData.postData?.title]);
 
   //DELETE PIN / COMMENT
-  const deleteTypes =
-  {
+  const deleteTypes = {
     PIN: "Pin",
     COMMENT: "Comment",
-  }
+  };
 
-  function handleDeleteRequest(action) {
-    setPopUpAction(action);
+  const [popUpIsOpen, setPopUpIsOpen] = useState(false);
+  const [deleteAction, setDeleteAction] = useState({});
+
+  function handleDeleteRequest(deleteInfo) {
+    setDeleteAction(deleteInfo);
     setPopUpIsOpen(true);
   }
-  function confirmDelete() {
 
-    if (popUpAction === deleteTypes.PIN) {
-      setPopUpIsOpen(false)
+  function confirmDelete() {
+    if (deleteAction.type === deleteTypes.PIN) {
+      setPopUpIsOpen(false);
       navigate("/");
       props.model.postDetailData.removePost();
       postDeletedToast();
-    }
-    else if (popUpAction === deleteTypes.COMMENT) {
-      setPopUpIsOpen(false)
-      alert("REMOVE A COMMENT")
+    } else if (deleteAction.type === deleteTypes.COMMENT) {
+      console.log("DELETE", deleteAction.type, deleteAction.id);
+      setPopUpIsOpen(false);
+      props.model.postDetailData.removeComment(deleteAction.id);
       commentDeletedToast();
     }
   }
-
-  const [popUpIsOpen, setPopUpIsOpen] = useState(false);
-  const [popUpAction, setPopUpAction] = useState("");
-
-
-
 
   /* change state of like */
   function changeLikeStateForUserACB() {
@@ -69,45 +69,54 @@ function DetailsPresenter(props) {
   }
 
   const post = props.model.postDetailData.postData;
+
   /* conditional rendering */
   function verifyCurrentPost() {
     if (!post)
       return (
         <div className="mt-10">
           <SuspenseAnimation loading={props.model.postDetailData} />
-        </div>)
+        </div>
+      );
     else {
-      return (<>
-        <DetailPostView
-          post={post}
-          comments={props.model.postDetailData.postComments}
-          currentUID={props.model.user.uid}
-          commentText={props.model.postDetailData.comment}
-          userEntersComment={(res) => { props.model.postDetailData.setComment(res) }}
-          storeComment={userPostsComment}
-          userDislikesPost={changeDislikeStateForUserACB}
-          userLikesPost={changeLikeStateForUserACB}
-          nofLikes={post.likes}
-          nofDislikes={post.dislikedBy ? post.dislikedBy.length : "?"}
-          isLikedByUser={post.likedBy?.includes(props.model.user.uid)}
-          isDislikedByUser={post.dislikedBy?.includes(props.model.user.uid)}
-          handleDeleteRequest={handleDeleteRequest}
-          deleteTypes={deleteTypes}
-        />
-        <ConfirmationPopupModal
-          isOpen={popUpIsOpen}
-          setOpen={setPopUpIsOpen}
-          onConfirm={confirmDelete}
-          onCancel={() => { setPopUpIsOpen(false) }}
-          actionType={popUpAction}
-        />
-      </>
-      )
+      return (
+        <>
+          <DetailPostView
+            post={post}
+            comments={props.model.postDetailData.postComments}
+            currentUID={props.model.user.uid}
+            commentText={props.model.postDetailData.comment}
+            userEntersComment={(res) => {
+              props.model.postDetailData.setComment(res);
+            }}
+            storeComment={userPostsComment}
+            userDislikesPost={changeDislikeStateForUserACB}
+            userLikesPost={changeLikeStateForUserACB}
+            nofLikes={post.likes}
+            nofDislikes={post.dislikedBy ? post.dislikedBy.length : "?"}
+            isLikedByUser={post.likedBy?.includes(props.model.user.uid)}
+            isDislikedByUser={post.dislikedBy?.includes(props.model.user.uid)}
+            handleDeleteRequest={handleDeleteRequest}
+            deleteTypes={deleteTypes}
+          />
+          <ConfirmationPopupModal
+            isOpen={popUpIsOpen}
+            setOpen={setPopUpIsOpen}
+            onConfirm={confirmDelete}
+            onCancel={() => {
+              setPopUpIsOpen(false);
+            }}
+            actionType={deleteAction.type}
+          />
+        </>
+      );
     }
   }
 
-  {/* General return*/ }
-  return (verifyCurrentPost())
+  {
+    /* General return*/
+  }
+  return verifyCurrentPost();
 }
 
 export default observer(DetailsPresenter);

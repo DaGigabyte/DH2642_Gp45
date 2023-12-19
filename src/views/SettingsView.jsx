@@ -1,6 +1,8 @@
-import InputBox from "./settingsInputBox";
-import UserProfileCard from "../components/global/UserProfileCard.jsx"
+import InputBox from "../components/settings/settingsInputBox.jsx";
+import UserProfileCard from "../components/global/UserProfileCard.jsx";
 import ReturnButton from "../components/navigation/ReturnButton.jsx";
+import { useNavigate } from "react-router-dom";
+
 /**
  * Used for updating username and nickname for the user.
  * @param {Object} props - The properties passed to the SettingsView component.
@@ -14,37 +16,89 @@ import ReturnButton from "../components/navigation/ReturnButton.jsx";
  * @returns {React.Element} The rendered SettingsView component.
  */
 export default function SettingsView(props) {
+  const navigate = useNavigate();
+
   /*ACB to change the full-name*/
   function nameChangeACB(result) {
     props.onNameChange(result);
   }
+
   /*ACB to change the nick-name*/
   function nickChangeACB(result) {
     props.onNickChange(result);
   }
+
   /*ACB to confirm new name*/
   function handleSaveClickACB() {
     props.onConfirm();
   }
-  /*ACB to discard new name*///TODO rout to prev
-  function handleCancelClickACB() {
-    props.onCancel();
-    alert("CANCEL ROUTE TO PREV TODO")
+
+  function bioChangeACB(result) {
+    props.onBioChange(result);
   }
+
+  /*ACB to discard new name*/ //TODO rout to prev
+  function handleCancelClickACB() {
+    navigate(-1);
+  }
+
   return (
-    <div className="relative text-left rounded-xl border-2 border-gray-300 p-10 bg-white w-full max-w-3xl"> -
+    <div className="relative text-left rounded-xl border-2 border-gray-300 bg-white w-full p-3 max-w-3xl">
       <ReturnButton size="25" />
-      <div className="text-black ">
-        <span className="text-5xl mb-8 block">Settings</span>
-        <UserProfileCard picture={props.profilePicture || ""} nick={props.nickName || ""} />
-        <span className="text-3xl mt-6 mb-2 block">Full Name</span>
-        <InputBox inputId="fullNameInput" text={props.fullName || ""} onInputChange={nameChangeACB} />
-        <span className="text-3xl mb-2 mt-6 block">Nickname</span>
-        <InputBox inputId="nickNameInput" text={props.nickName || ""} onInputChange={nickChangeACB} />
-      </div>
-      <div className="mt-4 space-x-1">
-        <button onClick={handleCancelClickACB} className="w-[100px] text-lg font-bold purpleButton">Cancel</button>
-        <button onClick={handleSaveClickACB} className="w-[100px] text-lg  font-bold purpleButton">Save</button>
+      <div className="text-black">
+        <p className="text-4xl mb-8 block">Settings</p>
+
+        <p className="text-2xl">Current Settings</p>
+        <div className="p-3 shadow border rounded mb-10">
+          <UserProfileCard
+            picture={props.profilePicture || ""}
+            nick={props.currentData.nickName || ""}
+          />
+          <p className="">Name: {props.currentData.fullName}</p>
+          <p className="">
+            Bio: {props.currentData.bio || "*Enter something about you below*"}
+          </p>
+        </div>
+
+        <p className="text-2xl">Change Settings</p>
+        <div className="p-3 shadow border rounded mb-2">
+          <p className="mt-3">Full Name</p>
+          <InputBox
+            inputId="fullNameInput"
+            inputText={props.fullName || ""}
+            predfinedText="Enter new name"
+            onInputChange={nameChangeACB}
+          />
+
+          <p className="mt-3">Display Name</p>
+          <InputBox
+            inputId="nickNameInput"
+            inputText={props.nickName || ""}
+            predfinedText="Enter new nickname"
+            onInputChange={nickChangeACB}
+          />
+          <p className="mt-3">Bio</p>
+          <InputBox
+            inputId="bioInput"
+            inputText={props.bio || ""}
+            predfinedText="Enter new Bio"
+            onInputChange={bioChangeACB}
+          />
+        </div>
+        <div className="space-x-1 flex justify-center">
+          <button
+            onClick={handleCancelClickACB}
+            className="w-[100px] text-lg font-bold purpleButton"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSaveClickACB}
+            className="w-[100px] text-lg  font-bold purpleButton"
+          >
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );

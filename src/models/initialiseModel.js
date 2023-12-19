@@ -1,4 +1,4 @@
-import { connectToFirestore, postDataListener, postCommentsDataListener, profileDataListener, queryPostByUserUid } from "../firebase/firebaseModel";
+import { connectToFirestore, postDataListener, postCommentsDataListener, profileDataListener, userPostsListener } from "../firebase/firebaseModel";
 import resolvePromise from "./resolvePromise";
 import { reaction } from "mobx";
 import { listOfGenre } from "../services/firePinsSource";
@@ -12,6 +12,7 @@ function settingsReaction(model) {
         console.debug("copyUserToUserSettingsDataCB: model.user.data changed, copying to model.userSettingsData.data");
         model.userSettingsData.setFullName(model.user.data.fullName);
         model.userSettingsData.setDisplayName(model.user.data.displayName);
+        model.userSettingsData.setBio(model.user.data.bio);
     }
     reaction(watchUserCB, copyUserToUserSettingsDataCB);
 }
@@ -66,7 +67,11 @@ function currentProfileUidReaction(model) {
             profileData.profileBannerPromiseState.setData(extractProfileBannerData(data));
         }));
         
-        //model.profilePageData.unsubscribePostsData?.();
+        profileData.unsubscribePostsData?.();
+        profileData.setUserPosts(null);
+        profileData.setUnsubscribePostsData(userPostsListener(newUid, (posts) => {
+            profileData.setUserPosts(posts);
+        }));
     }
 
     reaction(watchCurrentProfileUidCB, onCurrentProfileUidChangeCB);

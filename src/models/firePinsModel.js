@@ -1,7 +1,7 @@
 import { observable, reaction, action, set } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import { listOfGenre } from "../services/firePinsSource";
-import { savePostToFirestore, removePostFromFirestore, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
+import { savePostToFirestore, removePostFromFirestore, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore, removeCommentFromFirestore } from "../firebase/firebaseModel";
 import NewestPostListenerManager from "../firebase/NewestPostListenerManager";
 
 const model = observable({
@@ -196,6 +196,9 @@ const model = observable({
       };
       await saveCommentToFireStore(commentObj, this.currentPostID);
     },
+    removeComment: async function (commentId) {
+      await removeCommentFromFirestore(this.currentPostID, commentId);
+    },
     likePost: async function () {
       await likePostFirestore(model.user.uid, this.currentPostID);
     },
@@ -230,22 +233,10 @@ const model = observable({
         this.error = error;
       }),
     },
-    userPostsPromiseState: {
-      promise: null,
-      data: {
-        posts: [], // Array of posts created by the user
-      },
-      error: null,
-      setPromise: action(function(promise) {
-        this.promise = promise;
-      }),
-      setData: action(function(data) {
-        this.data = data;
-      }),
-      setError: action(function(error) {
-        this.error = error;
-      }),
-    },
+    userPosts: {},
+    setUserPosts: action(function(data) {
+      this.data = data;
+    }),
     setCurrentProfileUid: action(function(uid) {
       this.currentProfileUid = uid;
     }),

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import RootView from "../views/RootView";
-import { signInACB, signOutACB } from "../firebase/firebaseModel";
+import { signInACB, signOutACB, queryUsername } from "../firebase/firebaseModel";
 import { searchMovie } from "../services/firePinsSource";
 import { newPostCreatedToast } from "../utils/toastify";
 import { useNavigate } from "react-router-dom";
@@ -129,6 +129,54 @@ function RootPresenter(props) {
     };
   }, [searchTextTMDB]);
 
+  // State for searchbar
+
+  const placeholderText = "Find a user";
+
+  const [searchText, setSearchText] = useState();
+  const [searchResults, setSearchResults] = useState();
+  const [showSuggestions, setShowSuggestions] = useState();
+  const [searching, setSearching] = useState(false);
+  
+  useEffect(() => {
+    if (searchText === "") {
+      setSearchResults([]);
+    }
+
+    const timeoutId = setTimeout(() => {
+      if (searchText !== placeholderText) {
+        setSearching(true);
+        userSearch().then(() =>   {
+          setSearching(false);
+        });
+      }
+    }, 250);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [searchText]);
+
+  function onUserTyping(searchQuery) {
+      setSearchText(searchQuery);
+  }
+
+  async function userSearch() {
+      if (searchText) {
+          setSearchResults(await queryUsername(searchText));
+      } 
+  }
+
+  function onSearchBlur() {
+      setTimeout(() => {
+          setShowSuggestions(false);
+      }, 200)
+  }
+
+  function onSearchFocus() {
+      setShowSuggestions(true);
+  }
+
   return (
     <RootView
       user={props.model.user}
@@ -154,6 +202,15 @@ function RootPresenter(props) {
       newPostCaption={newPostCaption}
       onSetNewPostCaption={handleSetNewPostCaption}
       onCreateNewPost={handleCreateNewPost}
+      searchbarText={searchText}
+      placeholderText={placeholderText}
+      searching={searching}
+      searchResults={searchResults} 
+      onUserTyping={onUserTyping} 
+      onUserSearching={userSearch} 
+      onSearchBlur={onSearchBlur} 
+      onSearchFocus={onSearchFocus} 
+      showSuggestions={showSuggestions}
     />
   );
 }
