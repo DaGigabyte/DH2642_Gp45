@@ -6,7 +6,7 @@ import NewPostModal from "../components/modal/NewPostModal";
 import Search from "./Searchbar";
 import UserAvatarAndMenu from "../components/topbar/UserAvatarAndMenu";
 import LogInButton from "../components/topbar/LogInButton";
-import SearchbarPresenter from "../presenters/SearchbarPresenter";
+import Searchbar from "../views/Searchbar";
 import { IoSearchOutline } from "react-icons/io5";
 
 function RootView(props) {
@@ -35,7 +35,16 @@ function RootView(props) {
                 showSearch ? "w-full self-center" : "hidden"
               } md:block md:w-full md:self-center`}
             >
-              <SearchbarPresenter />
+              <Search
+              searchText={props.searchbarText ? props.searchbarText : props.placeholderText} 
+              searching={props.searching}
+              searchResults={props.searchResults} 
+              onUserTyping={props.onUserTyping} 
+              onUserSearching={props.onUserSearching} 
+              onSearchBlur={props.onSearchBlur} 
+              onSearchFocus={props.onSearchFocus} 
+              showSuggestions={props.showSuggestions}
+              />
             </div>
           </div>
 
