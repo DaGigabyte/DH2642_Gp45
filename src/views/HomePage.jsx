@@ -1,7 +1,9 @@
 import { useState } from "react";
-import CommentModal from "../components/modal/CommentModal"
+import CommentModal from "../components/modal/CommentModal";
 import NewPostSection from "../components/homepage/newPosts/NewPostsSection";
 import TopRatedSection from "../components/homepage/toprated/TopRatedSection";
+import SuspenseAnimation from "../components/global/SuspenseAnimation.jsx";
+
 /**
  * Renders the homepage view
  * @param {Object} props.currentUID - The currently logged in user
@@ -16,46 +18,50 @@ import TopRatedSection from "../components/homepage/toprated/TopRatedSection";
  * @param {function} props.storeComment - confirm and upload the comment of a post
  * @returns {React.Element} A render of the homepage
  */
-function HomePage(props) {
-
+export default function HomePage(props) {
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
 
   function openCommentModalACB(post) {
-    setCurrentPost(post)
+    setCurrentPost(post);
     setCommentModalOpen(true);
   }
 
+  let isReady = !!(props.hotPosts.length > 0 && props.newPosts);
   return (
-    <div className="flex flex-col w-full gap-5 max-w-6xl">
-      <TopRatedSection
-        currentUID={props.currentUID}
-        hotPosts={props.hotPosts}
-        selectPost={(id) => props.selectPost(id)}
-      />
-      <NewPostSection
-        newPosts={props.newPosts}
-        currentUID={props.currentUID}
-        loadMorePosts={() => props.loadMorePosts()}
-        selectPost={(id) => props.selectPost(id)}
-        likePost={(id) => props.likePost(id)}
-        dislikePost={(id) => props.dislikePost(id)}
-        commentOnCurrentPost={openCommentModalACB}
-      />
-      <CommentModal
-        post={currentPost}
-        isUserConfirmed={props.currentUID ? true : false}
-        isOpen={commentModalOpen}
-        setOpen={setCommentModalOpen}
-        text={props.commentText}
-        userEntersComment={(res) => props.userEntersComment(res)}
-        storeComment={() => {
-          setCommentModalOpen(false);
-          props.storeComment(currentPost);
-        }}
-      />
-    </div>
+    <>
+      {isReady ? (
+        <div className="flex flex-col w-full gap-5 max-w-6xl">
+          <TopRatedSection
+            currentUID={props.currentUID}
+            hotPosts={props.hotPosts}
+            selectPost={(id) => props.selectPost(id)}
+          />
+          <NewPostSection
+            newPosts={props.newPosts}
+            currentUID={props.currentUID}
+            loadMorePosts={() => props.loadMorePosts()}
+            selectPost={(id) => props.selectPost(id)}
+            likePost={(id) => props.likePost(id)}
+            dislikePost={(id) => props.dislikePost(id)}
+            commentOnCurrentPost={openCommentModalACB}
+          />
+          <CommentModal
+            post={currentPost}
+            isUserConfirmed={!!props.currentUID}
+            isOpen={commentModalOpen}
+            setOpen={setCommentModalOpen}
+            text={props.commentText}
+            userEntersComment={(res) => props.userEntersComment(res)}
+            storeComment={() => {
+              setCommentModalOpen(false);
+              props.storeComment(currentPost);
+            }}
+          />
+        </div>
+      ) : (
+        <SuspenseAnimation loading={!isReady} />
+      )}
+    </>
   );
 }
-
-export default HomePage;
