@@ -7,7 +7,6 @@ import { BiLike } from "react-icons/bi";
 
 export default function TopRatedCard(post) {
   const [isHovered, setIsHover] = useState(false);
-  console.log(isHovered);
   return (
     <div
       className="relative h-[400px] inline-block m-3 cursor-pointer rounded-lg border  shadow hover:shadow-lg overflow-hidden "
