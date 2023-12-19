@@ -140,7 +140,7 @@ const model = observable({
     }),
     fetchTopPosts: async function() {
       const posts = await queryTopPosts(12); // Hardcoded posts fetched once when app is initialised
-      this.setNewestPosts(posts);
+      this.setTopRatedPosts(posts);
     },
     fetchNewestPosts: async function() {
       console.debug("this.data.newestPosts.length:", this.data.newestPosts.length);
