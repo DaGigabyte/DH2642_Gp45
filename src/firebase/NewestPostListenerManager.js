@@ -1,7 +1,7 @@
 import { collection, onSnapshot, query, orderBy, startAfter, endBefore, limit } from "firebase/firestore";
 import { db } from "./firebaseModel";
 import { readUserFromFirestore } from "./firebaseModel";
-import { makeAutoObservable, reaction, action } from "mobx";
+import { makeAutoObservable, reaction, action, autorun } from "mobx";
 
 class NewestPostListenerManager {
     constructor(model) {
@@ -9,6 +9,7 @@ class NewestPostListenerManager {
         this.newerThanConstructionPosts = [];
         this.listeners = [];
         this.timeOfConstruction = new Date();
+        this.readyForAddingNewestPostsListener = true;
         makeAutoObservable(this);
         reaction(()=>this.listeners.map(l => l.post), ()=> {
             console.debug('NewestPostListenerManager: reaction', this.listeners);
@@ -22,6 +23,9 @@ class NewestPostListenerManager {
     setListenerPostAt = action((post, index) => this.listeners[index].post = post);
     
     addNewestPostsListener() {
+        if (!this.readyForAddingNewestPostsListener)
+            return;
+        this.readyForAddingNewestPostsListener = false;
         console.debug('NewestPostListenerManager: addNewestPostsListener');
         const lastListenerDocs = this.listeners[this.listeners.length - 1]?.post;
         const q = lastListenerDocs ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(lastListenerDocs.createdAt), limit(1)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(this.timeOfConstruction), limit(1));
@@ -37,6 +41,7 @@ class NewestPostListenerManager {
                     console.debug('NewestPostListenerManager: added', listener.post);
                     this.setListeners([...this.listeners, listener]);
                     console.debug('NewestPostListenerManager: this.listeners', this.listeners);
+                    this.readyForAddingNewestPostsListener = true;
                 }
                 if (change.type === 'modified') {
                     const postData = change.doc.data();
@@ -54,11 +59,6 @@ class NewestPostListenerManager {
                 }
             }.bind(this));
         });
-    }
-    addFourNewestPostsListener() {
-        console.debug('NewestPostListenerManager: addFourNewestPostsListener');
-        setTimeout(this.addNewestPostsListener.bind(this), 1000);
-        setTimeout(this.addNewestPostsListener.bind(this), 2000);
     }
     updateNewestPostsFromFirestoreListener(model) {
         const posts = collection(db, "Posts");
