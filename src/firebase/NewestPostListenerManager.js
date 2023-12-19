@@ -25,11 +25,12 @@ class NewestPostListenerManager {
     
     setListeners = action((listeners) => this.listeners = listeners);
     setListenerPostAt = action((post, index) => this.listeners[index].post = post);
+    setReadyForAddingNewestPostsListener = action((ready) => this.readyForAddingNewestPostsListener = ready);
     
     addNewestPostsListener() {
         if (!this.readyForAddingNewestPostsListener)
             return;
-        this.readyForAddingNewestPostsListener = false;
+        this.setReadyForAddingNewestPostsListener(false);
         console.debug('NewestPostListenerManager: addNewestPostsListener');
         const lastListenerDocs = this.listeners[this.listeners.length - 1]?.post;
         const q = lastListenerDocs ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(lastListenerDocs.createdAt), limit(1)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(this.timeOfConstruction), limit(1));
@@ -45,7 +46,7 @@ class NewestPostListenerManager {
                     console.debug('NewestPostListenerManager: added', listener.post);
                     this.setListeners([...this.listeners, listener]);
                     console.debug('NewestPostListenerManager: this.listeners', this.listeners);
-                    this.readyForAddingNewestPostsListener = true;
+                    this.setReadyForAddingNewestPostsListener(true);
                 }
                 if (change.type === 'modified') {
                     const postData = change.doc.data();
