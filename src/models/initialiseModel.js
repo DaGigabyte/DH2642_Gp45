@@ -78,6 +78,7 @@ export default async function initialiseModel(model) {
     settingsReaction(model);
     currentPostIdReaction(model);
     currentProfileUidReaction(model);
+    model.homePageData.fetchTopPosts();
     model.homePageData.fetchNewestPosts();
     Object.assign(model, {listOfTMDBgenre: await listOfGenre()});
 }
