@@ -307,7 +307,22 @@ async function unfollowUserFirestore(uidFollowed, uidUnfollower) {
 async function saveCommentToFireStore(commentObj, postId) {
     const path = "Posts/" + postId + "/Comments";
     const docRef = await addDoc(collection(db, path), commentObj);
+
+    // Update the document with the correct document ID
+    await updateDoc(docRef, { id: docRef.id });
+
     console.debug("saveCommentToFirestore: Document written with ID: ", docRef.id);
+}
+
+async function removeCommentFromFirestore(postId, commentId) {
+    const docRef = doc(db, "Posts", postId, "Comments", commentId);
+    deleteDoc(docRef)
+    .then(() => {
+        console.debug("removeCommentFromFirestore: Document removed with ID: ", commentId);
+    })
+    .catch((error) => {
+        console.error('Error removing document: ', error);
+    });
 }
 
 async function queryUsername(username) {
@@ -451,4 +466,4 @@ async function queryFavoritePosts(amountOfPosts, uid) {
     return posts;
 }
 
-export { db, connectToFirestore, signInACB, signOutACB, readUserFromFirestore, postDataListener, removePostFromFirestore, savePostToFirestore, profileDataListener, saveCommentToFireStore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, postCommentsDataListener, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };
+export { db, connectToFirestore, signInACB, signOutACB, readUserFromFirestore, postDataListener, removePostFromFirestore, savePostToFirestore, profileDataListener, saveCommentToFireStore, removeCommentFromFirestore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, queryPostByUserUid, postCommentsDataListener, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };

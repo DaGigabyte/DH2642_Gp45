@@ -1,7 +1,7 @@
 import { observable, reaction, action, set } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import { listOfGenre } from "../services/firePinsSource";
-import { savePostToFirestore, removePostFromFirestore, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore } from "../firebase/firebaseModel";
+import { savePostToFirestore, removePostFromFirestore, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore, removeCommentFromFirestore } from "../firebase/firebaseModel";
 import NewestPostListenerManager from "../firebase/NewestPostListenerManager";
 
 const model = observable({
@@ -195,6 +195,9 @@ const model = observable({
         profilePicture: model.user.data.profilePicture
       };
       await saveCommentToFireStore(commentObj, this.currentPostID);
+    },
+    removeComment: async function (commentId) {
+      await removeCommentFromFirestore(this.currentPostID, commentId);
     },
     likePost: async function () {
       await likePostFirestore(model.user.uid, this.currentPostID);
