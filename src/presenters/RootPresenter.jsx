@@ -18,6 +18,7 @@ function RootPresenter(props) {
   const [searchTextTMDB, setSearchTextTMDB] = useState("");
   const [searchResultsTMDB, setSearchResultsTMDB] = useState([]);
   const [selectedMovieID, setSelectedMovieID] = useState(null);
+  const [selectedMovieObject, setSelectedMovieObject] = useState(null);
   const [searchApiSource, setSearchApiSource] = useState(sourceENUM.TMDB);
   const [newPostCaption, setNewPostCaption] = useState("");
 
@@ -29,6 +30,9 @@ function RootPresenter(props) {
   // Handle select movie
   function handleSelectMovie(movieID) {
     setSelectedMovieID(movieID);
+    setSelectedMovieObject(
+      searchResultsTMDB.find((movie) => movie.id === movieID)
+    );
   }
 
   // Handle select search API source
@@ -43,25 +47,21 @@ function RootPresenter(props) {
 
   // Handle create new post
   function handleCreateNewPost() {
-    if (selectedMovieID !== null) {
-      // Get movie title from search results for selected movie
-      const movieTitle = searchResultsTMDB.find(
-        (movie) => movie.id === selectedMovieID
-      ).title;
-
-      // Get movie poster path from search results for selected movie
-      const moviePosterPath = searchResultsTMDB.find(
-        (movie) => movie.id === selectedMovieID
-      ).poster_path;
-
+    if (selectedMovieID && selectedMovieObject) {
       // Complete poster path
-      const completePosterPath = `https://image.tmdb.org/t/p/original${moviePosterPath}`;
+      const completePosterPath = `https://image.tmdb.org/t/p/original${selectedMovieObject.poster_path}`;
 
       // Set new post data to model
-      props.model.createPostEditor.setTitle(movieTitle);
+      props.model.createPostEditor.setTitle(selectedMovieObject.title);
       props.model.createPostEditor.setPosterPath(completePosterPath);
       props.model.createPostEditor.setContent(newPostCaption);
       props.model.createPostEditor.setSource(searchApiSource);
+      props.model.createPostEditor.setTMDBdateOfMovieRelease(
+        selectedMovieObject.release_date
+      );
+      props.model.createPostEditor.setPostDescription(
+        selectedMovieObject.overview
+      );
 
       // Create new post
       props.model.createPost();
@@ -70,6 +70,8 @@ function RootPresenter(props) {
       setNewPostCaption("");
       // Reset selected movie ID
       setSelectedMovieID(null);
+      // Reset selected movie object
+      setSelectedMovieObject(null);
       // Reset search text
       setSearchTextTMDB("");
       // Reset search results
@@ -109,6 +111,7 @@ function RootPresenter(props) {
     return () => {
       clearTimeout(timeoutId);
       setSelectedMovieID(null);
+      setSelectedMovieObject(null);
     };
   }, [searchTextTMDB]);
 
