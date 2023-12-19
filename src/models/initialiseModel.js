@@ -42,8 +42,6 @@ function currentPostIdReaction(model) {
         postData.setUnsubscribePostCommentsData(postCommentsDataListener(newPostId, (comments) => {
             postData.setPostComments(comments);
         }));
-        // Reset the comment to an empty string
-        postData.comment = "";
     }
     reaction(watchCurrentPostIdCB, onCurrentPostIdChangeCB);
 }
