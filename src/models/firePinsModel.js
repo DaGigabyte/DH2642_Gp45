@@ -301,7 +301,6 @@ const model = observable({
     addNewPost: action(function(post) {
       console.debug("adding new post: ", post);
       this.setNewPostsData([post, ...this.data]);
-      // model.updateHomePageDataWithNewPosts();
     }),
   },
   /**
