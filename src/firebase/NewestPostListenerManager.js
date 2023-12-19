@@ -17,10 +17,6 @@ class NewestPostListenerManager {
             model.homePageData.setNewestPostsBeforeTimeOfConstruction(postArr)
         });
         this.updateNewestPostsFromFirestoreListener(model);
-        when(()=>this.readyForAddingNewestPostsListener, ()=>this.addNewestPostsListener());
-        when(()=>this.readyForAddingNewestPostsListener, ()=>this.addNewestPostsListener());
-        when(()=>this.readyForAddingNewestPostsListener, ()=>this.addNewestPostsListener());
-        when(()=>this.readyForAddingNewestPostsListener, ()=>this.addNewestPostsListener());
     }
     
     setListeners = action((listeners) => this.listeners = listeners);

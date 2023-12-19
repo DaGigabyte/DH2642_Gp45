@@ -46,7 +46,7 @@ export default function NewPostSection(props) {
         pageStart={0}
         loadMore={() => props.loadMorePosts()}
         hasMore={true /******************************** METHOD TO CHECK THIS ********************************/}
-        initialLoad={false}
+        initialLoad={true}
         loader={<div className="relative p-10" key={0}>
           <SuspenseAnimation loading={true} /></div>}
       >
