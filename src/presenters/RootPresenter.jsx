@@ -4,6 +4,7 @@ import RootView from "../views/RootView";
 import { signInACB, signOutACB } from "../firebase/firebaseModel";
 import { searchMovie } from "../services/firePinsSource";
 import { newPostCreatedToast } from "../utils/toastify";
+import { useNavigate } from "react-router-dom";
 
 // Enum for search API source
 const sourceENUM = {
@@ -13,6 +14,7 @@ const sourceENUM = {
 };
 
 function RootPresenter(props) {
+  const navigate = useNavigate();
   // State for search movie
   const [isSearching, setIsSearching] = useState(false);
   const [searchTextTMDB, setSearchTextTMDB] = useState("");
@@ -48,6 +50,12 @@ function RootPresenter(props) {
   // Handle set new post caption
   function handleSetNewPostCaption(caption) {
     setNewPostCaption(caption);
+  }
+
+  // Handle sign out and redirect to home page
+  function handleSignOut() {
+    signOutACB();
+    navigate("/");
   }
 
   // Handle create new post
@@ -133,7 +141,7 @@ function RootPresenter(props) {
         props.model.confirmUserSearch();
       }}
       onSignIn={signInACB}
-      onSignOut={signOutACB}
+      onSignOut={handleSignOut}
       isSearching={isSearching}
       searchTextTMDB={searchTextTMDB}
       setSearchTextTMDB={handleSetSearchText}
