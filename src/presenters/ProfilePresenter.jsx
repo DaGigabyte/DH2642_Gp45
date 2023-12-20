@@ -20,7 +20,7 @@ function ProfilePresenter(props) {
       {loading ? (
         <SuspenseAnimation loading={loading} />
       ) : (
-        <ProfileView {...props.model.profilePageData} />
+        <ProfileView {...props.model} />
       )}
     </>
   );
