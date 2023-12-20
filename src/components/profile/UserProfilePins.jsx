@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
 
 function UserProfilePins(props) {
@@ -16,37 +17,41 @@ function UserProfilePins(props) {
               key={pin.id}
               className="p-2 bg-white/50 rounded-lg break-inside-avoid-column group hover:cursor-pointer"
             >
-              {/* Cover container */}
-              <div
-                className="relative overflow-hidden rounded-lg shadow-md"
-                style={{ height: `${randomHeight}px` }}
-              >
-                <img
-                  src={pin.posterPath}
-                  alt={pin.title}
+              <Link to={`/post/${pin.id}`}>
+                {/* Cover container */}
+                <div
+                  className="relative overflow-hidden rounded-lg shadow-md"
                   style={{ height: `${randomHeight}px` }}
-                  className="w-full object-cover rounded-lg group-hover:opacity-80 group-hover:scale-105 group-hover:rotate-3 transition-all duration-150 "
-                />
-                {/* Rating */}
-                <div className="flex justify-center items-center absolute bottom-0 right-0 left-0">
-                  <div className="bg-black/50 p-2 pt-0 rounded-tr-md rounded-tl-md">
-                    <Rating
-                      initialValue={pin.rating}
-                      readonly={true}
-                      size={20}
-                    />
+                >
+                  <img
+                    src={pin.posterPath}
+                    alt={pin.title}
+                    style={{ height: `${randomHeight}px` }}
+                    className="w-full object-cover rounded-lg group-hover:opacity-80 group-hover:scale-105 group-hover:rotate-3 transition-all duration-150 "
+                  />
+                  {/* Rating */}
+                  <div className="flex justify-center items-center absolute bottom-0 right-0 left-0">
+                    <div className="bg-black/50 p-2 pt-0 rounded-tr-md rounded-tl-md">
+                      <Rating
+                        initialValue={pin.rating}
+                        readonly={true}
+                        size={20}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-              {/* Title */}
-              <div className="mt-2">
-                <p className="text-lg font-semibold">{pin.title}</p>
-                {pin.TMDBdateOfMovieRelease && (
-                  <p className="text-black/50">
-                    Released {pin.TMDBdateOfMovieRelease}
+                {/* Title */}
+                <div className="mt-2">
+                  <p className="text-lg font-semibold text-pins-secondary">
+                    {pin.title}
                   </p>
-                )}
-              </div>
+                  {pin.TMDBdateOfMovieRelease && (
+                    <p className="text-black/50">
+                      Released {pin.TMDBdateOfMovieRelease}
+                    </p>
+                  )}
+                </div>
+              </Link>
             </div>
           );
         })}
