@@ -68,14 +68,15 @@ const model = observable({
   }),
   createPostEditor: {
     data: {
-      title: "",
-      content: "",
-      posterPath: "",
-      source: "",
-      TMDBsourceID: null,
-      TMDBgenreID: [],
-      TMDBdateOfMovieRelease: "",
-      postDescription: ""
+        title: "",
+        content: "",
+        posterPath: "",
+        source: "",
+        TMDBsourceID: null,
+        TMDBgenres: [],
+        TMDBdateOfMovieRelease: "",
+        postDescription: "",
+        rating: null,
     },
     setTitle: action(function(title) {
       console.debug("setting createPostEditor.data.title to: ", title);
@@ -97,9 +98,9 @@ const model = observable({
       console.debug("setting createPostEditor.data.TMDBsourceID to: ", source);
       this.data.TMDBsourceID = source;
     }),
-    setTMDBgenreID: action(function (TMDBgenre) {
-      console.debug("setting createPostEditor.data.TMDBgenreID to: ", TMDBgenre);
-      this.data.TMDBgenreID = TMDBgenre;
+    setTMDBgenres: action(function (TMDBgenres) {
+      console.debug("setting createPostEditor.data.TMDBgenres to: ", TMDBgenres);
+      this.data.TMDBgenres = TMDBgenres;
     }),
     setTMDBdateOfMovieRelease: action(function (TMDBdateOfMovieRelease) {
       console.debug("setting createPostEditor.data.TMDBdateOfMovieRelease to: ", TMDBdateOfMovieRelease);
@@ -109,10 +110,14 @@ const model = observable({
       console.debug("setting createPostEditor.data.postDescription to: ", postDescription);
       this.data.postDescription = postDescription;
     }),
+    setRating: action(function (rating) {
+      console.debug("setting createPostEditor.data.rating to: ", rating) ;
+      this.data.rating = rating;
+    })
   },
   createPost: action(function() {
     console.debug("creating post with data: ", this.createPostEditor.data);
-    savePostToFirestore(this.createPostEditor.data, this.user.uid);
+    savePostToFirestore(this.createPost.data, this.user.uid);
   }),
   homePageData: {
     data: {
@@ -233,7 +238,7 @@ const model = observable({
         this.error = error;
       }),
     },
-    userPosts: {},
+    userPosts: [],
     setUserPosts: action(function(data) {
       this.data = data;
     }),

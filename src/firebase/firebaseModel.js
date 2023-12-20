@@ -379,7 +379,7 @@ function userPostsListener(userUid, onUpdate) {
             const postData = doc.data();
             posts.push({ id: doc.id, ...postData});
         });
-        console.debug("queryPostByUserUid: Current posts: ", posts);
+        console.debug("userPostsListener: Current posts: ", posts);
         onUpdate(posts);
     });
 }
