@@ -14,18 +14,18 @@ function UserProfilePins(props) {
           return (
             <div
               key={pin.id}
-              className="p-2 bg-white/50 rounded-lg break-inside-avoid-column group"
+              className="p-2 bg-white/50 rounded-lg break-inside-avoid-column group hover:cursor-pointer"
             >
               {/* Cover container */}
               <div
-                className="relative overflow-hidden"
+                className="relative overflow-hidden rounded-lg shadow-md"
                 style={{ height: `${randomHeight}px` }}
               >
                 <img
                   src={pin.posterPath}
                   alt={pin.title}
                   style={{ height: `${randomHeight}px` }}
-                  className="w-full object-cover rounded-lg shadow-md"
+                  className="w-full object-cover rounded-lg group-hover:opacity-80 group-hover:scale-105 group-hover:rotate-3 transition-all duration-150 "
                 />
                 {/* Rating */}
                 <div className="flex justify-center items-center absolute bottom-0 right-0 left-0">
