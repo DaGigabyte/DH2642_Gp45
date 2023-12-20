@@ -18,7 +18,7 @@ function RootView(props) {
       <Sidebar />
       <div className="flex-1">
         {/* Sticky top bar */}
-        <div className="sticky top-[66px] z-10 flex flex-row md:top-0  justify-between p-4 bg-pins-light bg-opacity-95">
+        <div className="sticky top-[66px] z-40 flex flex-row md:top-0  justify-between p-4 bg-pins-light bg-opacity-95">
           <div
             className={`${showSearch ? "flex w-full space-x-2" : ""} md:w-1/2`}
           >
@@ -36,14 +36,18 @@ function RootView(props) {
               } md:block md:w-full md:self-center`}
             >
               <Search
-              searchText={props.searchbarText ? props.searchbarText : props.placeholderText} 
-              searching={props.searching}
-              searchResults={props.searchResults} 
-              onUserTyping={props.onUserTyping} 
-              onUserSearching={props.onUserSearching} 
-              onSearchBlur={props.onSearchBlur} 
-              onSearchFocus={props.onSearchFocus} 
-              showSuggestions={props.showSuggestions}
+                searchText={
+                  props.searchbarText
+                    ? props.searchbarText
+                    : props.placeholderText
+                }
+                searching={props.searching}
+                searchResults={props.searchResults}
+                onUserTyping={props.onUserTyping}
+                onUserSearching={props.onUserSearching}
+                onSearchBlur={props.onSearchBlur}
+                onSearchFocus={props.onSearchFocus}
+                showSuggestions={props.showSuggestions}
               />
             </div>
           </div>
