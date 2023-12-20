@@ -2,8 +2,11 @@ import UserProfileCard from "../components/global/UserProfileCard.jsx";
 import ReturnButton from "../components/navigation/ReturnButton.jsx";
 import SuspenseAnimation from "../components/global/SuspenseAnimation";
 import DeletePostButton from "../components/global/DeletePostButton.jsx";
+import { movieById } from "../services/firePinsSource.js";
 import { BiLike, BiDislike } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Rating } from "react-simple-star-rating";
 
 /**
  * Renders the Detailed post view
@@ -12,6 +15,16 @@ import { useNavigate } from "react-router-dom";
  */
 function DetailedPostView(props) {
   const navigate = useNavigate();
+  const [fullPost, setFullPost] = useState(null);
+  useEffect(() => {
+    let movieId = props.post.TMDBsourceID;
+    if (movieId) {
+      movieById(movieId).then((res) => setFullPost(res));
+    } else {
+      navigate("/file-not-found");
+      console.error("Source id field is missing");
+    }
+  }, []);
 
   /* Renders the conditional input box and button for comments. */
   function renderInputForVerifiedUser() {
@@ -129,96 +142,109 @@ function DetailedPostView(props) {
     props.userLikesPost();
   }
 
-  return (
-    /* Full rended container */
-    <div className="flex flex-col gap-2 w-full max-w-6xl">
-      {/*Content container */}
-      <div className="relative bg-white rounded-2xl flex flex-col lg:flex-row p-3 lg:p-6 gap-5">
-        {/* return button with nav top right */}
-        <ReturnButton size="30" />
+  /* Full rended container */
+  return fullPost ? (
+    <div className="w-full max-w-6xl">
+      <div className="relative bg-white rounded-2xl mb-3 p-3">
+        {/*Content container */}
+        <div className=" flex flex-col lg:flex-row p-2 gap-3">
+          {/* return button with nav top right */}
+          <ReturnButton size="30" />
 
-        {/* poster image container */}
-        <div className="shrink-0 aspect-square lg:aspect-auto max-h-[500px] lg:max-w-[350px] rounded-xl border shadow overflow-hidden ">
-          <img
-            className="w-full h-full object-cover"
-            src={props.post.posterPath}
-            alt="/"
-          />
-        </div>
-        {/* user and text container */}
-        <div className="flex flex-col w-full mt-6 pl-4">
-          {/* user profile */}
-          <span
-            className="text-3xl w-fit rounded-full py-1 pr-3 mb-3 hover:cursor-pointer hover:shadow hover:bg-pins-light transition duration-300"
-            onClick={() => {
-              navigate("/profile/" + props.post.createdBy);
-            }}
-            title="Go to Profile"
-          >
-            {/* User dont exist anymore? */}
-            {props.post.user && (
-              <UserProfileCard
-                picture={props.post.user.profilePicture}
-                nick={props.post.user.displayName}
-              />
-            )}
-          </span>
-
-          {/* Title */}
-          <div className="text-3xl">{props.post.title}</div>
-
-          {/* content and remove button*/}
-          <div className="flex flex-col h-full pb-2">
-            <p className="text-lg max-h-96 overflow-y-scroll scrollbar-hide">
-              {props.post.content}
-            </p>
-
-            {/* Only visible if uid = post.uid */}
-            {props.currentUID === props.post.createdBy && (
-              <div className="flex justify-end mt-auto pr-1">
-                <DeletePostButton
-                  handleOnClick={() =>
-                    props.handleDeleteRequest({
-                      type: props.deleteTypes.PIN,
-                      id: props.post.id,
-                    })
-                  }
+          {/* poster image container */}
+          <div className="shrink-0 aspect-square lg:aspect-auto max-h-[500px] lg:max-w-[350px] rounded-xl border shadow overflow-hidden ">
+            <img
+              className="w-full h-full object-cover"
+              src={props.post.posterPath}
+              alt="/"
+            />
+          </div>
+          {/* user and text container */}
+          <div className="flex flex-col w-full mt-3 pl-4 mb-2">
+            {/* user profile */}
+            <span
+              className="text-3xl w-fit rounded-full py-1 pr-3 mb-3 mt-2 hover:cursor-pointer hover:shadow hover:bg-pins-light transition duration-300 pl-1.5"
+              onClick={() => {
+                navigate("/profile/" + props.post.createdBy);
+              }}
+              title="Go to Profile"
+            >
+              {/* User dont exist anymore? */}
+              {props.post.user && (
+                <UserProfileCard
+                  picture={props.post.user.profilePicture}
+                  nick={props.post.user.displayName}
                 />
-              </div>
-            )}
-          </div>
+              )}
+            </span>
 
-          {/* Interaction buttons */}
-          <div className="flex gap-5 items-center justify-end mt-auto">
-            <button
-              title="Click to like"
-              onClick={handleLikeClickACB}
-              className="postModifyingButtons hover:bg-gray-200"
-              disabled={props.currentUID ? false : true}
-            >
-              {props.nofLikes}
-              <BiLike
-                size="40"
-                className={
-                  props.isLikedByUser ? "text-pins-primary" : "text-black"
-                }
-              />
-            </button>
-            <button
-              title="Click to dislike"
-              onClick={handleDislikeClickACB}
-              className="postModifyingButtons hover:bg-gray-200"
-              disabled={props.currentUID ? false : true}
-            >
-              {props.nofDislikes}
-              <BiDislike
-                size="40"
-                className={
-                  props.isDislikedByUser ? "text-pins-primary" : "text-black"
-                }
-              />
-            </button>
+            {/* Caption */}
+            <div className="mb-5 bg-gray-100 rounded p-3 ">
+              <p className="line-clamp-3 overflow-scroll scrollbar-hide clear-left text-xl leading-8">
+                <p className="bg-pins-primary  rounded px-2 mr-2  text-white  h-min w-min float-left tracking-wide">
+                  Caption
+                </p>
+                {props.post.content}
+              </p>
+              {props.rating && (
+                <div className="mt-3">
+                  <Rating initialValue={props.rating} readOnly={true} />
+                </div>
+              )}
+            </div>
+
+            {/* Title */}
+            <div className="text-3xl p-1.5 ">{props.post.title}</div>
+
+            {/* content and remove button*/}
+            <div className="flex flex-col h-full pb-2 ">
+              <p className="text-lg line-clamp-6 overflow-y-scroll scrollbar-hide">
+                {fullPost ? fullPost.overview : ""}
+              </p>
+            </div>
           </div>
+        </div>
+        {/* Interaction buttons */}
+        <div className="flex gap-5 items-center justify-end mt-auto">
+          <button
+            title="Click to like"
+            onClick={handleLikeClickACB}
+            className="postModifyingButtons hover:bg-gray-200"
+            disabled={props.currentUID ? false : true}
+          >
+            {props.nofLikes}
+            <BiLike
+              size="40"
+              className={
+                props.isLikedByUser ? "text-pins-primary" : "text-black"
+              }
+            />
+          </button>
+          <button
+            title="Click to dislike"
+            onClick={handleDislikeClickACB}
+            className="postModifyingButtons hover:bg-gray-200"
+            disabled={props.currentUID ? false : true}
+          >
+            {props.nofDislikes}
+            <BiDislike
+              size="40"
+              className={
+                props.isDislikedByUser ? "text-pins-primary" : "text-black"
+              }
+            />
+          </button>
+          {/* Only visible if uid = post.uid */}
+          {props.currentUID === props.post.createdBy && (
+            <DeletePostButton
+              handleOnClick={() =>
+                props.handleDeleteRequest({
+                  type: props.deleteTypes.PIN,
+                  id: props.post.id,
+                })
+              }
+            />
+          )}
         </div>
       </div>
 
@@ -228,6 +254,8 @@ function DetailedPostView(props) {
         {renderCommentSection()}
       </div>
     </div>
+  ) : (
+    <SuspenseAnimation loading={true} />
   );
 }
 
