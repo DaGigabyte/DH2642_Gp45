@@ -163,7 +163,7 @@ function DetailedPostView(props) {
           <div className="flex flex-col w-full mt-3 pl-4 mb-2">
             {/* user profile */}
             <span
-              className="text-3xl w-fit rounded-full py-1 pr-3 mb-5 hover:cursor-pointer hover:shadow hover:bg-pins-light transition duration-300 pl-1.5"
+              className="text-3xl w-fit rounded-full py-1 pr-3 mb-3 mt-2 hover:cursor-pointer hover:shadow hover:bg-pins-light transition duration-300 pl-1.5"
               onClick={() => {
                 navigate("/profile/" + props.post.createdBy);
               }}
