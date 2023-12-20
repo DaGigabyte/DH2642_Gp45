@@ -32,44 +32,36 @@ class NewestPostListenerManager {
         const q = lastListenerDocs ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(lastListenerDocs.createdAt), limit(1)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(this.timeOfConstruction), limit(1));
         const queryString = lastListenerDocs ? lastListenerDocs.createdAt : this.timeOfConstruction;
         const listener = {unsub: null, post: null};
-        listener.unsub = onSnapshot(q, {includeMetadataChanges: true}, (querySnapshot) => {
+        listener.unsub = onSnapshot(q, {includeMetadataChanges: true}, async function listenerACB(querySnapshot) {
             console.log('NewestPostListenerManager: onSnapshotACB: query: createdAt', queryString);
             if (querySnapshot.metadata.fromCache) {
                 console.log('NewestPostListenerManager: onSnapshotACB: fromCache: DO NOTHING');
                 return;
             } else {
-                console.log('NewestPostListenerManager: onSnapshotACB: fromServer: DO SOMETHING');
-            }
-            querySnapshot.docChanges().forEach(async function changeACB(change) {
-                if (change.type === 'added') {
-                    if (changeACB.toBeDeleted === true)
-                        return;
-                    const postData = change.doc.data();
-                    const user = await readUserFromFirestore(postData.createdBy);
-                    listener.post = { id: change.doc.id, user, ...postData };
-                    console.log('NewestPostListenerManager: added', listener.post);
-                    this.setListeners([...this.listeners, listener]);
-                    console.log('NewestPostListenerManager: this.listeners', this.listeners);
-                    this.setReadyForAddingNewestPostsListener(true);
-                    changeACB.hasBeenAdded = true;
+                console.log('NewestPostListenerManager: onSnapshotACB: fromServer: DO SOMETHING: post: ', querySnapshot.docs[0].data());
+                const docID = querySnapshot.docs?.[0].id;
+                if (listenerACB.docID !== undefined && listenerACB.docID !== docID) {
+                    console.log("listenerACB is returns another docID, the original post has been deleted, removing listenerACB");
+                    listener.unsub();
+                    removeListener(listenerACB.docID).bind(this);
                 }
-                if (change.type === 'modified') {
-                    const postData = change.doc.data();
-                    const index = this.listeners.findIndex((listener)=>listener.post.id === change.doc.id);
+                const postData = querySnapshot.docs[0].data();
+                const index = this.listeners.findIndex((listener)=>listener.post.id === docID);
+                if (index === -1) { // post does not exists yet
+                    console.log('NewestPostListenerManager: onSnapshotACB: fromServer: DO SOMETHING: post: does not exists yet: adding');
+                    listenerACB.docID = docID; // assign docID to listenerACB
+                    const user = await readUserFromFirestore(postData.createdBy);
+                    listener.post = { id: docID, user, ...postData };
+                    this.setListeners([...this.listeners, listener]);
+                    this.setReadyForAddingNewestPostsListener(true);
+                    listenerACB.hasBeenAdded = true;
+                } else {
+                    console.log('NewestPostListenerManager: onSnapshotACB: fromServer: DO SOMETHING: post: exists: modifying');
                     const updatedPost = { ...this.listeners[index].post, ...postData };
                     this.setListenerPostAt(updatedPost, index);
-                    console.log('NewestPostListenerManager: modified', updatedPost);
                 }
-                if (change.type === 'removed') {
-                    // Todo: remove listener from listeners
-                    console.log('NewestPostListenerManager: removed');
-                    listener.unsub();
-                    if (changeACB.hasBeenAdded === true)
-                        changeACB.toBeDeleted = true;
-                    this.removeListener(change.doc.id);
-                }
-            }.bind(this));
-        });
+            }
+        }.bind(this));
     }
     updateNewestPostsFromFirestoreListener(model) {
         const posts = collection(db, "Posts");
