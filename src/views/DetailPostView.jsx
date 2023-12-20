@@ -181,9 +181,9 @@ function DetailedPostView(props) {
             {/* Caption */}
             <div className="mb-5 bg-gray-100 rounded p-3 ">
               <p className="line-clamp-3 overflow-scroll scrollbar-hide clear-left text-xl leading-8">
-                <p className="bg-pins-primary  rounded px-2 mr-2  text-white  h-min w-min float-left tracking-wide">
+                <span className="bg-pins-primary  rounded px-2 mr-2  text-white  h-min w-min float-left tracking-wide">
                   Caption
-                </p>
+                </span>
                 {props.post.content}
               </p>
               {props.rating && (
