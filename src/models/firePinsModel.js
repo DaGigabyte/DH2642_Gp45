@@ -117,7 +117,7 @@ const model = observable({
   },
   createPost: action(function() {
     console.debug("creating post with data: ", this.createPostEditor.data);
-    savePostToFirestore(this.createPost.data, this.user.uid);
+    savePostToFirestore(this.createPostEditor.data, this.user.uid);
   }),
   homePageData: {
     data: {
