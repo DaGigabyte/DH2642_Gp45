@@ -83,6 +83,7 @@ function DetailsPresenter(props) {
         <>
           <DetailPostView
             post={post}
+            rating={post?.rating}
             comments={props.model.postDetailData.postComments}
             currentUID={props.model.user.uid}
             commentText={props.model.postDetailData.comment}
