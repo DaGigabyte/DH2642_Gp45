@@ -53,15 +53,19 @@ export default function NewPostSection(props) {
   return (
     <>
       <p className="text-3xl font-semibold pt-6">Newest Pins</p>
-      {props.newPosts?.map(renderNewPosts)}
-      <div className="flex justify-center ">
-        <button
-          className="purpleButton w-1/2"
-          onClick={() => props.loadMorePosts()}
-        >
-          Load More
-        </button>
-      </div>
+      <InfiniteScroll
+        pageStart={0}
+        loadMore={() => props.loadMorePosts()}
+        hasMore={true}
+        initialLoad={true}
+        loader={
+          <div className="relative p-10" key={0}>
+            <SuspenseAnimation loading={true} />
+          </div>
+        }
+      >
+        {props.newPosts?.map(renderNewPosts)}
+      </InfiniteScroll>
     </>
   );
 }
