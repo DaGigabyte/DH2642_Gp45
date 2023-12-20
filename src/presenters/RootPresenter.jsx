@@ -6,7 +6,7 @@ import {
   signOutACB,
   queryUsername,
 } from "../firebase/firebaseModel";
-import { searchMovie } from "../services/firePinsSource";
+import { searchMovie, listOfGenre } from "../services/firePinsSource";
 import { newPostCreatedToast } from "../utils/toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -28,6 +28,8 @@ function RootPresenter(props) {
   const [searchApiSource, setSearchApiSource] = useState(sourceENUM.TMDB);
   const [newPostCaption, setNewPostCaption] = useState("");
   const [newPostRating, setNewPostRating] = useState(0);
+  const [allTMDBGenres, setAllTMDBGenres] = useState([]);
+  const [genreNames, setGenreNames] = useState([]);
 
   // Handle set search text
   function handleSetSearchText(text) {
@@ -68,6 +70,12 @@ function RootPresenter(props) {
     setNewPostRating(rating);
   }
 
+  // Handle get genres from TMDB
+  async function handleGetGenres() {
+    const genres = await listOfGenre();
+    setAllTMDBGenres(genres);
+  }
+
   // Handle create new post
   function handleCreateNewPost() {
     if (selectedMovieID && selectedMovieObject) {
@@ -86,9 +94,8 @@ function RootPresenter(props) {
         selectedMovieObject.overview
       );
       props.model.createPostEditor.setTMDBsourceID(selectedMovieObject.id);
-      props.model.createPostEditor.setTMDBgenreID(
-        selectedMovieObject.genre_ids
-      );
+
+      props.model.createPostEditor.setTMDBgenres(genreNames);
       props.model.createPostEditor.setRating(newPostRating);
 
       // Create new post
@@ -131,6 +138,10 @@ function RootPresenter(props) {
   // Search for movies in TMDB on searchTextTMDB change
   // Wait for user to stop typing for 500ms before searching TMDB
   useEffect(() => {
+    if (allTMDBGenres.length === 0) {
+      handleGetGenres();
+    }
+
     const timeoutId = setTimeout(() => {
       handleSearchMovie();
     }, 500);
@@ -143,8 +154,21 @@ function RootPresenter(props) {
     };
   }, [searchTextTMDB]);
 
-  // State for searchbar
+  // Find genre name from genre ID when selected movie object changes
+  useEffect(() => {
+    if (selectedMovieObject) {
+      const genreNames = [];
+      selectedMovieObject.genre_ids.forEach((genreID) => {
+        const genreName = allTMDBGenres.find(
+          (genre) => genre.id === genreID
+        ).name;
+        genreNames.push(genreName);
+      });
+      setGenreNames(genreNames);
+    }
+  }, [selectedMovieObject]);
 
+  // State for searchbar
   const placeholderText = "Find a user";
 
   const [searchText, setSearchText] = useState();
