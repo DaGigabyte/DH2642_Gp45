@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import RootView from "../views/RootView";
-import { signInACB, signOutACB, queryUsername } from "../firebase/firebaseModel";
+import {
+  signInACB,
+  signOutACB,
+  queryUsername,
+} from "../firebase/firebaseModel";
 import { searchMovie } from "../services/firePinsSource";
 import { newPostCreatedToast } from "../utils/toastify";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +27,7 @@ function RootPresenter(props) {
   const [selectedMovieObject, setSelectedMovieObject] = useState(null);
   const [searchApiSource, setSearchApiSource] = useState(sourceENUM.TMDB);
   const [newPostCaption, setNewPostCaption] = useState("");
+  const [newPostRating, setNewPostRating] = useState(0);
 
   // Handle set search text
   function handleSetSearchText(text) {
@@ -58,6 +63,11 @@ function RootPresenter(props) {
     navigate("/");
   }
 
+  // Handle post rating
+  function handlePostRating(rating) {
+    setNewPostRating(rating);
+  }
+
   // Handle create new post
   function handleCreateNewPost() {
     if (selectedMovieID && selectedMovieObject) {
@@ -79,6 +89,7 @@ function RootPresenter(props) {
       props.model.createPostEditor.setTMDBgenreID(
         selectedMovieObject.genre_ids
       );
+      props.model.createPostEditor.setRating(newPostRating);
 
       // Create new post
       props.model.createPost();
@@ -93,6 +104,8 @@ function RootPresenter(props) {
       setSearchTextTMDB("");
       // Reset search results
       setSearchResultsTMDB([]);
+      // Reset rating
+      setNewPostRating(0);
 
       // Notify user of new post creation
       newPostCreatedToast();
@@ -126,6 +139,7 @@ function RootPresenter(props) {
       clearTimeout(timeoutId);
       setSelectedMovieID(null);
       setSelectedMovieObject(null);
+      setNewPostRating(0);
     };
   }, [searchTextTMDB]);
 
@@ -137,7 +151,7 @@ function RootPresenter(props) {
   const [searchResults, setSearchResults] = useState();
   const [showSuggestions, setShowSuggestions] = useState();
   const [searching, setSearching] = useState(false);
-  
+
   useEffect(() => {
     if (searchText === "") {
       setSearchResults([]);
@@ -146,7 +160,7 @@ function RootPresenter(props) {
     const timeoutId = setTimeout(() => {
       if (searchText !== placeholderText) {
         setSearching(true);
-        userSearch().then(() =>   {
+        userSearch().then(() => {
           setSearching(false);
         });
       }
@@ -158,23 +172,23 @@ function RootPresenter(props) {
   }, [searchText]);
 
   function onUserTyping(searchQuery) {
-      setSearchText(searchQuery);
+    setSearchText(searchQuery);
   }
 
   async function userSearch() {
-      if (searchText) {
-          setSearchResults(await queryUsername(searchText));
-      } 
+    if (searchText) {
+      setSearchResults(await queryUsername(searchText));
+    }
   }
 
   function onSearchBlur() {
-      setTimeout(() => {
-          setShowSuggestions(false);
-      }, 200)
+    setTimeout(() => {
+      setShowSuggestions(false);
+    }, 200);
   }
 
   function onSearchFocus() {
-      setShowSuggestions(true);
+    setShowSuggestions(true);
   }
 
   return (
@@ -202,14 +216,16 @@ function RootPresenter(props) {
       newPostCaption={newPostCaption}
       onSetNewPostCaption={handleSetNewPostCaption}
       onCreateNewPost={handleCreateNewPost}
+      newPostRating={newPostRating}
+      onSetPostRating={handlePostRating}
       searchbarText={searchText}
       placeholderText={placeholderText}
       searching={searching}
-      searchResults={searchResults} 
-      onUserTyping={onUserTyping} 
-      onUserSearching={userSearch} 
-      onSearchBlur={onSearchBlur} 
-      onSearchFocus={onSearchFocus} 
+      searchResults={searchResults}
+      onUserTyping={onUserTyping}
+      onUserSearching={userSearch}
+      onSearchBlur={onSearchBlur}
+      onSearchFocus={onSearchFocus}
       showSuggestions={showSuggestions}
     />
   );

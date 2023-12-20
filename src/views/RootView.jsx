@@ -73,6 +73,8 @@ function RootView(props) {
                 newPostCaption={props.newPostCaption}
                 onSetNewPostCaption={props.onSetNewPostCaption}
                 onCreateNewPost={props.onCreateNewPost}
+                newPostRating={props.newPostRating}
+                onSetPostRating={props.onSetPostRating}
               />
             ) : (
               <></>
