@@ -20,6 +20,9 @@ function DetailedPostView(props) {
     let movieId = props.post.TMDBsourceID;
     if (movieId) {
       movieById(movieId).then((res) => setFullPost(res));
+    } else {
+      navigate("/file-not-found");
+      console.error("Source id field is missing");
     }
   }, []);
 
