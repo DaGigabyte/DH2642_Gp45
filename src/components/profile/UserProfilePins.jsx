@@ -1,4 +1,7 @@
+import { Rating } from "react-simple-star-rating";
+
 function UserProfilePins(props) {
+  console.log(props.userPins);
   return (
     <div>
       {/* List of user pins as masonry cards */}
@@ -11,17 +14,38 @@ function UserProfilePins(props) {
           return (
             <div
               key={pin.id}
-              className="p-2 bg-white/50 rounded-lg break-inside-avoid-column"
+              className="p-2 bg-white/50 rounded-lg break-inside-avoid-column group"
             >
-              <img
-                src={pin.posterPath}
-                alt={pin.title}
+              {/* Cover container */}
+              <div
+                className="relative overflow-hidden"
                 style={{ height: `${randomHeight}px` }}
-                className="w-full object-cover rounded-lg shadow-md"
-              />
+              >
+                <img
+                  src={pin.posterPath}
+                  alt={pin.title}
+                  style={{ height: `${randomHeight}px` }}
+                  className="w-full object-cover rounded-lg shadow-md"
+                />
+                {/* Rating */}
+                <div className="flex justify-center items-center absolute bottom-0 right-0 left-0">
+                  <div className="bg-black/50 p-2 pt-0 rounded-tr-md rounded-tl-md">
+                    <Rating
+                      initialValue={pin.rating}
+                      readonly={true}
+                      size={20}
+                    />
+                  </div>
+                </div>
+              </div>
               {/* Title */}
               <div className="mt-2">
                 <p className="text-lg font-semibold">{pin.title}</p>
+                {pin.TMDBdateOfMovieRelease && (
+                  <p className="text-black/50">
+                    Released {pin.TMDBdateOfMovieRelease}
+                  </p>
+                )}
               </div>
             </div>
           );
