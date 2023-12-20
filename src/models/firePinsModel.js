@@ -144,7 +144,7 @@ const model = observable({
       console.debug("new homePageData.data.newestPostsBeforeTimeOfConstruction: ", this.data.newestPostsBeforeTimeOfConstruction);
     }),
     fetchTopPosts: async function() {
-      const posts = await queryTopPosts(1); // Hardcoded posts fetched once when app is initialised
+      const posts = await queryTopPosts(4); // Hardcoded posts fetched once when app is initialised
       this.setTopRatedPosts(posts);
     },
     fetchNewestPosts: async function() {

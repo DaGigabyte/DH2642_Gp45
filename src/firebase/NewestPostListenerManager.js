@@ -43,7 +43,7 @@ class NewestPostListenerManager {
                 if (listenerACB.docID !== undefined && listenerACB.docID !== docID) {
                     console.log("listenerACB is returns another docID, the original post has been deleted, removing listenerACB");
                     listener.unsub();
-                    removeListener(listenerACB.docID).bind(this);
+                    this.removeListener(listenerACB.docID);
                 }
                 const postData = querySnapshot.docs[0].data();
                 const index = this.listeners.findIndex((listener)=>listener.post.id === docID);
