@@ -176,7 +176,7 @@ function postDataListener(postId, onUpdate) {
 
         return onSnapshot(docRef, async (docSnapshot) => {
             if (docSnapshot.exists()) {
-                console.debug("postDataListener: Post exists on Firestore, reading data");
+                console.debug("postDataListener: Post exists on Firestore, reading data of postId: ", postId);
                 const postData = docSnapshot.data();
                 try {
                     const user = await readUserFromFirestore(postData.createdBy);

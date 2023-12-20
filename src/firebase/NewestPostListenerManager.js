@@ -27,11 +27,19 @@ class NewestPostListenerManager {
         if (!this.readyForAddingNewestPostsListener)
             return;
         this.setReadyForAddingNewestPostsListener(false);
-        console.debug('NewestPostListenerManager: addNewestPostsListener');
+        console.log('NewestPostListenerManager: addNewestPostsListener');
         const lastListenerDocs = this.listeners[this.listeners.length - 1]?.post;
         const q = lastListenerDocs ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(lastListenerDocs.createdAt), limit(1)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(this.timeOfConstruction), limit(1));
+        const queryString = lastListenerDocs ? lastListenerDocs.createdAt : this.timeOfConstruction;
         const listener = {unsub: null, post: null};
-        listener.unsub = onSnapshot(q, (querySnapshot) => {
+        listener.unsub = onSnapshot(q, {includeMetadataChanges: true}, (querySnapshot) => {
+            console.log('NewestPostListenerManager: onSnapshotACB: query: createdAt', queryString);
+            if (querySnapshot.metadata.fromCache) {
+                console.log('NewestPostListenerManager: onSnapshotACB: fromCache: DO NOTHING');
+                return;
+            } else {
+                console.log('NewestPostListenerManager: onSnapshotACB: fromServer: DO SOMETHING');
+            }
             querySnapshot.docChanges().forEach(async function changeACB(change) {
                 if (change.type === 'added') {
                     if (changeACB.toBeDeleted === true)
@@ -39,23 +47,25 @@ class NewestPostListenerManager {
                     const postData = change.doc.data();
                     const user = await readUserFromFirestore(postData.createdBy);
                     listener.post = { id: change.doc.id, user, ...postData };
-                    console.debug('NewestPostListenerManager: added', listener.post);
+                    console.log('NewestPostListenerManager: added', listener.post);
                     this.setListeners([...this.listeners, listener]);
-                    console.debug('NewestPostListenerManager: this.listeners', this.listeners);
+                    console.log('NewestPostListenerManager: this.listeners', this.listeners);
                     this.setReadyForAddingNewestPostsListener(true);
+                    changeACB.hasBeenAdded = true;
                 }
                 if (change.type === 'modified') {
                     const postData = change.doc.data();
                     const index = this.listeners.findIndex((listener)=>listener.post.id === change.doc.id);
                     const updatedPost = { ...this.listeners[index].post, ...postData };
                     this.setListenerPostAt(updatedPost, index);
-                    console.debug('NewestPostListenerManager: modified', updatedPost);
+                    console.log('NewestPostListenerManager: modified', updatedPost);
                 }
                 if (change.type === 'removed') {
                     // Todo: remove listener from listeners
-                    console.debug('NewestPostListenerManager: removed');
+                    console.log('NewestPostListenerManager: removed');
                     listener.unsub();
-                    changeACB.toBeDeleted = true;
+                    if (changeACB.hasBeenAdded === true)
+                        changeACB.toBeDeleted = true;
                     this.removeListener(change.doc.id);
                 }
             }.bind(this));
@@ -66,6 +76,7 @@ class NewestPostListenerManager {
         const q = query(posts, orderBy("createdAt", "desc"), endBefore(this.timeOfConstruction));
         
         const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+            console.log('NewestPostListenerManager: updateNewestPostsFromFirestoreListener');
             const postArr = [];
             for (const doc of querySnapshot.docs) {
                 const postData = doc.data();
@@ -77,7 +88,7 @@ class NewestPostListenerManager {
         });
     }
     removeListener(postId) {
-        console.debug('NewestPostListenerManager: removeListener', postId);
+        console.log('NewestPostListenerManager: removeListener', postId);
         this.listeners = this.listeners.filter(l => l.post.id !== postId);
     }
 }
