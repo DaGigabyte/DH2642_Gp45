@@ -188,7 +188,7 @@ function DetailedPostView(props) {
               </p>
               {props.rating && (
                 <div className="mt-3">
-                  <Rating initialValue={props.rating} readOnly={true} />
+                  <Rating initialValue={props.rating} readonly={true} />
                 </div>
               )}
             </div>
