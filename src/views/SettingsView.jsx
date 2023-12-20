@@ -60,12 +60,12 @@ export default function SettingsView(props) {
           <p className=" p-2 rounded">{props.currentData.fullName}</p>
           <p className="mt-3">Bio</p>
           <textarea
+            id="currentBioSetting"
             className=" p-2 rounded border  w-full"
             rows={4}
             readOnly={true}
-          >
-            {props.currentData.bio || "*Enter something about you below*"}
-          </textarea>
+            value={props.currentData.bio || "*Enter something about you below*"}
+          />
         </div>
 
         <p className="text-2xl">Edit Profile</p>
@@ -88,7 +88,7 @@ export default function SettingsView(props) {
           <p className="mt-3">Bio</p>
           <textarea
             className="settingsInput"
-            id="bioInput"
+            id="newBioInput"
             rows={4}
             maxLength={200}
             placeholder="Enter your new Bio"
