@@ -35,6 +35,8 @@ function NewPostModal(props) {
           newPostCaption={props.newPostCaption}
           onSetNewPostCaption={props.onSetNewPostCaption}
           onCreateNewPost={props.onCreateNewPost}
+          onSetPostRating={props.onSetPostRating}
+          newPostRating={props.newPostRating}
           closeModal={handleCloseModal}
         />
       </Modal.Content>
