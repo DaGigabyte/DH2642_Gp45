@@ -172,20 +172,6 @@ function DetailedPostView(props) {
             <p className="text-lg max-h-96 overflow-y-scroll scrollbar-hide">
               {props.post.content}
             </p>
-
-            {/* Only visible if uid = post.uid */}
-            {props.currentUID === props.post.createdBy && (
-              <div className="flex justify-end mt-auto pr-1">
-                <DeletePostButton
-                  handleOnClick={() =>
-                    props.handleDeleteRequest({
-                      type: props.deleteTypes.PIN,
-                      id: props.post.id,
-                    })
-                  }
-                />
-              </div>
-            )}
           </div>
 
           {/* Interaction buttons */}
@@ -218,6 +204,17 @@ function DetailedPostView(props) {
                 }
               />
             </button>
+            {/* Only visible if uid = post.uid */}
+            {props.currentUID === props.post.createdBy && (
+              <DeletePostButton
+                handleOnClick={() =>
+                  props.handleDeleteRequest({
+                    type: props.deleteTypes.PIN,
+                    id: props.post.id,
+                  })
+                }
+              />
+            )}
           </div>
         </div>
       </div>

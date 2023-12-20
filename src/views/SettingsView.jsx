@@ -48,7 +48,7 @@ export default function SettingsView(props) {
       <div className="text-black">
         <p className="text-4xl mb-8 block">Settings</p>
 
-        <p className="text-2xl">Current Settings</p>
+        <p className="text-2xl mb-1">Current Settings</p>
         <div className="p-3 shadow border rounded mb-10">
           <UserProfileCard
             picture={props.profilePicture || ""}
@@ -60,7 +60,7 @@ export default function SettingsView(props) {
           </p>
         </div>
 
-        <p className="text-2xl">Change Settings</p>
+        <p className="text-2xl mb-1">Change Settings</p>
         <div className="p-3 shadow border rounded mb-2">
           <p className="mt-3">Full Name</p>
           <InputBox

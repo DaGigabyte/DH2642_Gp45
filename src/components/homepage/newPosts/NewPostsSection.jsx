@@ -1,5 +1,5 @@
 import InfiniteScroll from "react-infinite-scroller";
-import Post from "./NewPostCard";
+import Post from "./SummarizePostCard.jsx";
 import defaultProfile from "../../../assets/default-avatar.jpg";
 import SuspenseAnimation from "../../global/SuspenseAnimation";
 
@@ -34,6 +34,7 @@ export default function NewPostSection(props) {
         currentUID={props.currentUID}
         currentUserLikes={post.likedBy?.includes(props.currentUID)}
         currentUserDislikes={post.dislikedBy?.includes(props.currentUID)}
+        deleteDisabled={true}
         selectPost={() => {
           props.selectPost(post.id);
         }}
@@ -53,6 +54,7 @@ export default function NewPostSection(props) {
   return (
     <>
       <p className="text-3xl font-semibold pt-6">Newest Pins</p>
+
       <InfiniteScroll
         pageStart={0}
         loadMore={() => props.loadMorePosts()}
