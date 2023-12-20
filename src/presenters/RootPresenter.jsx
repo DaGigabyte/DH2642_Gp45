@@ -124,6 +124,12 @@ function RootPresenter(props) {
     setIsSearching(true);
     if (searchApiSource === sourceENUM.TMDB) {
       const results = await searchMovie(searchTextTMDB);
+      // Remove movies without poster_path from the results
+      results.forEach((movie, index) => {
+        if (!movie.poster_path) {
+          results.splice(index, 1);
+        }
+      });
       setSearchResultsTMDB(results);
     } else if (searchApiSource === sourceENUM.Unsplash) {
       console.log("Unsplash");
