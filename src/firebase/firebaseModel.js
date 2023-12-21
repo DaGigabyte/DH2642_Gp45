@@ -314,8 +314,6 @@ async function saveCommentToFireStore(commentObj, postId) {
     const path = "Posts/" + postId + "/Comments";
     try {
         const docRef = await addDoc(collection(db, path), commentObj);
-        // Update the document with the correct document ID
-        await updateDoc(docRef, { id: docRef.id });
         console.debug("saveCommentToFirestore: Document written with ID: ", docRef.id);
         return docRef;
     } catch (error) {
