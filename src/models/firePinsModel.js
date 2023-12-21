@@ -136,7 +136,6 @@ const model = observable({
       this.setTopRatedPosts(posts);
     },
     fetchNewestPosts: async function() {
-      console.debug("this.data.newestPosts.length:", this.data.newestPosts.length);
       newestPostListenerManager.addNewestPostsListener();
     },
   },
@@ -146,7 +145,6 @@ const model = observable({
     newestPostsAfterTimeOfConstruction: [],
     setNewestPosts: action(function(posts) {
       this.newestPosts = posts;
-      console.debug("newestPostsData.newestPosts: ", this.newestPosts);
     }),
     setNewestPostsBeforeTimeOfConstruction: action(function(posts) {
       this.newestPostsBeforeTimeOfConstruction = posts;
