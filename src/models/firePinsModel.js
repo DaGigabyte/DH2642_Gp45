@@ -168,8 +168,15 @@ const model = observable({
   },
   postDetailData: {
     currentPostID: null,
-    status: null, // Has one of the values, 'loading, 'success' or 'error' depening on the state of the fetching
     comment: "",
+    postCommentStatus: null, // Has one of the values, 'loading, 'success' or 'error' depending on the state of the fetching
+    setPostCommentStatus: action(function(status) {
+      this.postCommentStatus = status;
+    }),
+    removeCommentStatus: null, // Has one of the values, 'loading, 'success' or 'error' depending on the state of the fetching
+    setRemoveCommentStatus: action(function(status) {
+      this.removeCommentStatus = status;
+    }),
     postData: {
       id: null, // post id
       user: null, // user object from user who created post
@@ -213,10 +220,24 @@ const model = observable({
         displayName: model.user.data.displayName,
         profilePicture: model.user.data.profilePicture
       };
-      await saveCommentToFireStore(commentObj, this.currentPostID);
+      this.setPostCommentStatus("loading");
+      try {
+        await saveCommentToFireStore(commentObj, this.currentPostID);
+        this.setPostCommentStatus("success");
+      } catch (error) {
+        console.error(error);
+        this.setPostCommentStatus("error");
+      }
     },
     removeComment: async function (commentId) {
-      await removeCommentFromFirestore(this.currentPostID, commentId);
+      this.setRemoveCommentStatus("loading");
+      try {
+        await removeCommentFromFirestore(this.currentPostID, commentId);
+        this.setRemoveCommentStatus("success");
+      } catch (error) {
+        console.error(error);
+        this.setRemoveCommentStatus("error");
+      }
     },
     likePost: async function () {
       await likePostFirestore(model.user.uid, this.currentPostID);
