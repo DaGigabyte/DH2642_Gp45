@@ -60,7 +60,7 @@ export default function NewPostCard(props) {
       title="Click to view post"
     >
       {/* Image container */}
-      <div className="aspect-[14/10]  w-full overflow-hidden rounded-xl shadow-lg">
+      <div className="aspect-[14/8] max-h-[350px] w-full overflow-hidden rounded-xl shadow-lg">
         <img
           src={props.postPicture}
           alt="Picture"
