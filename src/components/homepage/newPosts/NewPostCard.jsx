@@ -32,7 +32,7 @@ export default function NewPostCard(props) {
   /*OnClick ACBs*/
   function handlePostClickACB() {
     props.selectPost();
-    navigate("post/" + props.postId);
+    navigate("/post/" + props.postId);
   }
 
   function handleCommentClickACB(event) {
