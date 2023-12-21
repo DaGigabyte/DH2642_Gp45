@@ -1,47 +1,33 @@
 import { observer } from "mobx-react-lite";
 import ProfileView from "../views/ProfileView";
 import { useEffect, useState } from "react";
-import { useParams } from 'react-router-dom';
-import model from "../models/firePinsModel";
+import { useParams } from "react-router-dom";
+import SuspenseAnimation from "../components/global/SuspenseAnimation.jsx";
+import ConfirmationPopupModal from "../components/modal/ConfirmationPopupModal.jsx";
+import { commentDeletedToast } from "../utils/toastify.js";
 
 function ProfilePresenter(props) {
-    const { uid } = useParams();
+  const { uid } = useParams();
+  const loading = !props.model.profilePageData.userPosts;
 
-    useEffect(() => {
-        props.model.profilePageData.setCurrentProfileUid(uid);
-    }, [uid]);
+  console.log("profile: ", loading);
 
-    useEffect(() => {
-        document.title = props.model.profilePageData.profileBannerPromiseState.data?.displayName;
-    }, [props.model.profilePageData.profileBannerPromiseState.data?.displayName]);
+  // Set user id to the model
+  useEffect(() => {
+    props.model.profilePageData.setCurrentProfileUid(uid);
+  }, [uid]);
 
-    function profileButtonClick() {
-        if (!model.user.data.follows.includes(uid)) {
-            props.model.profilePageData.followUser();
-        } else {
-            props.model.profilePageData.unfollowUser();
-        }
-    }
+  console.log("profile: ", props.model.profilePageData);
 
-    const profileBannerData = props.model.profilePageData.profileBannerPromiseState.data;
-
-    if(!profileBannerData) {
-        return ("Implement proper suspense here");
-    }
-
-    return (
-        <ProfileView
-            picture={profileBannerData?.profilePicture}
-            username={profileBannerData?.displayName}
-            bio={profileBannerData?.bio}
-            followerAmt={profileBannerData?.followedBy.length}
-            followingAmt={profileBannerData?.follows.length}
-            profileButtonClick={profileButtonClick}
-            ownAccount={model.user?.uid === uid}
-            follows={model.user?.data?.follows?.includes(uid)}
-            isLoggedIn={props.model.user.uid}
-        />
-    );
+  return (
+    <>
+      {loading ? (
+        <SuspenseAnimation loading={loading} />
+      ) : (
+        <ProfileView {...props.model} />
+      )}
+    </>
+  );
 }
 
 export default observer(ProfilePresenter);
