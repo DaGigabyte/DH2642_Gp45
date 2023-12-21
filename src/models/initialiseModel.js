@@ -79,11 +79,11 @@ function currentProfileUidReaction(model) {
 
 function combineLatestPosts(model) {
     function watchCB() {
-        return [model.homePageData.data.newestPostsBeforeTimeOfConstruction, model.newPostsData.data];
+        return [model.newestPostsData.newestPostsBeforeTimeOfConstruction, model.newestPostsData.newestPostsAfterTimeOfConstruction];
     }
     function updateNewestPostsCB() {
-        const newestPosts = [...model.newPostsData.data, ...model.homePageData.data.newestPostsBeforeTimeOfConstruction];
-        model.homePageData.setNewestPosts(newestPosts);
+        const newestPosts = [...model.newestPostsData.newestPostsBeforeTimeOfConstruction, ...model.newestPostsData.newestPostsAfterTimeOfConstruction];
+        model.newestPostsData.setNewestPosts(newestPosts);
     }
     reaction(watchCB, updateNewestPostsCB);
 }

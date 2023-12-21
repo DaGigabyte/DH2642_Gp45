@@ -32,7 +32,7 @@ function HomePresenter(props) {
     <HomePage
       currentUID={props.model.user.uid}
       hotPosts={data.topRatedPosts}
-      newPosts={data.newestPosts}
+      newPosts={props.model.newestPostsData.newestPosts}
       loadMorePosts={loadMorePostACB}
       selectPost={userSelectsPostACB}
       likePost={userlikesPostACB}

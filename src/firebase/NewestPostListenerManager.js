@@ -14,7 +14,7 @@ class NewestPostListenerManager {
         reaction(()=>this.listeners.map(l => l.post), ()=> {
             console.debug('NewestPostListenerManager: reaction', this.listeners);
             const postArr = this.listeners.map(l => l.post).filter(p => p!==null);
-            model.homePageData.setNewestPostsBeforeTimeOfConstruction(postArr)
+            model.newestPostsData.setNewestPostsBeforeTimeOfConstruction(postArr)
         });
         this.listenToAndUpdatePostsCreatedAfterConstruction(model);
     }
@@ -75,7 +75,7 @@ class NewestPostListenerManager {
                 const post = { id: doc.id, user, ...postData };
                 postArr.push(post);
             }
-            model.newPostsData.setNewPostsData(postArr);
+            model.newestPostsData.setNewestPostsAfterTimeOfConstruction(postArr);
         });
     }
     removeListener(postId) {
