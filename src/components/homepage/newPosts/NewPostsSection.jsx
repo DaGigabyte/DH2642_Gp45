@@ -27,8 +27,10 @@ export default function NewPostSection(props) {
         nickName={post.user.displayName}
         postPicture={post.posterPath}
         postId={post.id}
+        rating={post.rating}
+        postRelease={post.TMDBdateOfMovieRelease}
         postTitle={post.title}
-        postBody={post.content}
+        postCaption={post.content}
         nofLikes={post.likes}
         nofDislikes={post.dislikedBy.length}
         currentUID={props.currentUID}

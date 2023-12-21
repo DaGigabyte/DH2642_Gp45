@@ -157,13 +157,10 @@ function DetailedPostView(props) {
               }}
               title="Go to Profile"
             >
-              {/* User dont exist anymore? */}
-              {props.post.user && (
-                <UserProfileCard
-                  picture={props.post.user.profilePicture}
-                  nick={props.post.user.displayName}
-                />
-              )}
+              <UserProfileCard
+                picture={props.post.user.profilePicture}
+                nick={props.post.user.displayName}
+              />
             </span>
 
             {/* Caption */}
@@ -182,10 +179,15 @@ function DetailedPostView(props) {
             </div>
 
             {/* Title */}
-            <div className="text-3xl p-1.5 ">{props.post.title}</div>
+            <div className="text-3xl px-1.5 ">{props.post.title}</div>
+            {props.post.TMDBdateOfMovieRelease && (
+              <p className="movieReleaseDate">
+                released {props.post.TMDBdateOfMovieRelease}
+              </p>
+            )}
 
-            {/* content and remove button*/}
-            <div className="flex flex-col h-full pb-2 ">
+            {/* content */}
+            <div className="flex flex-col h-full p-1.5 mt-2">
               <p className="text-lg line-clamp-6 overflow-y-scroll scrollbar-hide">
                 {props.fullPost
                   ? props.fullPost.overview

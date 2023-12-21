@@ -99,6 +99,12 @@ h2 {
         cursor: not-allowed;
     }
 
+    .movieReleaseDate {
+        padding-left: 0.75rem;
+        font-size: 1rem;
+        color: #718096;
+    }
+
     .hotPostOverlay {
         position: absolute;
         bottom: 0;
@@ -149,4 +155,6 @@ h2 {
     .settingsInput:hover {
         border-color: #8d66fc;
     }
+
+
 }
