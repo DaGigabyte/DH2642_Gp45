@@ -10,19 +10,45 @@ function ProfilePresenter(props) {
   const { uid } = useParams();
   const loading = !props.model.profilePageData.userPosts;
 
+  function userSelectsPostACB(postId) {
+    props.model.postDetailData.setCurrentPostID(postId);
+  }
+  function userlikesPostACB(postId) {
+    props.model.postDetailData.setCurrentPostID(postId);
+    props.model.postDetailData.likePost();
+    props.model.homePageData.fetchTopPosts();
+  }
+  function userdislikesPostACB(postId) {
+    props.model.postDetailData.setCurrentPostID(postId);
+    props.model.postDetailData.dislikePost();
+    props.model.homePageData.fetchTopPosts();
+  }
+
+  function handleSubmittedCommentACB(post) {
+    props.model.postDetailData.setCurrentPostID(post.id);
+    props.model.postDetailData.postComment();
+    props.model.postDetailData.setComment("");
+    newCommentCreatedToast();
+  }
+
   // Set user id to the model
   useEffect(() => {
     props.model.profilePageData.setCurrentProfileUid(uid);
   }, [uid]);
 
+  // Show suspense while fetching data
+  if (loading) {
+    return <SuspenseAnimation loading={loading} />;
+  }
+
   return (
-    <>
-      {loading ? (
-        <SuspenseAnimation loading={loading} />
-      ) : (
-        <ProfileView {...props.model} />
-      )}
-    </>
+    <ProfileView
+      {...props.model}
+      userSelectsPostACB={userSelectsPostACB}
+      userlikesPostACB={userlikesPostACB}
+      userdislikesPostACB={userdislikesPostACB}
+      handleSubmittedCommentACB={handleSubmittedCommentACB}
+    />
   );
 }
 
