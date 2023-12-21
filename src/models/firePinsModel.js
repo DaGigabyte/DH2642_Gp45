@@ -145,26 +145,29 @@ const model = observable({
       this.data.topRatedPosts = posts;
       console.debug("new homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
     }),
-    setNewestPosts: action(function(posts) {
-      console.debug("current homePageData.data.newestPosts: ", this.data.newestPosts);
-      console.debug("setting homePageData.data.newestPosts to: ", posts);
-      this.data.newestPosts = posts;
-      console.debug("new homePageData.data.newestPosts: ", this.data.newestPosts);
-    }),
-    setNewestPostsBeforeTimeOfConstruction: action(function(posts) {
-      console.debug("current homePageData.data.newestPostsBeforeTimeOfConstruction: ", this.data.newestPostsBeforeTimeOfConstruction);
-      console.debug("setting homePageData.data.newestPostsBeforeTimeOfConstruction to: ", posts);
-      this.data.newestPostsBeforeTimeOfConstruction = posts;
-      console.debug("new homePageData.data.newestPostsBeforeTimeOfConstruction: ", this.data.newestPostsBeforeTimeOfConstruction);
-    }),
     fetchTopPosts: async function() {
-      const posts = await queryTopPosts(12); // Hardcoded posts fetched once when app is initialised
+      const posts = await queryTopPosts(4); // Hardcoded posts fetched once when app is initialised
       this.setTopRatedPosts(posts);
     },
     fetchNewestPosts: async function() {
-      console.debug("this.data.newestPosts.length:", this.data.newestPosts.length);
       newestPostListenerManager.addNewestPostsListener();
     },
+  },
+  newestPostsData: {
+    newestPosts: [],
+    newestPostsBeforeTimeOfConstruction: [],
+    newestPostsAfterTimeOfConstruction: [],
+    setNewestPosts: action(function(posts) {
+      this.newestPosts = posts;
+    }),
+    setNewestPostsBeforeTimeOfConstruction: action(function(posts) {
+      this.newestPostsBeforeTimeOfConstruction = posts;
+      console.debug("newestPostsData.newestPostsBeforeTimeOfConstruction: ", this.newestPostsBeforeTimeOfConstruction);
+    }),
+    setNewestPostsAfterTimeOfConstruction: action(function(posts) {
+      this.newestPostsAfterTimeOfConstruction = posts;
+      console.debug("newestPostsData.newestPostsAfterTimeOfConstruction: ", this.newestPostsAfterTimeOfConstruction);
+    }),
   },
   postDetailData: {
     currentPostID: null,
@@ -275,7 +278,7 @@ const model = observable({
     },
     userPosts: [],
     setUserPosts: action(function(data) {
-      this.data = data;
+      this.userPosts = data;
     }),
     setCurrentProfileUid: action(function(uid) {
       this.currentProfileUid = uid;
@@ -320,17 +323,6 @@ const model = observable({
     setNumberOfNewPost: action(function(number) {
       console.debug("setting numberOfNewPost to: ", number);
       this.numberOfNewPost = number;
-    }),
-    setNewPostsData: action(function(posts) {
-      console.debug("current newPostsData: ", this.newPostsData);
-      console.debug("setting newPostsData to: ", posts);
-      this.data = posts;
-      console.debug("new newPostsData: ", this.data);
-      this.setNumberOfNewPost(this.data.length);
-    }),
-    addNewPost: action(function(post) {
-      console.debug("adding new post: ", post);
-      this.setNewPostsData([post, ...this.data]);
     }),
   },
   /**
