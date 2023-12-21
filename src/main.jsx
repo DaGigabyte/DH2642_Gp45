@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 configure({ enforceActions: "observed" }); // All state that is observed somewhere needs to be changed through actions.
+if (!new class { x }().hasOwnProperty('x')) throw new Error('Transpiler is not configured correctly for MobX');
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
