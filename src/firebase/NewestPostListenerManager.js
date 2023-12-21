@@ -16,9 +16,8 @@ class NewestPostListenerManager {
             const postArr = this.listeners.map(l => l.post).filter(p => p!==null);
             model.homePageData.setNewestPostsBeforeTimeOfConstruction(postArr)
         });
-        this.updateNewestPostsFromFirestoreListener(model);
+        this.listenToAndUpdatePostsCreatedAfterConstruction(model);
     }
-    
     setListeners = action((listeners) => this.listeners = listeners);
     setListenerPostAt = action((post, index) => this.listeners[index].post = post);
     setReadyForAddingNewestPostsListener = action((ready) => this.readyForAddingNewestPostsListener = ready);
@@ -63,12 +62,12 @@ class NewestPostListenerManager {
             }
         }.bind(this));
     }
-    updateNewestPostsFromFirestoreListener(model) {
+    listenToAndUpdatePostsCreatedAfterConstruction(model) {
         const posts = collection(db, "Posts");
-        const q = query(posts, orderBy("createdAt", "desc"), endBefore(this.timeOfConstruction));
+        const q = query(posts, orderBy("createdAt", "desc"), endBefore(this.timeOfConstruction)); // query posts created after this website is first loaded
         
         const unsubscribe = onSnapshot(q, async (querySnapshot) => {
-            console.log('NewestPostListenerManager: updateNewestPostsFromFirestoreListener');
+            console.log('NewestPostListenerManager: listenToAndUpdatePostsCreatedAfterConstruction');
             const postArr = [];
             for (const doc of querySnapshot.docs) {
                 const postData = doc.data();
