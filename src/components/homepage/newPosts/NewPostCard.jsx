@@ -102,7 +102,7 @@ export default function NewPostCard(props) {
           <Rating initialValue={props.rating} readonly={true} />
         </div>
         {/* Interaction buttons*/}
-        <div className="flex gap-2 items-center justify-end mt-auto">
+        <div className="flex gap-4 items-center justify-end mt-auto">
           <button
             title={props.currentUID ? "Click to comment" : "Log in to access"}
             onClick={handleCommentClickACB}
