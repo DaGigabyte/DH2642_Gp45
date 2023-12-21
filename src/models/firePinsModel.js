@@ -122,8 +122,6 @@ const model = observable({
   homePageData: {
     data: {
       topRatedPosts: [],
-      newestPosts: [],
-      newestPostsBeforeTimeOfConstruction: [],
     },
     setTopRatedPosts: action(function(posts) {
       console.debug("current homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
@@ -134,9 +132,6 @@ const model = observable({
     fetchTopPosts: async function() {
       const posts = await queryTopPosts(4); // Hardcoded posts fetched once when app is initialised
       this.setTopRatedPosts(posts);
-    },
-    fetchNewestPosts: async function() {
-      newestPostListenerManager.addNewestPostsListener();
     },
   },
   newestPostsData: {
@@ -159,6 +154,9 @@ const model = observable({
       this.newestPostsAfterTimeOfConstruction = posts;
       console.debug("newestPostsData.newestPostsAfterTimeOfConstruction: ", this.newestPostsAfterTimeOfConstruction);
     }),
+    fetchNewestPosts: async function() {
+      newestPostListenerManager.addNewestPostsListener();
+    },
   },
   postDetailData: {
     currentPostID: null,

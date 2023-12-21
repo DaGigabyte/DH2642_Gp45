@@ -7,7 +7,7 @@ function HomePresenter(props) {
   let data = props.model.homePageData.data;
 
   function loadMorePostACB() {
-    props.model.homePageData.fetchNewestPosts();
+    props.model.newestPostsData.fetchNewestPosts();
   }
   function userSelectsPostACB(postId) {
     props.model.postDetailData.setCurrentPostID(postId);

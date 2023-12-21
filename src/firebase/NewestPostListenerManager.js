@@ -8,7 +8,7 @@ class NewestPostListenerManager {
         this.model = model;
         this.newerThanConstructionPosts = [];
         this.listeners = [];
-        this.timeOfConstruction = new Date(2019, 1, 1);
+        this.timeOfConstruction = new Date();
         this.readyForAddingNewestPostsListener = true;
         this.endOfPosts = false;
         makeAutoObservable(this);
@@ -21,7 +21,7 @@ class NewestPostListenerManager {
             console.debug('NewestPostListenerManager: whenEndOfPosts: endOfPosts');
             this.model.newestPostsData.setEndOfNewestPostsBeforeTimeOfConstruction(true);
         });
-        // this.listenToAndUpdatePostsCreatedAfterConstruction(model);
+        this.listenToAndUpdatePostsCreatedAfterConstruction(model);
     }
     setListeners = action((listeners) => this.listeners = listeners);
     setListenerPostAt = action((post, index) => this.listeners[index].post = post);
