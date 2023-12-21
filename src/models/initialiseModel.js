@@ -27,6 +27,7 @@ function currentPostIdReaction(model) {
 
     async function onCurrentPostIdChangeCB([newPostId]) {
         postData.unsubscribePostData?.();
+        postData.unsubscribePostCommentsData?.();
         // If the post data is available immediately set it in the model and associate it with the current post
         const post = model.getPostFromModel(newPostId);
         if (post) {
@@ -39,7 +40,6 @@ function currentPostIdReaction(model) {
             }));
         }
         // Subscribe to changes in the comments of the current post
-        postData.unsubscribePostCommentsData?.();
         postData.setPostComments(null);
         postData.setUnsubscribePostCommentsData(postCommentsDataListener(newPostId, (comments) => {
             postData.setPostComments(comments);
@@ -83,7 +83,7 @@ function combineLatestPosts(model) {
         return [model.newestPostsData.newestPostsBeforeTimeOfConstruction, model.newestPostsData.newestPostsAfterTimeOfConstruction];
     }
     function updateNewestPostsCB() {
-        const newestPosts = [...model.newestPostsData.newestPostsBeforeTimeOfConstruction, ...model.newestPostsData.newestPostsAfterTimeOfConstruction];
+        const newestPosts = [...model.newestPostsData.newestPostsAfterTimeOfConstruction, ...model.newestPostsData.newestPostsBeforeTimeOfConstruction];
         model.newestPostsData.setNewestPosts(newestPosts);
     }
     reaction(watchCB, updateNewestPostsCB);
