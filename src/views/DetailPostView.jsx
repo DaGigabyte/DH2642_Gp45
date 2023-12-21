@@ -18,7 +18,7 @@ function DetailedPostView(props) {
   function renderInputForVerifiedUser() {
     if (props.currentUID) {
       return (
-        /*logged in users activates button by typing*/
+        /*logged-in users activates button by typing*/
         <div className="w-full flex flex-col lg:flex-row gap-1 items-end justify-items-end mb-4">
           <textarea
             className="w-full border rounded-xl p-2 bg-pins-light content-start min-h-[3rem]"
@@ -46,6 +46,7 @@ function DetailedPostView(props) {
       return (
         <div className="w-full flex flex-col lg:flex-row gap-1 items-end justify-items-end mb-4">
           <textarea
+            id="commentBoxNotLoggedIn"
             className="w-full border rounded-xl p-2 content-start min-h-[3rem] bg-pins-light disabled:opacity-50 disabled:cursor-not-allowed hover:disabled:bg-gray-200 hover:disabled:border-gray-300"
             disabled
             placeholder="Log in to enter text"
@@ -158,15 +159,15 @@ function DetailedPostView(props) {
               title="Go to Profile"
             >
               <UserProfileCard
-                picture={props.post.user.profilePicture}
-                nick={props.post.user.displayName}
+                picture={props.post.user?.profilePicture}
+                nick={props.post.user?.displayName}
               />
             </span>
 
             {/* Caption */}
             <div className="mb-5 bg-gray-100 rounded p-3 ">
               <p className="line-clamp-3 overflow-scroll scrollbar-hide clear-left text-xl leading-8">
-                <span className="bg-pins-primary  rounded px-2 mr-2  text-white  h-min w-min float-left tracking-wide">
+                <span className="bg-pins-primary  rounded px-2 mr-2  text-white h-min w-min ">
                   Caption
                 </span>
                 {props.post.content}

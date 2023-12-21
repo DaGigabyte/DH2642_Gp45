@@ -32,7 +32,7 @@ export default function NewPostCard(props) {
   /*OnClick ACBs*/
   function handlePostClickACB() {
     props.selectPost();
-    navigate("/post/" + props.postId);
+    navigate("post/" + props.postId);
   }
 
   function handleCommentClickACB(event) {
@@ -50,18 +50,6 @@ export default function NewPostCard(props) {
     props.likePost();
   }
 
-  function renderGenres(props) {
-    return (
-      <div>
-        {props?.genres.map((text) => (
-          <span key={text} className="text-white">
-            {text}
-          </span>
-        ))}
-      </div>
-    );
-  }
-
   /* React Component*/
   return (
     <div
@@ -72,7 +60,7 @@ export default function NewPostCard(props) {
       title="Click to view post"
     >
       {/* Image container */}
-      <div className="shrink-0  aspect-[16/12] lg:w-auto min-h-[350px] max-h-[350px] lg:max-h-[350px] overflow-hidden rounded-xl shadow-lg">
+      <div className="aspect-[14/10]  w-full overflow-hidden rounded-xl shadow-lg">
         <img
           src={props.postPicture}
           alt="Picture"
