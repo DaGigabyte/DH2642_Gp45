@@ -120,6 +120,10 @@ const model = observable({
     savePostToFirestore(this.createPostEditor.data, this.user.uid);
   }),
   homePageData: {
+    scrollPosition: 0,
+    setScrollPosition: action(function(position) {
+      this.scrollPosition = position;
+    }),
     data: {
       topRatedPosts: [],
     },
