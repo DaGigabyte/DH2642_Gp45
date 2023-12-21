@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { listOfGenre } from "../services/firePinsSource";
 import { savePostToFirestore, removePostFromFirestore, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore, removeCommentFromFirestore } from "../firebase/firebaseModel";
 import NewestPostListenerManager from "../firebase/NewestPostListenerManager";
+import FavoritesPostListenerManager from "../firebase/FavoritesPostListenerManager";
 
 const model = observable({
   count: 1,
@@ -275,11 +276,24 @@ const model = observable({
     },
   },
   favoritesPageData: {
-    data: {
-      favoritePosts: [],
-    },
+    favoritePosts: [],
+    newestPostsBeforeTimeOfConstruction: [],
+    endOfNewestPostsBeforeTimeOfConstruction: false,
+    newestPostsAfterTimeOfConstruction: [],
     setFavoritePosts: action(function(posts) {
-      this.data.favoritePosts = posts;
+      this.favoritePosts = posts;
+    }),
+    setNewestPostsBeforeTimeOfConstruction: action(function(posts) {
+      this.newestPostsBeforeTimeOfConstruction = posts;
+      console.debug("newestPostsData.newestPostsBeforeTimeOfConstruction: ", this.newestPostsBeforeTimeOfConstruction);
+    }),
+    setEndOfNewestPostsBeforeTimeOfConstruction: action(function(endOfPosts) {
+      this.endOfNewestPostsBeforeTimeOfConstruction = endOfPosts;
+      console.debug("newestPostsData.endOfNewestPostsBeforeTimeOfConstruction: ", this.endOfNewestPostsBeforeTimeOfConstruction);
+    }),
+    setNewestPostsAfterTimeOfConstruction: action(function(posts) {
+      this.newestPostsAfterTimeOfConstruction = posts;
+      console.debug("newestPostsData.newestPostsAfterTimeOfConstruction: ", this.newestPostsAfterTimeOfConstruction);
     }),
     fetchFavoritePosts: async function() {
       const uid = model.user.uid;
@@ -309,6 +323,7 @@ const model = observable({
   uuid: uuidv4(),
 });
 
-const newestPostListenerManager = new NewestPostListenerManager(model);
+const newestPostListenerManager = new NewestPostListenerManager(model.newestPostsData);
+const favoritePostListenerManager = new FavoritesPostListenerManager(model.favoritesPageData, model.user.uid);
 
 export default model;
