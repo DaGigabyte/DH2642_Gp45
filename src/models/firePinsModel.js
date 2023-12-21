@@ -78,6 +78,10 @@ const model = observable({
         postDescription: "",
         rating: null,
     },
+    createPostStatus: null, // Has one of the values, 'loading, 'success' or 'error' depending on the state of the fetching
+    setCreatePostStatus: action(function(status) {
+      this.createPostStatus = status;
+    }),
     setTitle: action(function(title) {
       console.debug("setting createPostEditor.data.title to: ", title);
       this.data.title = title;
@@ -115,9 +119,19 @@ const model = observable({
       this.data.rating = rating;
     })
   },
-  createPost: action(function() {
+  createPost: action(async function() {
     console.debug("creating post with data: ", this.createPostEditor.data);
-    savePostToFirestore(this.createPostEditor.data, this.user.uid);
+    this.createPostEditor.setCreatePostStatus("loading");
+    savePostToFirestore(this.createPostEditor.data, this.user.uid)
+      .then(()=> {
+          console.debug("createPost: success");
+          this.createPostEditor.setCreatePostStatus("success");
+      })
+      .catch(()=> {
+          console.debug("createPost: error");
+          console.error(error);
+          this.createPostEditor.setCreatePostStatus("error");
+      });
   }),
   homePageData: {
     data: {
@@ -157,8 +171,15 @@ const model = observable({
   },
   postDetailData: {
     currentPostID: null,
-    status: null, // Has one of the values, 'loading, 'success' or 'error' depening on the state of the fetching
     comment: "",
+    postCommentStatus: null, // Has one of the values, 'loading, 'success' or 'error' depending on the state of the fetching
+    setPostCommentStatus: action(function(status) {
+      this.postCommentStatus = status;
+    }),
+    removeCommentStatus: null, // Has one of the values, 'loading, 'success' or 'error' depending on the state of the fetching
+    setRemoveCommentStatus: action(function(status) {
+      this.removeCommentStatus = status;
+    }),
     postData: {
       id: null, // post id
       user: null, // user object from user who created post
@@ -202,10 +223,24 @@ const model = observable({
         displayName: model.user.data.displayName,
         profilePicture: model.user.data.profilePicture
       };
-      await saveCommentToFireStore(commentObj, this.currentPostID);
+      this.setPostCommentStatus("loading");
+      try {
+        await saveCommentToFireStore(commentObj, this.currentPostID);
+        this.setPostCommentStatus("success");
+      } catch (error) {
+        console.error(error);
+        this.setPostCommentStatus("error");
+      }
     },
     removeComment: async function (commentId) {
-      await removeCommentFromFirestore(this.currentPostID, commentId);
+      this.setRemoveCommentStatus("loading");
+      try {
+        await removeCommentFromFirestore(this.currentPostID, commentId);
+        this.setRemoveCommentStatus("success");
+      } catch (error) {
+        console.error(error);
+        this.setRemoveCommentStatus("error");
+      }
     },
     likePost: async function () {
       await likePostFirestore(model.user.uid, this.currentPostID);
