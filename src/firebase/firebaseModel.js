@@ -425,6 +425,32 @@ async function queryTopPosts(amountOfPosts) {
 
 async function queryFavoritePosts(amountOfPosts, uid) {
 
+    // Fetch posts liked by the user logged in
+    const q = query(
+        collection(db, 'Posts'), 
+        orderBy('createdAt', 'desc'), 
+        where('likedBy', 'array-contains', uid),
+        limit(amountOfPosts)
+    );
+    const querySnapshot = await getDocs(q);
+    const posts = [];
+
+    for (const doc of querySnapshot.docs) {
+        const postData = doc.data();
+        try {
+            const user = await readUserFromFirestore(postData.createdBy);
+            posts.push({ id: doc.id, user: user, ...postData });
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    }
+
+    console.debug("queryFavoritePosts: Current posts: ", posts);
+    return posts;
+}
+
+async function queryFollowingFeed(amountOfPosts, uid) {
+
     let followsArray = [];
 
     // Get the 'follows' array of the user logged in
@@ -460,7 +486,7 @@ async function queryFavoritePosts(amountOfPosts, uid) {
         }
     }
 
-    console.debug("queryFavoritePosts: Current posts: ", posts);
+    console.debug("queryFollowingFeed: Current posts: ", posts);
     return posts;
 }
 
