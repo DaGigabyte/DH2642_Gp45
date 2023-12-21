@@ -1,26 +1,32 @@
 import { collection, onSnapshot, query, orderBy, startAfter, endBefore, limit } from "firebase/firestore";
 import { db } from "./firebaseModel";
 import { readUserFromFirestore } from "./firebaseModel";
-import { makeAutoObservable, reaction, action, when } from "mobx";
+import { reaction, action, when, makeAutoObservable } from "mobx";
 
 class NewestPostListenerManager {
     constructor(model) {
         this.model = model;
         this.newerThanConstructionPosts = [];
         this.listeners = [];
-        this.timeOfConstruction = new Date();
+        this.timeOfConstruction = new Date(2019, 1, 1);
         this.readyForAddingNewestPostsListener = true;
+        this.endOfPosts = false;
         makeAutoObservable(this);
         reaction(()=>this.listeners.map(l => l.post), ()=> {
             console.debug('NewestPostListenerManager: reaction', this.listeners);
             const postArr = this.listeners.map(l => l.post).filter(p => p!==null);
             model.newestPostsData.setNewestPostsBeforeTimeOfConstruction(postArr)
         });
-        this.listenToAndUpdatePostsCreatedAfterConstruction(model);
+        when(()=>this.endOfPosts, ()=>{
+            console.debug('NewestPostListenerManager: whenEndOfPosts: endOfPosts');
+            this.model.newestPostsData.setEndOfNewestPostsBeforeTimeOfConstruction(true);
+        });
+        // this.listenToAndUpdatePostsCreatedAfterConstruction(model);
     }
     setListeners = action((listeners) => this.listeners = listeners);
     setListenerPostAt = action((post, index) => this.listeners[index].post = post);
     setReadyForAddingNewestPostsListener = action((ready) => this.readyForAddingNewestPostsListener = ready);
+    setEndOfPosts = action((endOfPosts) => {this.endOfPosts = endOfPosts});
     
     addNewestPostsListener() {
         if (!this.readyForAddingNewestPostsListener)
@@ -37,6 +43,10 @@ class NewestPostListenerManager {
                 console.log('NewestPostListenerManager: onSnapshotACB: fromCache: DO NOTHING');
                 return;
             } else {
+                if (querySnapshot.empty) {
+                    this.setEndOfPosts(true); // Indicate that there are no more posts to load
+                    return;
+                }
                 console.log('NewestPostListenerManager: onSnapshotACB: fromServer: DO SOMETHING: post: ', querySnapshot.docs[0].data());
                 const docID = querySnapshot.docs?.[0].id;
                 if (listenerACB.docID !== undefined && listenerACB.docID !== docID) {

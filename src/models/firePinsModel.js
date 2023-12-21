@@ -142,6 +142,7 @@ const model = observable({
   newestPostsData: {
     newestPosts: [],
     newestPostsBeforeTimeOfConstruction: [],
+    endOfNewestPostsBeforeTimeOfConstruction: false,
     newestPostsAfterTimeOfConstruction: [],
     setNewestPosts: action(function(posts) {
       this.newestPosts = posts;
@@ -149,6 +150,10 @@ const model = observable({
     setNewestPostsBeforeTimeOfConstruction: action(function(posts) {
       this.newestPostsBeforeTimeOfConstruction = posts;
       console.debug("newestPostsData.newestPostsBeforeTimeOfConstruction: ", this.newestPostsBeforeTimeOfConstruction);
+    }),
+    setEndOfNewestPostsBeforeTimeOfConstruction: action(function(endOfPosts) {
+      this.endOfNewestPostsBeforeTimeOfConstruction = endOfPosts;
+      console.debug("newestPostsData.endOfNewestPostsBeforeTimeOfConstruction: ", this.endOfNewestPostsBeforeTimeOfConstruction);
     }),
     setNewestPostsAfterTimeOfConstruction: action(function(posts) {
       this.newestPostsAfterTimeOfConstruction = posts;
