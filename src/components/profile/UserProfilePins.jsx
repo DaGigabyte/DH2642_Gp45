@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
+// Icons
+import { BiLike, BiDislike, BiCommentDetail } from "react-icons/bi";
 
 function UserProfilePins(props) {
   console.log(props.userPins);
@@ -15,7 +17,7 @@ function UserProfilePins(props) {
           return (
             <div
               key={pin.id}
-              className="p-2 bg-white/50 rounded-lg break-inside-avoid-column group hover:cursor-pointer"
+              className="relative p-2 bg-white/50 rounded-lg break-inside-avoid-column group hover:cursor-pointer"
             >
               <Link to={`/post/${pin.id}`}>
                 {/* Cover container */}
@@ -23,6 +25,7 @@ function UserProfilePins(props) {
                   className="relative overflow-hidden rounded-lg shadow-md"
                   style={{ height: `${randomHeight}px` }}
                 >
+                  {/* Cover image */}
                   <img
                     src={pin.posterPath}
                     alt={pin.title}
@@ -52,6 +55,18 @@ function UserProfilePins(props) {
                   )}
                 </div>
               </Link>
+              {/* Like, dislike and comment */}
+              <div className="md:hidden group-hover:md:flex flex justify-end items-center absolute top-2 right-2 left-2 p-2 space-x-1">
+                <button className="flex justify-center items-center bg-pins-light p-2 rounded-full text-pins-secondary hover:text-pins-light hover:bg-pins-primary transition ease-in-out">
+                  <BiCommentDetail size="25" />
+                </button>
+                <button className="flex justify-center items-center bg-pins-light p-2 rounded-full text-pins-secondary hover:text-pins-light hover:bg-pins-primary transition ease-in-out">
+                  <BiLike size="25" />
+                </button>
+                <button className="flex justify-center items-center bg-pins-light p-2 rounded-full text-pins-secondary hover:text-pins-light hover:bg-pins-primary transition ease-in-out">
+                  <BiDislike size="25" />
+                </button>
+              </div>
             </div>
           );
         })}
