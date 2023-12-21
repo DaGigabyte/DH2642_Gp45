@@ -10,25 +10,33 @@ import {
   commentDeletedToast,
 } from "../utils/toastify";
 import SuspenseAnimation from "../components/global/SuspenseAnimation";
+import { movieById } from "../services/firePinsSource.js";
 
 function DetailsPresenter(props) {
   const { pid } = useParams();
   const navigate = useNavigate();
-
   useEffect(() => {
     props.model.postDetailData.setCurrentPostID(pid);
   }, [pid]);
-
   useEffect(() => {
     document.title = props.model.postDetailData.postData?.title;
   }, [props.model.postDetailData.postData?.title]);
+
+  //Fetching details
+  const [postDetailsFromAPI, setPostDetailsFromAPI] = useState(null);
+
+  useEffect(() => {
+    const movieId = props.model.postDetailData.postData?.TMDBsourceID;
+    if (movieId) {
+      movieById(movieId).then((res) => setPostDetailsFromAPI(res));
+    }
+  }, [props.model.postDetailData.postData?.TMDBsourceID]);
 
   //DELETE PIN / COMMENT
   const deleteTypes = {
     PIN: "Pin",
     COMMENT: "Comment",
   };
-
   const [popUpIsOpen, setPopUpIsOpen] = useState(false);
   const [deleteAction, setDeleteAction] = useState({});
 
@@ -44,7 +52,6 @@ function DetailsPresenter(props) {
       props.model.postDetailData.removePost();
       postDeletedToast();
     } else if (deleteAction.type === deleteTypes.COMMENT) {
-      console.log("DELETE", deleteAction.type, deleteAction.id);
       setPopUpIsOpen(false);
       props.model.postDetailData.removeComment(deleteAction.id);
       commentDeletedToast();
@@ -68,6 +75,7 @@ function DetailsPresenter(props) {
     props.model.postDetailData.setComment("");
   }
 
+  /* Assigning the post in the model to a variable 'post'*/
   const post = props.model.postDetailData.postData;
 
   /* conditional rendering */
@@ -78,11 +86,21 @@ function DetailsPresenter(props) {
           <SuspenseAnimation loading={props.model.postDetailData} />
         </div>
       );
-    else {
+    else if (
+      props.model.postDetailData.postData.TMDBsourceID &&
+      !postDetailsFromAPI
+    ) {
+      return (
+        <div className="mt-10">
+          <SuspenseAnimation loading={!postDetailsFromAPI} />
+        </div>
+      );
+    } else {
       return (
         <>
           <DetailPostView
             post={post}
+            fullPost={postDetailsFromAPI}
             rating={post?.rating}
             comments={props.model.postDetailData.postComments}
             currentUID={props.model.user.uid}

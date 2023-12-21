@@ -2,10 +2,8 @@ import UserProfileCard from "../components/global/UserProfileCard.jsx";
 import ReturnButton from "../components/navigation/ReturnButton.jsx";
 import SuspenseAnimation from "../components/global/SuspenseAnimation";
 import DeletePostButton from "../components/global/DeletePostButton.jsx";
-import { movieById } from "../services/firePinsSource.js";
 import { BiLike, BiDislike } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { Rating } from "react-simple-star-rating";
 
 /**
@@ -15,16 +13,6 @@ import { Rating } from "react-simple-star-rating";
  */
 function DetailedPostView(props) {
   const navigate = useNavigate();
-  const [fullPost, setFullPost] = useState(null);
-  useEffect(() => {
-    let movieId = props.post.TMDBsourceID;
-    if (movieId) {
-      movieById(movieId).then((res) => setFullPost(res));
-    } else {
-      navigate("/file-not-found");
-      console.error("Source id field is missing");
-    }
-  }, []);
 
   /* Renders the conditional input box and button for comments. */
   function renderInputForVerifiedUser() {
@@ -143,7 +131,7 @@ function DetailedPostView(props) {
   }
 
   /* Full rended container */
-  return fullPost ? (
+  return (
     <div className="w-full max-w-6xl">
       <div className="relative bg-white rounded-2xl mb-3 p-3">
         {/*Content container */}
@@ -199,7 +187,9 @@ function DetailedPostView(props) {
             {/* content and remove button*/}
             <div className="flex flex-col h-full pb-2 ">
               <p className="text-lg line-clamp-6 overflow-y-scroll scrollbar-hide">
-                {fullPost ? fullPost.overview : ""}
+                {props.fullPost
+                  ? props.fullPost.overview
+                  : "*** Movie details missing ***"}
               </p>
             </div>
           </div>
@@ -254,8 +244,6 @@ function DetailedPostView(props) {
         {renderCommentSection()}
       </div>
     </div>
-  ) : (
-    <SuspenseAnimation loading={true} />
   );
 }
 
