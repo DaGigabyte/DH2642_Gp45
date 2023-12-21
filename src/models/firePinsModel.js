@@ -287,21 +287,6 @@ const model = observable({
       this.setFavoritePosts(posts);
     },
   },
-  newPostsData: {
-    numberOfNewPost: 0,
-    data: [], // array of new posts
-    setNumberOfNewPost: action(function(number) {
-      console.debug("setting numberOfNewPost to: ", number);
-      this.numberOfNewPost = number;
-    }),
-  },
-  /**
-   * Updates the homePageData.newestPosts with the new posts and clears the newPostsData.data
-   */
-  updateHomePageDataWithNewPosts: function() {
-    this.homePageData.setNewestPosts([...this.newPostsData.data, ...this.homePageData.data.newestPosts]);
-    this.newPostsData.setNewPostsData([]);
-  },
   /**
    * get post locally from homePageData.newestPosts
    * @param {Number} postID 
