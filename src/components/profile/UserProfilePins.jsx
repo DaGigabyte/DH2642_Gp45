@@ -4,7 +4,6 @@ import { Rating } from "react-simple-star-rating";
 import { BiLike, BiDislike, BiCommentDetail } from "react-icons/bi";
 
 function UserProfilePins(props) {
-  console.log(props.userPins);
   return (
     <div>
       {/* List of user pins as masonry cards */}
