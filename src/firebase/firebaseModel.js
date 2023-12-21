@@ -152,8 +152,14 @@ function profileDataListener(uid, onUpdate) {
 
 async function savePostToFirestore(postObj, userUid) {
     const postObjWithMetadata = {...postObj, createdBy: userUid, createdAt: new Date(), modifiedAt: new Date(), likedBy: [], dislikedBy: [], likes: 0};
-    const docRef = await addDoc(collection(db, "Posts"), postObjWithMetadata);
-    console.debug("savePostToFirestore: Document written with ID: ", docRef.id);
+    try {
+        const docRef = await addDoc(collection(db, "Posts"), postObjWithMetadata);
+        console.debug("savePostToFirestore: Document written with ID: ", docRef.id);
+        return docRef;
+    } catch (error) {
+        console.error("Error adding document: ", error);
+        throw new Error("Error adding document");
+    }
 }
 
 async function removePostFromFirestore(postId) {
