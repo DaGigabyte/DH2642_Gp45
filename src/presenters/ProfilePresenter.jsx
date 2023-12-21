@@ -9,7 +9,7 @@ import { commentDeletedToast } from "../utils/toastify.js";
 function ProfilePresenter(props) {
   const { uid } = useParams();
   const loading = !props.model.profilePageData.userPosts;
-  const isFollowing = props.model.user.data.follows.includes(uid);
+  const isFollowing = props.model?.user?.data?.follows?.includes(uid);
 
   function userSelectsPostACB(postId) {
     props.model.postDetailData.setCurrentPostID(postId);

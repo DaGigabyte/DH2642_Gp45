@@ -1,4 +1,15 @@
+import { needToLogInToast } from "../../utils/toastify";
+
 function ProfileBanner(props) {
+  // Handle show toast when user is not logged in on click of follow button
+  function handleFollowAndUnfollow() {
+    if (!props.currenLoggedInUid) {
+      needToLogInToast();
+    } else {
+      props.handleFollowAndUnfollow();
+    }
+  }
+
   return (
     <div className="flex flex-col space-y-4">
       <h2>Profile</h2>
@@ -33,7 +44,7 @@ function ProfileBanner(props) {
           {props.currentProfileUid !== props.currenLoggedInUid ? (
             <button
               className="flex items-center justify-center text-lg md:text-sm lg:text-lg text-white font-bold bg-pins-primary px-5 py-2 md:px-2 lg:px-5 rounded-2xl shadow hover:bg-pins-primary/80 transition duration-75"
-              onClick={props.handleFollowAndUnfollow}
+              onClick={handleFollowAndUnfollow}
             >
               {props.isFollowing ? "Unfollow" : "Follow"}
             </button>

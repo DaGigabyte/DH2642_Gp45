@@ -1,6 +1,8 @@
 import { toast } from "react-toastify";
 
 // Need to login
+export const needToLogInToast = () => toast.error("You need to log in.");
+
 export const newPostCreatedToast = () =>
   toast.success("Your post was successfully created.");
 
