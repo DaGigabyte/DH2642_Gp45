@@ -19,10 +19,7 @@ export default function InputBox(props) {
       placeholder={props.predfinedText}
       value={props.inputText}
       onChange={handleInputChangeACB}
-      className={`w-full text-black text-sm text-left rounded border border-gray-300
-  p-2 bg-white hover:border-indigo-600 transition duration-300 ${
-    props?.minHeight ? `min-h-[${props.minHeight}]` : "min-h-fit"
-  } `}
+      className="settingsInput"
     />
   );
 }

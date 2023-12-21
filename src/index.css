@@ -49,6 +49,11 @@ h2 {
     color: theme("colors.pins-light");
 }
 
+/* Rating custom style */
+.react-simple-star-rating svg {
+    display: inline-block;
+}
+
 @layer utilities {
     .purpleButton {
         color: #e9e2ec;
@@ -94,6 +99,11 @@ h2 {
         cursor: not-allowed;
     }
 
+    .movieReleaseDate {
+        padding-left: 0.75rem;
+        font-size: 1rem;
+        color: #718096;
+    }
 
     .hotPostOverlay {
         position: absolute;
@@ -127,4 +137,24 @@ h2 {
     .disable-selection {
         user-select: none;
     }
+
+    .settingsInput {
+        width: 100%;
+        color: #000;
+        font-size: 0.875rem;
+        text-align: left;
+        border-radius: 0.25rem;
+        border: 1px solid #ccc;
+        border-color: #d1d5db;
+        padding: 0.5rem;
+        transition-property: all;
+        transition-duration: 300ms;
+        background-color: #f3f4f6;
+    }
+
+    .settingsInput:hover {
+        border-color: #8d66fc;
+    }
+
+
 }

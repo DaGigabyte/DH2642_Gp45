@@ -34,35 +34,43 @@ export default function SettingsView(props) {
   }
 
   function bioChangeACB(result) {
-    props.onBioChange(result);
+    props.onBioChange(result.target.value);
   }
 
-  /*ACB to discard new name*/ //TODO rout to prev
+  /*ACB to discard new name*/
   function handleCancelClickACB() {
     navigate(-1);
   }
 
   return (
-    <div className="relative text-left rounded-xl border-2 border-gray-300 bg-white w-full p-3 max-w-3xl">
-      <ReturnButton size="25" />
-      <div className="text-black">
-        <p className="text-4xl mb-8 block">Settings</p>
+    <>
+      <p className="text-2xl pb-1">Current Profile</p>
+      <div className="relative text-black w-full  max-w-3xl">
+        <ReturnButton size="25" />
 
-        <p className="text-2xl">Current Settings</p>
-        <div className="p-3 shadow border rounded mb-10">
-          <UserProfileCard
-            picture={props.profilePicture || ""}
-            nick={props.currentData.nickName || ""}
+        <div className="p-6 shadow border rounded mb-8 bg-white">
+          <p>Profile Display </p>
+          <div className=" p-2 rounded">
+            <UserProfileCard
+              picture={props.profilePicture || ""}
+              nick={props.currentData.nickName || ""}
+            />
+          </div>
+          <p className="mt-3">Name</p>
+          <p className=" p-2 rounded">{props.currentData.fullName}</p>
+          <p className="mt-3">Bio</p>
+          <textarea
+            id="currentBioSetting"
+            className=" p-2 rounded border  w-full"
+            rows={4}
+            readOnly={true}
+            value={props.currentData.bio || "*Enter something about you below*"}
           />
-          <p className="">Name: {props.currentData.fullName}</p>
-          <p className="">
-            Bio: {props.currentData.bio || "*Enter something about you below*"}
-          </p>
         </div>
 
-        <p className="text-2xl">Change Settings</p>
-        <div className="p-3 shadow border rounded mb-2">
-          <p className="mt-3">Full Name</p>
+        <p className="text-2xl">Edit Profile</p>
+        <div className="p-6 shadow border rounded mb-2 bg-white">
+          <p>Full Name</p>
           <InputBox
             inputId="fullNameInput"
             inputText={props.fullName || ""}
@@ -78,11 +86,14 @@ export default function SettingsView(props) {
             onInputChange={nickChangeACB}
           />
           <p className="mt-3">Bio</p>
-          <InputBox
-            inputId="bioInput"
-            inputText={props.bio || ""}
-            predfinedText="Enter new Bio"
-            onInputChange={bioChangeACB}
+          <textarea
+            className="settingsInput"
+            id="newBioInput"
+            rows={4}
+            maxLength={200}
+            placeholder="Enter your new Bio"
+            value={props.bio || ""}
+            onChange={bioChangeACB}
           />
         </div>
         <div className="space-x-1 flex justify-center">
@@ -100,6 +111,6 @@ export default function SettingsView(props) {
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }

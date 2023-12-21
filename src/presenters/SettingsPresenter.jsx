@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import SettingsView from "../views/SettingsView";
+import { settingsUpdatedToast } from "../utils/toastify.js";
 
 /**
  * A basic presenter for the settings view
@@ -26,6 +27,7 @@ function SettingsPresenter(props) {
   /*ACB to store the changes*/
   function storeUpdatesACB() {
     props.model.storeUpdates();
+    settingsUpdatedToast();
   }
 
   return (

@@ -8,6 +8,8 @@ import FavoritesPresenter from "./presenters/FavoritesPresenter";
 import ProfilePresenter from "./presenters/ProfilePresenter";
 import SettingsPresenter from "./presenters/SettingsPresenter";
 import PageNotFoundPresenter from "./presenters/PageNotFoundPresenter";
+import TopRatedPinsPresenter from "./presenters/TopRatedPinsPresenter";
+import PrivacyPolicyPresenter from "./presenters/PrivacyPolicyPresenter";
 
 import { observer } from "mobx-react-lite";
 
@@ -33,7 +35,7 @@ function createRouter(props) {
           element: <DetailsPresenter model={props.model} />,
         },
         {
-          path: "favorites",
+          path: "liked-pins",
           element: <FavoritesPresenter model={props.model} />,
         },
         {
@@ -43,6 +45,14 @@ function createRouter(props) {
         {
           path: "settings",
           element: <SettingsPresenter model={props.model} />,
+        },
+        {
+          path: "top-rated-pins",
+          element: <TopRatedPinsPresenter model={props.model} />,
+        },
+        {
+          path: "privacy-policy",
+          element: <PrivacyPolicyPresenter />,
         },
       ],
     },

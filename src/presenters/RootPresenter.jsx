@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import RootView from "../views/RootView";
-import { signInACB, signOutACB, queryUsername } from "../firebase/firebaseModel";
-import { searchMovie } from "../services/firePinsSource";
+import {
+  signInACB,
+  signOutACB,
+  queryUsername,
+} from "../firebase/firebaseModel";
+import { searchMovie, listOfGenre } from "../services/firePinsSource";
 import { newPostCreatedToast } from "../utils/toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -23,6 +27,9 @@ function RootPresenter(props) {
   const [selectedMovieObject, setSelectedMovieObject] = useState(null);
   const [searchApiSource, setSearchApiSource] = useState(sourceENUM.TMDB);
   const [newPostCaption, setNewPostCaption] = useState("");
+  const [newPostRating, setNewPostRating] = useState(0);
+  const [allTMDBGenres, setAllTMDBGenres] = useState([]);
+  const [genreNames, setGenreNames] = useState([]);
 
   // Handle set search text
   function handleSetSearchText(text) {
@@ -58,6 +65,17 @@ function RootPresenter(props) {
     navigate("/");
   }
 
+  // Handle post rating
+  function handlePostRating(rating) {
+    setNewPostRating(rating);
+  }
+
+  // Handle get genres from TMDB
+  async function handleGetGenres() {
+    const genres = await listOfGenre();
+    setAllTMDBGenres(genres);
+  }
+
   // Handle create new post
   function handleCreateNewPost() {
     if (selectedMovieID && selectedMovieObject) {
@@ -76,9 +94,9 @@ function RootPresenter(props) {
         selectedMovieObject.overview
       );
       props.model.createPostEditor.setTMDBsourceID(selectedMovieObject.id);
-      props.model.createPostEditor.setTMDBgenreID(
-        selectedMovieObject.genre_ids
-      );
+
+      props.model.createPostEditor.setTMDBgenres(genreNames);
+      props.model.createPostEditor.setRating(newPostRating);
 
       // Create new post
       props.model.createPost();
@@ -93,6 +111,8 @@ function RootPresenter(props) {
       setSearchTextTMDB("");
       // Reset search results
       setSearchResultsTMDB([]);
+      // Reset rating
+      setNewPostRating(0);
 
       // Notify user of new post creation
       newPostCreatedToast();
@@ -104,6 +124,12 @@ function RootPresenter(props) {
     setIsSearching(true);
     if (searchApiSource === sourceENUM.TMDB) {
       const results = await searchMovie(searchTextTMDB);
+      // Remove movies without poster_path from the results
+      results.forEach((movie, index) => {
+        if (!movie.poster_path) {
+          results.splice(index, 1);
+        }
+      });
       setSearchResultsTMDB(results);
     } else if (searchApiSource === sourceENUM.Unsplash) {
       console.log("Unsplash");
@@ -118,6 +144,10 @@ function RootPresenter(props) {
   // Search for movies in TMDB on searchTextTMDB change
   // Wait for user to stop typing for 500ms before searching TMDB
   useEffect(() => {
+    if (allTMDBGenres.length === 0) {
+      handleGetGenres();
+    }
+
     const timeoutId = setTimeout(() => {
       handleSearchMovie();
     }, 500);
@@ -126,18 +156,32 @@ function RootPresenter(props) {
       clearTimeout(timeoutId);
       setSelectedMovieID(null);
       setSelectedMovieObject(null);
+      setNewPostRating(0);
     };
   }, [searchTextTMDB]);
 
-  // State for searchbar
+  // Find genre name from genre ID when selected movie object changes
+  useEffect(() => {
+    if (selectedMovieObject) {
+      const genreNames = [];
+      selectedMovieObject.genre_ids.forEach((genreID) => {
+        const genreName = allTMDBGenres.find(
+          (genre) => genre.id === genreID
+        ).name;
+        genreNames.push(genreName);
+      });
+      setGenreNames(genreNames);
+    }
+  }, [selectedMovieObject]);
 
+  // State for searchbar
   const placeholderText = "Find a user";
 
   const [searchText, setSearchText] = useState();
   const [searchResults, setSearchResults] = useState();
   const [showSuggestions, setShowSuggestions] = useState();
   const [searching, setSearching] = useState(false);
-  
+
   useEffect(() => {
     if (searchText === "") {
       setSearchResults([]);
@@ -146,7 +190,7 @@ function RootPresenter(props) {
     const timeoutId = setTimeout(() => {
       if (searchText !== placeholderText) {
         setSearching(true);
-        userSearch().then(() =>   {
+        userSearch().then(() => {
           setSearching(false);
         });
       }
@@ -158,23 +202,23 @@ function RootPresenter(props) {
   }, [searchText]);
 
   function onUserTyping(searchQuery) {
-      setSearchText(searchQuery);
+    setSearchText(searchQuery);
   }
 
   async function userSearch() {
-      if (searchText) {
-          setSearchResults(await queryUsername(searchText));
-      } 
+    if (searchText) {
+      setSearchResults(await queryUsername(searchText));
+    }
   }
 
   function onSearchBlur() {
-      setTimeout(() => {
-          setShowSuggestions(false);
-      }, 200)
+    setTimeout(() => {
+      setShowSuggestions(false);
+    }, 200);
   }
 
   function onSearchFocus() {
-      setShowSuggestions(true);
+    setShowSuggestions(true);
   }
 
   return (
@@ -202,14 +246,16 @@ function RootPresenter(props) {
       newPostCaption={newPostCaption}
       onSetNewPostCaption={handleSetNewPostCaption}
       onCreateNewPost={handleCreateNewPost}
+      newPostRating={newPostRating}
+      onSetPostRating={handlePostRating}
       searchbarText={searchText}
       placeholderText={placeholderText}
       searching={searching}
-      searchResults={searchResults} 
-      onUserTyping={onUserTyping} 
-      onUserSearching={userSearch} 
-      onSearchBlur={onSearchBlur} 
-      onSearchFocus={onSearchFocus} 
+      searchResults={searchResults}
+      onUserTyping={onUserTyping}
+      onUserSearching={userSearch}
+      onSearchBlur={onSearchBlur}
+      onSearchFocus={onSearchFocus}
       showSuggestions={showSuggestions}
     />
   );
