@@ -7,10 +7,10 @@ function ProfileView(props) {
       {/* Banner */}
       <ProfileBanner
         {...props.profilePageData.profileBannerPromiseState.data}
+        isFollowing={props.isFollowing}
         currenLoggedInUid={props.user.uid}
         currentProfileUid={props.profilePageData.currentProfileUid}
-        followUser={props.profilePageData.followUser}
-        unfollowUser={props.profilePageData.unfollowUser}
+        handleFollowAndUnfollow={props.handleFollowAndUnfollow}
       />
       {/* User's pins */}
       <ProfileUserPins

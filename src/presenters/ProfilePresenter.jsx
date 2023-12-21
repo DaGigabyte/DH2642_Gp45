@@ -9,6 +9,7 @@ import { commentDeletedToast } from "../utils/toastify.js";
 function ProfilePresenter(props) {
   const { uid } = useParams();
   const loading = !props.model.profilePageData.userPosts;
+  const isFollowing = props.model.user.data.follows.includes(uid);
 
   function userSelectsPostACB(postId) {
     props.model.postDetailData.setCurrentPostID(postId);
@@ -31,6 +32,15 @@ function ProfilePresenter(props) {
     newCommentCreatedToast();
   }
 
+  // Handle follow and unfollow
+  function handleFollowAndUnfollow() {
+    if (!isFollowing) {
+      props.model.profilePageData.followUser();
+    } else {
+      props.model.profilePageData.unfollowUser();
+    }
+  }
+
   // Set user id to the model
   useEffect(() => {
     props.model.profilePageData.setCurrentProfileUid(uid);
@@ -44,6 +54,8 @@ function ProfilePresenter(props) {
   return (
     <ProfileView
       {...props.model}
+      isFollowing={isFollowing}
+      handleFollowAndUnfollow={handleFollowAndUnfollow}
       userSelectsPostACB={userSelectsPostACB}
       userlikesPostACB={userlikesPostACB}
       userdislikesPostACB={userdislikesPostACB}

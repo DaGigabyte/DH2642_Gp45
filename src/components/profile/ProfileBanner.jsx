@@ -1,17 +1,4 @@
 function ProfileBanner(props) {
-  // Check if the current user is following the profile user
-  const isFollowing =
-    props.followedBy && props.followedBy.includes(props.currenLoggedInUid);
-
-  // Handle follow and unfollow
-  function handleFollowAndUnfollow() {
-    if (isFollowing) {
-      props.unfollowUser();
-    } else {
-      props.followUser();
-    }
-  }
-
   return (
     <div className="flex flex-col space-y-4">
       <h2>Profile</h2>
@@ -36,19 +23,19 @@ function ProfileBanner(props) {
         <div className="flex items-center space-x-4 self-end select-none">
           {/* Number of followers */}
           <div className="text-lg text-gray-500 border border-double px-4 py-2 rounded">
-            {props.followedBy && props.followedBy.length} followers
+            {props.followedBy?.length} followers
           </div>
           {/* Number of following */}
           <div className="text-lg text-gray-500 border border-double px-4 py-2 rounded">
-            {props.follows && props.follows.length} following
+            {props.follows?.length} following
           </div>
           {/* Follow button */}
           {props.currentProfileUid !== props.currenLoggedInUid ? (
             <button
               className="flex items-center justify-center text-lg md:text-sm lg:text-lg text-white font-bold bg-pins-primary px-5 py-2 md:px-2 lg:px-5 rounded-2xl shadow hover:bg-pins-primary/80 transition duration-75"
-              onClick={handleFollowAndUnfollow}
+              onClick={props.handleFollowAndUnfollow}
             >
-              {isFollowing ? "Unfollow" : "Follow"}
+              {props.isFollowing ? "Unfollow" : "Follow"}
             </button>
           ) : null}
         </div>
