@@ -240,7 +240,7 @@ const model = observable({
     },
     userPosts: [],
     setUserPosts: action(function(data) {
-      this.data = data;
+      this.userPosts = data;
     }),
     setCurrentProfileUid: action(function(uid) {
       this.currentProfileUid = uid;
