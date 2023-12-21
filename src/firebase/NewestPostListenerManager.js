@@ -4,8 +4,8 @@ import { readUserFromFirestore } from "./firebaseModel";
 import { reaction, action, when, makeAutoObservable } from "mobx";
 
 class NewestPostListenerManager {
-    constructor(model) {
-        this.model = model;
+    constructor(postsData) {
+        this.postsData = postsData;
         this.newerThanConstructionPosts = [];
         this.listeners = [];
         this.timeOfConstruction = new Date();
@@ -15,13 +15,13 @@ class NewestPostListenerManager {
         reaction(()=>this.listeners.map(l => l.post), ()=> {
             console.debug('NewestPostListenerManager: reaction', this.listeners);
             const postArr = this.listeners.map(l => l.post).filter(p => p!==null);
-            model.newestPostsData.setNewestPostsBeforeTimeOfConstruction(postArr)
+            this.postsData.setNewestPostsBeforeTimeOfConstruction(postArr)
         });
         when(()=>this.endOfPosts, ()=>{
             console.debug('NewestPostListenerManager: whenEndOfPosts: endOfPosts');
-            this.model.newestPostsData.setEndOfNewestPostsBeforeTimeOfConstruction(true);
+            this.postsData.setEndOfNewestPostsBeforeTimeOfConstruction(true);
         });
-        this.listenToAndUpdatePostsCreatedAfterConstruction(model);
+        this.listenToAndUpdatePostsCreatedAfterConstruction();
     }
     setListeners = action((listeners) => this.listeners = listeners);
     setListenerPostAt = action((post, index) => this.listeners[index].post = post);
@@ -76,7 +76,7 @@ class NewestPostListenerManager {
             }
         }.bind(this));
     }
-    listenToAndUpdatePostsCreatedAfterConstruction(model) {
+    listenToAndUpdatePostsCreatedAfterConstruction() {
         const posts = collection(db, "Posts");
         const q = query(posts, orderBy("createdAt", "desc"), endBefore(this.timeOfConstruction)); // query posts created after this website is first loaded
         
@@ -89,7 +89,7 @@ class NewestPostListenerManager {
                 const post = { id: doc.id, user, ...postData };
                 postArr.push(post);
             }
-            model.newestPostsData.setNewestPostsAfterTimeOfConstruction(postArr);
+            this.postsData.setNewestPostsAfterTimeOfConstruction(postArr);
         });
     }
 }
