@@ -124,13 +124,11 @@ const model = observable({
     setScrollPosition: action(function(position) {
       this.scrollPosition = position;
     }),
-    data: {
-      topRatedPosts: [],
-    },
+  },
+  topRatedPostsData: {
+    topRatedPosts: [],
     setTopRatedPosts: action(function(posts) {
-      console.debug("current homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
-      console.debug("setting homePageData.data.topRatedPosts to: ", posts);
-      this.data.topRatedPosts = posts;
+      this.topRatedPosts = posts;
       console.debug("new homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
     }),
     fetchTopPosts: async function() {

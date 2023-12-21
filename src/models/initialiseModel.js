@@ -94,7 +94,7 @@ export default async function initialiseModel(model) {
     settingsReaction(model);
     currentPostIdReaction(model);
     currentProfileUidReaction(model);
-    model.homePageData.fetchTopPosts();
+    model.topRatedPostsData.fetchTopPosts();
     combineLatestPosts(model);
     Object.assign(model, {listOfTMDBgenre: await listOfGenre()});
 }

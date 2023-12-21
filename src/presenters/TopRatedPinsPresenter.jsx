@@ -11,12 +11,12 @@ function TopRatedPinsPresenter(props) {
   function userlikesPostACB(postId) {
     props.model.postDetailData.setCurrentPostID(postId);
     props.model.postDetailData.likePost();
-    props.model.homePageData.fetchTopPosts();
+    props.model.topRatedPostsData.fetchTopPosts();
   }
   function userdislikesPostACB(postId) {
     props.model.postDetailData.setCurrentPostID(postId);
     props.model.postDetailData.dislikePost();
-    props.model.homePageData.fetchTopPosts();
+    props.model.topRatedPostsData.fetchTopPosts();
   }
 
   function handleSubmittedCommentACB(post) {
