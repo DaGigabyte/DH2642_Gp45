@@ -10,14 +10,10 @@ function ProfilePresenter(props) {
   const { uid } = useParams();
   const loading = !props.model.profilePageData.userPosts;
 
-  console.log("profile: ", loading);
-
   // Set user id to the model
   useEffect(() => {
     props.model.profilePageData.setCurrentProfileUid(uid);
   }, [uid]);
-
-  console.log("profile: ", props.model.profilePageData);
 
   return (
     <>
