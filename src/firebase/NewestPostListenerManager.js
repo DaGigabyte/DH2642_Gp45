@@ -25,6 +25,10 @@ class NewestPostListenerManager {
     }
     setListeners = action((listeners) => this.listeners = listeners);
     setListenerPostAt = action((post, index) => this.listeners[index].post = post);
+    removeListener(postId) {
+        console.log('NewestPostListenerManager: removeListener', postId);
+        this.listeners = this.listeners.filter(l => l.post.id !== postId);
+    }
     setReadyForAddingNewestPostsListener = action((ready) => this.readyForAddingNewestPostsListener = ready);
     setEndOfPosts = action((endOfPosts) => {this.endOfPosts = endOfPosts});
     
@@ -87,10 +91,6 @@ class NewestPostListenerManager {
             }
             model.newestPostsData.setNewestPostsAfterTimeOfConstruction(postArr);
         });
-    }
-    removeListener(postId) {
-        console.log('NewestPostListenerManager: removeListener', postId);
-        this.listeners = this.listeners.filter(l => l.post.id !== postId);
     }
 }
 
