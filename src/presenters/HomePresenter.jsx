@@ -28,6 +28,7 @@ function HomePresenter(props) {
     } else if (commentStatus === "error") {
       newCommentFailedToast();
       setCommentModalOpen(false);
+      props.model.postDetailData.setPostCommentStatus(null);
     }
   }, [commentStatus, props.model.postDetailData]);
 

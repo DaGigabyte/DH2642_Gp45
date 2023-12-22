@@ -23,7 +23,8 @@ export default function ConfirmationPopupContainer(props) {
             props.onConfirm();
           }}
         >
-          {props.commentRemovalStatus === "loading" ? (
+          {props.commentRemovalStatus === "loading" ||
+          props.postRemovalStatus === "loading" ? (
             <IoReloadOutline size={20} className="animate-spin mr-2" />
           ) : (
             "Confirm"
