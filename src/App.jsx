@@ -36,7 +36,11 @@ function createRouter(props) {
         },
         {
           path: "liked-pins",
-          element: <FavoritesPresenter model={props.model} />,
+          element: (
+            <AuthGuard model={props.model}>
+              <FavoritesPresenter model={props.model} />
+            </AuthGuard>
+          ),
         },
         {
           path: "profile/:uid",
