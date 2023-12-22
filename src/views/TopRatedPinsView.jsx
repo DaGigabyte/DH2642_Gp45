@@ -3,12 +3,11 @@ import CommentModal from "../components/modal/CommentModal";
 import TopRatedPostsSection from "../components/top-rated-page/TopRatedPostsSection";
 
 function TopRatedPinsView(props) {
-  const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
 
   function openCommentModalACB(post) {
     setCurrentPost(post);
-    setCommentModalOpen(true);
+    props.setCommentModalOpen(true);
   }
 
   return (
@@ -27,14 +26,12 @@ function TopRatedPinsView(props) {
         <CommentModal
           post={currentPost}
           isUserConfirmed={!!props.currentUID}
-          isOpen={commentModalOpen}
-          setOpen={setCommentModalOpen}
+          isOpen={props.commentModalOpen}
+          setOpen={props.setCommentModalOpen}
           text={props.commentText}
           userEntersComment={(res) => props.userEntersComment(res)}
-          storeComment={() => {
-            setCommentModalOpen(false);
-            props.storeComment(currentPost);
-          }}
+          storeComment={() => props.storeComment(currentPost)}
+          commentStatus={props.commentStatus}
         />
       </div>
     </div>
