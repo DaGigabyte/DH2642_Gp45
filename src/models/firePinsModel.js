@@ -346,7 +346,8 @@ const model = observable({
       console.debug("favoritesPageData.newestPostsAfterTimeOfConstruction: ", this.newestPostsAfterTimeOfConstruction);
     }),
     fetchFavoritePosts: async function() {
-      favoritePostListenerManager.addNewestPostsListener();
+      const posts = await queryFavoritePosts(10, model.user.uid); // Hardcoded posts fetched once when app is initialised
+      this.setFavoritePosts(posts);
     },
   },
   /**
