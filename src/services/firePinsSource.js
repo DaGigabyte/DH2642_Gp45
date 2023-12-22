@@ -39,7 +39,6 @@ function movieById(id) {
             }
             return response.json();
         })
-        .catch(err => console.error(err));
 }
 
 /* 
@@ -73,7 +72,6 @@ function searchMovie(searchQuery) {
             return response.json();
         })
         .then(result => result.results)
-        .catch(err => console.error(err));
 }
 
 function listOfGenre() {
@@ -94,10 +92,8 @@ function listOfGenre() {
         return res.json();
     })
     .then(json => {
-        console.debug("listOfGenre():", json);
         return json.genres;
     })
-    .catch(err => console.error('error:' + err));
 }
 
 export { searchMovie, movieById, listOfGenre }

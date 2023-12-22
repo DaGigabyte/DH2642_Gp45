@@ -1,5 +1,4 @@
 function AuthView(props) {
-    console.log(props.user);
     return (
         <div>
             <h1>AuthView</h1>
