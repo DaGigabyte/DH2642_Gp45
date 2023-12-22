@@ -87,7 +87,17 @@ export default function NewPostCard(props) {
           {props.postCaption}
         </span>
         <div className="flex justify-start mt-1.5 mb-1">
-          <Rating initialValue={props.rating} readonly={true} />
+          <Rating
+            initialValue={props.rating}
+            readonly={true}
+            fillColorArray={[
+              "#f14f45",
+              "#f16c45",
+              "#f18845",
+              "#f1b345",
+              "#f1d045",
+            ]}
+          />
         </div>
         {/* Interaction buttons*/}
         <div className="flex gap-4 items-center justify-end mt-auto">

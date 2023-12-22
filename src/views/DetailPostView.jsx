@@ -174,7 +174,17 @@ function DetailedPostView(props) {
               </p>
               {props.rating && (
                 <div className="mt-3">
-                  <Rating initialValue={props.rating} readonly={true} />
+                  <Rating
+                    initialValue={props.rating}
+                    readonly={true}
+                    fillColorArray={[
+                      "#f14f45",
+                      "#f16c45",
+                      "#f18845",
+                      "#f1b345",
+                      "#f1d045",
+                    ]}
+                  />
                 </div>
               )}
             </div>
