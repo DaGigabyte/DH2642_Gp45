@@ -62,7 +62,7 @@ function HomePresenter(props) {
 
   // Show suspense when loading
   if (!isReadyForRender) {
-    <SuspenseAnimation loading={!isReadyForRender} />;
+    return <SuspenseAnimation loading={!isReadyForRender} />;
   }
   return (
     <div className="flex flex-col w-full gap-5 max-w-6xl">
