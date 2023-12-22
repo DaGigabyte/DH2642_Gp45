@@ -178,11 +178,11 @@ const model = observable({
   postDetailData: {
     currentPostID: null,
     comment: "",
-    postCommentStatus: null, // Has one of the values, 'loading, 'success' or 'error' depending on the state of the fetching
+    postCommentStatus: null, // Has one of the values, 'loading, 'success' or 'error' depending on the state of the posting comment
     setPostCommentStatus: action(function(status) {
       this.postCommentStatus = status;
     }),
-    removeCommentStatus: null, // Has one of the values, 'loading, 'success' or 'error' depending on the state of the fetching
+    removeCommentStatus: null, // Has one of the values, 'loading, 'success' or 'error' depending on the state of removing comment
     setRemoveCommentStatus: action(function(status) {
       this.removeCommentStatus = status;
     }),
@@ -200,6 +200,10 @@ const model = observable({
       source: null,
       title: null,
     },
+    removePostStatus: null, // Has one of the values, 'loading, 'success' or 'error' depending on the state of removing post
+    setRemovePostStatus: action(function(status){
+      this.removePostStatus = status;
+    }),
     unsubscribePostData: null,
     setPostData: action(function(postData) {
       this.postData = postData;
@@ -255,7 +259,14 @@ const model = observable({
       await dislikePostFirestore(model.user.uid, this.currentPostID);
     },
     removePost: async function () {
-      await removePostFromFirestore(this.currentPostID);
+      this.setRemovePostStatus("loading");
+      try {
+        await removePostFromFirestore(this.currentPostID);
+        this.setRemovePostStatus("success");
+      } catch (error) {
+        console.error(error);
+        this.setRemovePostStatus("error");
+      }
     }
   },
   profilePageData: {
