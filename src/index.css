@@ -107,13 +107,11 @@ h2 {
         font-size: 1.875rem;
         width: fit-content;
         border-radius: 9999px;
-        padding-top: 0.25rem;
-        padding-right: 0.75rem;
+        padding: 0.25rem 0.75rem 0.25rem 0.25rem;
         margin-bottom: 0.75rem;
         margin-top: 0.5rem;
         cursor: pointer;
         transition-duration: 300ms;
-        padding-left: 0.375rem;
     }
 
     .clickableProfile:hover {
