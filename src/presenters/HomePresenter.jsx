@@ -80,6 +80,7 @@ function HomePresenter(props) {
         likePost={userLikesPostACB}
         dislikePost={userDislikesPostACB}
         commentOnCurrentPost={openCommentModalACB}
+        hasMore={props.model.newestPostsData.hasMore()}
       />
       <CommentModal
         post={currentPost}
