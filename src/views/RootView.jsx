@@ -8,6 +8,7 @@ import UserAvatarAndMenu from "../components/topbar/UserAvatarAndMenu";
 import LogInButton from "../components/topbar/LogInButton";
 import Searchbar from "../views/Searchbar";
 import { IoSearchOutline } from "react-icons/io5";
+import ScrollToTop from "react-scroll-to-top";
 
 function RootView(props) {
   const [showSearch, setShowSearch] = useState(false);
@@ -98,6 +99,9 @@ function RootView(props) {
           <Outlet />
         </div>
       </div>
+
+      {/* Scroll back to top */}
+      <ScrollToTop smooth className="flex justify-center items-center" />
     </div>
   );
 }
