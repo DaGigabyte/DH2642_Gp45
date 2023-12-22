@@ -358,7 +358,8 @@ function postCommentsDataListener(postId, onUpdate) {
     return onSnapshot(q, (querySnapshot) => {
         const comments = [];
         querySnapshot.forEach((doc) => {
-            comments.push(doc.data());
+            const commentData = doc.data();
+            comments.push({ id: doc.id, ...commentData});
         });
         onUpdate(comments); 
     }, (error) => {
