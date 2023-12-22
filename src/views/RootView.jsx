@@ -6,19 +6,20 @@ import NewPostModal from "../components/modal/NewPostModal";
 import Search from "./Searchbar";
 import UserAvatarAndMenu from "../components/topbar/UserAvatarAndMenu";
 import LogInButton from "../components/topbar/LogInButton";
-import SearchbarPresenter from "../presenters/SearchbarPresenter";
+import Searchbar from "../views/Searchbar";
 import { IoSearchOutline } from "react-icons/io5";
+import ScrollToTop from "react-scroll-to-top";
 
 function RootView(props) {
   const [showSearch, setShowSearch] = useState(false);
 
   return (
-    <div className="flex flex-col min-h-screen bg-pins-light md:flex-row">
+    <div className="flex flex-col 2xl:container 2xl:mx-auto min-h-screen bg-pins-light md:flex-row">
       {/* Sidebar */}
       <Sidebar />
       <div className="flex-1">
         {/* Sticky top bar */}
-        <div className="sticky top-[66px] z-10 flex flex-row md:top-0  justify-between p-4 bg-pins-light bg-opacity-95">
+        <div className="sticky top-[66px] z-40 flex flex-row md:top-0  justify-between p-4 bg-pins-light bg-opacity-95">
           <div
             className={`${showSearch ? "flex w-full space-x-2" : ""} md:w-1/2`}
           >
@@ -35,7 +36,20 @@ function RootView(props) {
                 showSearch ? "w-full self-center" : "hidden"
               } md:block md:w-full md:self-center`}
             >
-              <SearchbarPresenter />
+              <Search
+                searchText={
+                  props.searchbarText
+                    ? props.searchbarText
+                    : props.placeholderText
+                }
+                searching={props.searching}
+                searchResults={props.searchResults}
+                onUserTyping={props.onUserTyping}
+                onUserSearching={props.onUserSearching}
+                onSearchBlur={props.onSearchBlur}
+                onSearchFocus={props.onSearchFocus}
+                showSuggestions={props.showSuggestions}
+              />
             </div>
           </div>
 
@@ -48,6 +62,7 @@ function RootView(props) {
             {/* Create new post button */}
             {props.uid ? (
               <NewPostModal
+                isSearching={props.isSearching}
                 searchTextTMDB={props.searchTextTMDB}
                 setSearchTextTMDB={props.setSearchTextTMDB}
                 searchResultsTMDB={props.searchResultsTMDB}
@@ -59,6 +74,10 @@ function RootView(props) {
                 newPostCaption={props.newPostCaption}
                 onSetNewPostCaption={props.onSetNewPostCaption}
                 onCreateNewPost={props.onCreateNewPost}
+                createNewPostStatus={props.createNewPostStatus}
+                resetCreatePostStatus={props.resetCreatePostStatus}
+                newPostRating={props.newPostRating}
+                onSetPostRating={props.onSetPostRating}
               />
             ) : (
               <></>
@@ -80,6 +99,9 @@ function RootView(props) {
           <Outlet />
         </div>
       </div>
+
+      {/* Scroll back to top */}
+      <ScrollToTop smooth className="flex justify-center items-center" />
     </div>
   );
 }

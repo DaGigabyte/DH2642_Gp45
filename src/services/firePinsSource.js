@@ -39,7 +39,6 @@ function movieById(id) {
             }
             return response.json();
         })
-        .catch(err => console.error(err));
 }
 
 /* 
@@ -73,7 +72,28 @@ function searchMovie(searchQuery) {
             return response.json();
         })
         .then(result => result.results)
-        .catch(err => console.error(err));
 }
 
-export { searchMovie, movieById }
+function listOfGenre() {
+    const url = TMDB_BASE_URL + 'genre/movie/list?language=en';
+    const options = {
+    method: 'GET',
+    headers: {
+        accept: 'application/json',
+        Authorization: TMDB_API_KEY
+    }
+    };
+
+    return fetch(url, options)
+    .then(res => {
+        if (!res.ok) {
+            throw new Error('http error, status code: ' + res.status);
+        }
+        return res.json();
+    })
+    .then(json => {
+        return json.genres;
+    })
+}
+
+export { searchMovie, movieById, listOfGenre }

@@ -20,6 +20,7 @@ function NewPostSearchInput(props) {
   return (
     <input
       type="text"
+      id="search-input"
       placeholder={handlePlaceholderText()}
       value={props.searchTextTMDB}
       className="border-2 border-gray-300 rounded-lg px-2 py-3 text-lg mb-4 w-full bg-pins-light focus:border-pins-primary focus:outline-none transition duration-150 ease-in-out"

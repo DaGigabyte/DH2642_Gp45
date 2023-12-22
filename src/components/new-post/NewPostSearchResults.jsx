@@ -1,3 +1,5 @@
+// Suspense animation
+import SuspenseAnimation from "../global/SuspenseAnimation";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 // import required modules
@@ -9,7 +11,10 @@ import "swiper/css/pagination";
 
 function NewPostSearchResults(props) {
   return (
-    <div>
+    <div className="relative min-h-[100px]">
+      {/* Suspense animation */}
+      <SuspenseAnimation loading={props.isSearching} />
+      {/* Showing result */}
       <Swiper
         slidesPerView="auto"
         spaceBetween={20}
@@ -38,10 +43,10 @@ function NewPostSearchResults(props) {
                   <img
                     src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
                     alt={movie.title}
-                    className="w-32 h-full rounded-lg object-cover transition duration-150 ease-in-out transform hover:scale-110"
+                    className="w-32 h-48 rounded-lg object-cover transition duration-150 ease-in-out transform hover:scale-110"
                   />
                   {props.selectedMovieID === movie.id ? (
-                    <div className="absolute inset-0 flex bg-pins-primary bg-opacity-50 rounded-lg items-center justify-center text-white">
+                    <div className="absolute inset-0 flex bg-pins-primary bg-opacity-50 rounded-lg items-center justify-center text-white font-bold">
                       SELECTED
                     </div>
                   ) : (
@@ -55,7 +60,9 @@ function NewPostSearchResults(props) {
             );
           })
         ) : (
-          <p className="text-center">No results found</p>
+          <p className="text-center">
+            {props.isSearching ? "" : "No results found"}
+          </p>
         )}
       </Swiper>
     </div>

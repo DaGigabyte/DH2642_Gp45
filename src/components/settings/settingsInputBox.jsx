@@ -8,17 +8,18 @@
  */
 export default function InputBox(props) {
   /*ACB to handle inputs*/
-  function handleUserNameInputACB(evt) {
+  function handleInputChangeACB(evt) {
     props.onInputChange(evt.target.value);
   }
+
   return (
     <input
       id={props.inputId}
       type="text"
-      value={props.text}
-      onChange={handleUserNameInputACB}
-      className="w-full text-black text-left rounded border border-gray-300
-         p-2 bg-white hover:border-indigo-600 transition duration-300 "
+      placeholder={props.predfinedText}
+      value={props.inputText}
+      onChange={handleInputChangeACB}
+      className="settingsInput"
     />
   );
 }

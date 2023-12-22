@@ -9,27 +9,43 @@ import FollowButton from "./FollowButton";
  * @param {int} props.followingAmt - Amount following
  * @param {boolean} props.ownAccount - True if the user logged in owns the profile
  * @param {boolean} props.following - True if the user logged in follows the account of the profile
+ * @param {boolean} props.isLoggedIn- True if the user is logged in
  * @param {Function} props.profileButtonClick - Custom event called when the button in the profile is pressed, depending on the state it might be a follow or unfollow
  * @returns {React.Element} A component that renders a profile banner
  */
 
 export default function ProfileBanner(props) {
-    return (
-      <div className="flex justify-center ml-10 mr-16">
-        <img src={props.picture} className="w-[400px] rounded-full mr-10" />
-        <div className="bg-white p-8 h-[300px] w-full rounded-xl shadow-md">
-            <div className="flex">
-                <h1 className="text-2xl font-bold mb-4">{props.username}</h1>
-                <div className="ml-auto mb-4 flex">
-                    <div className="text-2xl mr-5">{props.followerAmt} followers</div>
-                    <div className="text-2xl mr-5">{props.followingAmt} following</div>
-                </div>
-            </div>
-            <div className="text-lg mb-4 mr-5 max-h-[140px] h-[140px] overflow-auto whitespace-pre-line">
-                {props.bio}
-            </div>
-            {props.ownAccount ? "" : <FollowButton text={props.following ? "Unfollow" : "Follow"} onUserClick={props.profileButtonClick}/>}
+  return (
+    <div className="flex flex-col lg:flex-row justify-center space-y-4 lg:space-x-4">
+      <img
+        src={props.picture}
+        alt={props.username}
+        className="w-40 h-4w-40 rounded-full self-center"
+      />
+      {/* Other content */}
+      <div className="flex flex-col items-center lg:items-stretch justify-around bg-white p-4 flex-1 rounded-xl shadow-md">
+        <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-between">
+          <h1 className="text-2xl font-bold">{props.username}</h1>
+          <div className="ml-auto flex">
+            <div className="text-2xl mr-5">{props.followerAmt} followers</div>
+            <div className="text-2xl mr-5">{props.followingAmt} following</div>
+          </div>
+        </div>
+        <div className="text-lg py-2 overflow-auto whitespace-pre-line">
+          {props.bio}
+        </div>
+        <div className="lg:self-end">
+          {props.ownAccount || !props.isLoggedIn ? (
+            ""
+          ) : (
+            <FollowButton
+              text={props.following ? "Unfollow" : "Follow"}
+              onUserClick={props.profileButtonClick}
+              following={props.following}
+            />
+          )}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}

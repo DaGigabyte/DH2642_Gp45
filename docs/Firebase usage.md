@@ -29,11 +29,18 @@ https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
         - title: "Post Title"
         - content: "Post Content"
         - posterPath: "https://image.tmdb.org/t/p/original/3GqP4HxjpVe0ChBAStTbkZhpWYC.jpg"
+        - TMDBsourceID: 1068236
+        - TMDBgenreID: [35]
+        - TMDBdateOfMovieRelease: "1933-06-14"
         - createdAt: "Timestamp"
         - modifiedAt: "Timestamp"
         - likedBy: ["u0gSii1Srsfy6gd7wOvYdtMObhp2"] // uid of users who liked
         - dislikedBy: []
         - Comments (sub-collection)
+          - mQASwrbGfT6iYpjkNLFH (document)
+            - content: "Comment"
+            - createdAt: "Timestamp"
+            - createdBy: "67XI4DS0oKdTcg9kXuRAEQs3gR03" // uid
 
 ## Querying Firestore
 ```

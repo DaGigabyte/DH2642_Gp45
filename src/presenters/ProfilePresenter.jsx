@@ -1,82 +1,70 @@
 import { observer } from "mobx-react-lite";
 import ProfileView from "../views/ProfileView";
-import { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
-import { readUserFromFirestore } from "../firebase/firebaseModel";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import SuspenseAnimation from "../components/global/SuspenseAnimation.jsx";
 
 function ProfilePresenter(props) {
-    const { uid } = useParams();
+  const { uid } = useParams();
+  const loading = !props.model.profilePageData.userPosts;
 
-    const [loading, setLoading] = useState(true);
-    const [profileData, setProfileData] = useState();
+  function userSelectsPostACB(postId) {
+    props.model.postDetailData.setCurrentPostID(postId);
+  }
+  function userlikesPostACB(postId) {
+    props.model.postDetailData.setCurrentPostID(postId);
+    props.model.postDetailData.likePost();
+  }
+  function userdislikesPostACB(postId) {
+    props.model.postDetailData.setCurrentPostID(postId);
+    props.model.postDetailData.dislikePost();
+  }
 
-    useEffect(() => {
-        setLoading(true);
-        readUserFromFirestore(uid)
-            .then((data) => {
-                setProfileData({
-                    profilePicture: data?.profilePicture,
-                    username: data?.displayName,
-                    bio: data?.bio,
-                    followerAmt: countFollowersOrFollowing(data.followedBy),
-                    followingAmt: countFollowersOrFollowing(data.follows),
-                    follows: data.follows
-                });
-                document.title = data?.displayName;
-            })
-            .catch((error) => {
-                console.error(error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, [uid]);
+  // Set user id to the model
+  useEffect(() => {
+    props.model.profilePageData.setCurrentProfileUid(uid);
+  }, [uid]);
 
-    function countFollowersOrFollowing(accounts) {
-        return accounts.length;
+  // Change document title to the user's display name
+  useEffect(() => {
+    document.title =
+      props.model.profilePageData.profileBannerPromiseState.data?.displayName;
+  }, [props.model.profilePageData.profileBannerPromiseState.data?.displayName]);
+
+  // Handle follow/unfollow button click
+  function profileButtonClick() {
+    if (!props.model.user.data.follows.includes(uid)) {
+      props.model.profilePageData.followUser();
+    } else {
+      props.model.profilePageData.unfollowUser();
     }
+  }
 
-    function ownAccountCheck() {
-        if (uid === props.model.user.uid) {
-            return true;
-        }
-        return false;
-    }
+  const profileBannerData =
+    props.model.profilePageData.profileBannerPromiseState.data;
 
-    function followsCheck() {
-        if (profileData.follows.includes(uid)) {
-            return true;
-        }
-        return false;
-    }
+  // Show suspense while fetching data
+  if (loading) {
+    return <SuspenseAnimation loading={loading} />;
+  }
 
-    function profileButtonClick() {
-        console.log("follow/unfollow");
-    }
-
-    if (loading) {
-        return (
-            <div>
-                <img
-                    src="https://brfenergi.se/iprog/loading.gif"
-                    alt="Loading"
-                />
-            </div>
-        );
-    }
-
-    return (
-        <ProfileView
-            picture={profileData?.profilePicture}
-            username={profileData?.username}
-            bio={profileData?.bio}
-            followerAmt={profileData?.followerAmt}
-            followingAmt={profileData?.followingAmt}
-            profileButtonClick={profileButtonClick}
-            ownAccount={ownAccountCheck()}
-            follows={followsCheck()}
-        />
-    );
+  return (
+    <ProfileView
+      {...props.model}
+      userSelectsPostACB={userSelectsPostACB}
+      userlikesPostACB={userlikesPostACB}
+      userdislikesPostACB={userdislikesPostACB}
+      picture={profileBannerData?.profilePicture}
+      username={profileBannerData?.displayName}
+      bio={profileBannerData?.bio}
+      followerAmt={profileBannerData?.followedBy.length}
+      followingAmt={profileBannerData?.follows.length}
+      profileButtonClick={profileButtonClick}
+      ownAccount={props.model.user?.uid === uid}
+      follows={props.model.user?.data?.follows?.includes(uid)}
+      isLoggedIn={props.model.user.uid}
+    />
+  );
 }
 
 export default observer(ProfilePresenter);
