@@ -1,4 +1,4 @@
-import ProfileBanner from "../components/profile/ProfileBanner";
+import ProfileBanner from "../components/layout/ProfileBanner";
 import ProfileUserPins from "../components/profile/ProfileUserPins";
 
 function ProfileView(props) {
@@ -6,15 +6,19 @@ function ProfileView(props) {
     <div className="flex flex-col w-full max-w-6xl">
       {/* Banner */}
       <ProfileBanner
-        {...props.profilePageData.profileBannerPromiseState.data}
-        isFollowing={props.isFollowing}
-        currenLoggedInUid={props.user.uid}
-        currentProfileUid={props.profilePageData.currentProfileUid}
-        handleFollowAndUnfollow={props.handleFollowAndUnfollow}
+        picture={props.picture}
+        username={props.username}
+        bio={props.bio}
+        followerAmt={props.followerAmt}
+        followingAmt={props.followingAmt}
+        profileButtonClick={props.profileButtonClick}
+        ownAccount={props.ownAccount}
+        following={props.follows}
+        isLoggedIn={props.isLoggedIn}
       />
       {/* User's pins */}
       <ProfileUserPins
-        currentUID={props.user.uid}
+        currentUID={props.user?.uid}
         currentUserData={props.profilePageData.profileBannerPromiseState.data}
         userPins={props.profilePageData.userPosts}
         selectPost={props.userSelectsPostACB}
