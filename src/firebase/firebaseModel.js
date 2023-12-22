@@ -57,7 +57,7 @@ function signOutACB() {
 }
 
 function connectToFirestore(model) {
-    model.userReady = false;
+    model.setUserReady(false);
     function watchUserCB() {
         return [model.user.data.fullName, model.user.data.displayName, model.user.data.displayNameInsensitive, model.user.data.bio, model.user.data.profilePicture, model.user.data.follows, model.user.data.followedBy];
     }
@@ -83,7 +83,7 @@ function connectToFirestore(model) {
             const docRef = doc(db, "Users", userAuthObj.uid);
             unsubscribeOnSnapshotUser = onSnapshot(docRef, onSnapshotChangeACB);
             function onSnapshotChangeACB(docSnapshot) {
-                model.userReady = false;
+                model.setUserReady(false);
                 if (docSnapshot.exists()) { // Document for this user exists on Firestore
                     console.debug("onSnapshotChangeACB: User exists on Firestore, reading data");
                     const docSnapshotdata = docSnapshot.data();
@@ -91,12 +91,12 @@ function connectToFirestore(model) {
                         console.debug("onSnapshotChangeACB: Document was not written by this device, updating MobX store");
                         userObj.data = docSnapshotdata;
                         model.setUser(userObj); // Update MobX store based on Firestore document
-                        model.userReady = true;
+                        model.setUserReady(true);
                     } else 
                         console.debug("onSnapshotChangeACB: Document was written by this device, no need to update MobX store");
                 } else { // Document for this user does not exist on Firestore
                     console.debug("onSnapshotChangeACB: Creating new user document on MobX store");
-                    model.userReady = true;
+                    model.setUserReady(true);
                     userObj.data = { fullName: "", displayName: userAuthObj.displayName, displayNameInsensitive: userAuthObj.displayName.toLowerCase(), profilePicture: userAuthObj.photoURL, follows: [], followedBy: [] };
                     model.setUser(userObj); // Create new user document on MobX store based on userAuthObj
                 }
@@ -287,7 +287,7 @@ async function unfollowUserFirestore(uidFollowed, uidUnfollower) {
 
         if (docSnapshotUnfollower.exists()) {
             const { follows } = docSnapshotUnfollower.data();
-            const updatedFollows = follows.filter((uidFollowed) => uidFollowed !== uidFollowed);
+            const updatedFollows = follows.filter((uid) => uid !== uidFollowed);
             await updateDoc(docRefUnfollower, { follows: updatedFollows });
         } else {
             console.error("unfollowUserFirestore: User not found");

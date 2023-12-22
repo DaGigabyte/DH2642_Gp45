@@ -1,4 +1,4 @@
-import { observable, reaction, action, set } from "mobx";
+import { observable, action, autorun } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import { listOfGenre } from "../services/firePinsSource";
 import { savePostToFirestore, removePostFromFirestore, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore, removeCommentFromFirestore } from "../firebase/firebaseModel";
@@ -12,6 +12,10 @@ const model = observable({
   },
   
   /* Left here for reference (refer to Firebase usage.md)*/
+  userReady: null,
+  setUserReady: action(function(value) {
+    this.userReady = value;
+  }),
   user: {
     uid: null,
     data: {
@@ -128,7 +132,7 @@ const model = observable({
           console.debug("createPost: success");
           this.createPostEditor.setCreatePostStatus("success");
       })
-      .catch(()=> {
+      .catch((error)=> {
           console.debug("createPost: error");
           console.error(error);
           this.createPostEditor.setCreatePostStatus("error");
@@ -331,15 +335,15 @@ const model = observable({
     }),
     setNewestPostsBeforeTimeOfConstruction: action(function(posts) {
       this.newestPostsBeforeTimeOfConstruction = posts;
-      console.debug("newestPostsData.newestPostsBeforeTimeOfConstruction: ", this.newestPostsBeforeTimeOfConstruction);
+      console.debug("favoritesPageData.newestPostsBeforeTimeOfConstruction: ", this.newestPostsBeforeTimeOfConstruction);
     }),
     setEndOfNewestPostsBeforeTimeOfConstruction: action(function(endOfPosts) {
       this.endOfNewestPostsBeforeTimeOfConstruction = endOfPosts;
-      console.debug("newestPostsData.endOfNewestPostsBeforeTimeOfConstruction: ", this.endOfNewestPostsBeforeTimeOfConstruction);
+      console.debug("favoritesPageData.endOfNewestPostsBeforeTimeOfConstruction: ", this.endOfNewestPostsBeforeTimeOfConstruction);
     }),
     setNewestPostsAfterTimeOfConstruction: action(function(posts) {
       this.newestPostsAfterTimeOfConstruction = posts;
-      console.debug("newestPostsData.newestPostsAfterTimeOfConstruction: ", this.newestPostsAfterTimeOfConstruction);
+      console.debug("favoritesPageData.newestPostsAfterTimeOfConstruction: ", this.newestPostsAfterTimeOfConstruction);
     }),
     fetchFavoritePosts: async function() {
       favoritePostListenerManager.addNewestPostsListener();
@@ -368,6 +372,7 @@ const model = observable({
 });
 
 const newestPostListenerManager = new NewestPostListenerManager(model.newestPostsData);
-const favoritePostListenerManager = new FavoritesPostListenerManager(model.favoritesPageData, model.user.uid);
+const favoritePostListenerManager = new FavoritesPostListenerManager(model.favoritesPageData);
+autorun(() => {favoritePostListenerManager.setUserID(model.user.uid);});
 
 export default model;
