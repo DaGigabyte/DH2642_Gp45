@@ -1,4 +1,7 @@
+import { observer } from "mobx-react-lite";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AuthGuard from "./utils/AuthGuard";
+
 // Presenters
 import RootPresenter from "./presenters/RootPresenter";
 import HomePresenter from "./presenters/HomePresenter";
@@ -11,10 +14,7 @@ import PageNotFoundPresenter from "./presenters/PageNotFoundPresenter";
 import TopRatedPinsPresenter from "./presenters/TopRatedPinsPresenter";
 import PrivacyPolicyPresenter from "./presenters/PrivacyPolicyPresenter";
 
-import { observer } from "mobx-react-lite";
-
 // Create a router
-
 function createRouter(props) {
   return createBrowserRouter([
     {
@@ -44,7 +44,11 @@ function createRouter(props) {
         },
         {
           path: "settings",
-          element: <SettingsPresenter model={props.model} />,
+          element: (
+            <AuthGuard model={props.model}>
+              <SettingsPresenter model={props.model} />
+            </AuthGuard>
+          ),
         },
         {
           path: "top-rated-pins",
