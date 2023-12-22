@@ -39,7 +39,7 @@ function DetailedPostView(props) {
             disabled={props.commentText ? false : true}
           >
             {props.commentStatus === "loading" ? (
-              <div className="flex items-center">
+              <div className="flex items-center justify-center">
                 <IoReloadOutline size={20} className="animate-spin mr-2" />
                 Posting...
               </div>
