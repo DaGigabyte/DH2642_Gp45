@@ -1,7 +1,7 @@
 import { observable, reaction, action, set } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import { listOfGenre } from "../services/firePinsSource";
-import { savePostToFirestore, removePostFromFirestore, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore, removeCommentFromFirestore } from "../firebase/firebaseModel";
+import { saveUserToFirestore, savePostToFirestore, removePostFromFirestore, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore, removeCommentFromFirestore } from "../firebase/firebaseModel";
 import NewestPostListenerManager from "../firebase/NewestPostListenerManager";
 
 const model = observable({
@@ -61,6 +61,7 @@ const model = observable({
     }), 
   },
   storeUpdates: action(function() {
+    saveUserToFirestore({user}, ).bind(this);
     console.debug(this);
     const newUserData = { ...this.user.data, ...this.userSettingsData.data };
     console.debug("storing updates to user.data\n", "newUserData: ", newUserData);

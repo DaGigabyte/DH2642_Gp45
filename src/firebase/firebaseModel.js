@@ -112,6 +112,8 @@ function connectToFirestore(model) {
     reaction(watchUserCB, callSaveUserToFirestoreCB);
 }
 
+function saveUserSettingsToFirestore(model) {
+
 function readUserFromFirestore(uid) {
     if (!uid) {
         throw new Error("uid is falsy");
@@ -500,4 +502,4 @@ async function queryFollowingFeed(amountOfPosts, uid) {
     return posts;
 }
 
-export { db, connectToFirestore, signInACB, signOutACB, readUserFromFirestore, postDataListener, removePostFromFirestore, savePostToFirestore, profileDataListener, saveCommentToFireStore, removeCommentFromFirestore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, userPostsListener, postCommentsDataListener, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };
+export { db, connectToFirestore, signInACB, signOutACB, readUserFromFirestore, saveUserToFirestore, postDataListener, removePostFromFirestore, savePostToFirestore, profileDataListener, saveCommentToFireStore, removeCommentFromFirestore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, userPostsListener, postCommentsDataListener, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };
