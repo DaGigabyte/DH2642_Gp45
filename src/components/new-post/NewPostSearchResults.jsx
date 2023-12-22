@@ -43,7 +43,7 @@ function NewPostSearchResults(props) {
                   <img
                     src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
                     alt={movie.title}
-                    className="w-32 h-full rounded-lg object-cover transition duration-150 ease-in-out transform hover:scale-110"
+                    className="w-32 h-48 rounded-lg object-cover transition duration-150 ease-in-out transform hover:scale-110"
                   />
                   {props.selectedMovieID === movie.id ? (
                     <div className="absolute inset-0 flex bg-pins-primary bg-opacity-50 rounded-lg items-center justify-center text-white font-bold">

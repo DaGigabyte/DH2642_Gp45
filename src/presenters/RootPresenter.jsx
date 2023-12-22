@@ -118,13 +118,9 @@ function RootPresenter(props) {
     setIsSearching(true);
     if (searchApiSource === sourceENUM.TMDB) {
       const results = await searchMovie(searchTextTMDB);
-      // Remove movies without poster_path from the results
-      results.forEach((movie, index) => {
-        if (!movie.poster_path) {
-          results.splice(index, 1);
-        }
-      });
-      setSearchResultsTMDB(results);
+      // Filter movies to only include those with a poster_path
+      const filteredResults = results.filter((movie) => movie.poster_path);
+      setSearchResultsTMDB(filteredResults);
     } else if (searchApiSource === sourceENUM.Unsplash) {
       console.log("Unsplash");
     } else if (searchApiSource === sourceENUM.Pinterest) {
