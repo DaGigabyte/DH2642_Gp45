@@ -296,9 +296,7 @@ const model = observable({
       console.debug("newestPostsData.newestPostsAfterTimeOfConstruction: ", this.newestPostsAfterTimeOfConstruction);
     }),
     fetchFavoritePosts: async function() {
-      const uid = model.user.uid;
-      const posts = await queryFavoritePosts(this.data.favoritePosts.length + 4, uid);
-      this.setFavoritePosts(posts);
+      favoritePostListenerManager.addNewestPostsListener();
     },
   },
   /**
@@ -307,7 +305,7 @@ const model = observable({
    * @returns {Object} post with the corresponding postID
    */
   getPostFromModel: function(postID) {
-    const post = this.newestPostsData.newestPosts.find(post => post.id === postID) || this.topRatedPostsData.topRatedPosts.find(post => post.id === postID) || this.favoritesPageData.data.favoritePosts.find(post => post.id === postID);
+    const post = this.newestPostsData.newestPosts.find(post => post.id === postID) || this.topRatedPostsData.topRatedPosts.find(post => post.id === postID) || this.favoritesPageData.favoritePosts.find(post => post.id === postID);
     return post;
   },
   listOfTMDBgenre: [],
