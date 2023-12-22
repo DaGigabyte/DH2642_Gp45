@@ -110,6 +110,7 @@ function connectToFirestore(model) {
     }
     onAuthStateChanged(auth, onAuthStateChangedCB);
     reaction(watchUserCB, callSaveUserToFirestoreCB);
+    topPostsListener(model.user.uid, model.topRatedPostsData.setTopRatedPosts.bind(model.topRatedPostsData), 10);
 }
 
 function readUserFromFirestore(uid) {
@@ -395,9 +396,28 @@ function userPostsListener(userUid, onUpdate) {
     });
 }
 
-function favoritePostsListener(userUid, onUpdate) {
+function topPostsListener(userUid, onUpdate, amountOfPosts) {
+    topPostsListener.unsub?.();
+    const q = query(collection(db, 'Posts'), orderBy('likes', 'desc'), limit(amountOfPosts));
+    topPostsListener.unsub = onSnapshot(q, async (querySnapshot) => {
+        const posts = [];
+        for (const doc of querySnapshot.docs) {
+            const postData = doc.data();
+            try {
+                const user = await readUserFromFirestore(postData.createdBy);
+                posts.push({ id: doc.id, user: user, ...postData });
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        }
+        console.debug("topPostsListener: Current posts: ", posts);
+        onUpdate(posts);
+    });
+}
+
+function favoritePostsListener(userUid, onUpdate, amountOfPosts) {
     favoritePostsListener.unsub?.();
-    const q = query(collection(db, "Posts"), where("likedBy", "array-contains", userUid), orderBy("createdAt", "desc"));
+    const q = query(collection(db, "Posts"), where("likedBy", "array-contains", userUid), orderBy("createdAt", "desc"), limit(amountOfPosts));
     favoritePostsListener.unsub = onSnapshot(q, async (querySnapshot) => {
         const posts = [];
         for (const doc of querySnapshot.docs) {
