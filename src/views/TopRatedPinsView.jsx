@@ -12,7 +12,7 @@ function TopRatedPinsView(props) {
 
   return (
     <div className="flex flex-col space-y-4 max-w-6xl">
-      <h2>Top Rated Pins</h2>
+      <h2>{props.sectionTitle}</h2>
       {/* Top pins */}
       <div>
         <TopRatedPostsSection

@@ -53,6 +53,7 @@ function TopRatedPinsPresenter(props) {
 
   return (
     <TopRatedPinsView
+      sectionTitle="Top Rated Posts"
       currentUID={props.model.user.uid}
       hotPosts={topRatedPosts}
       selectPost={userSelectsPostACB}
