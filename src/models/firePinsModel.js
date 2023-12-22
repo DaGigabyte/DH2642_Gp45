@@ -128,7 +128,7 @@ const model = observable({
       this.topRatedPosts = posts;
     }),
     fetchTopPosts: async function() {
-      const posts = await queryTopPosts(4); // Hardcoded posts fetched once when app is initialised
+      const posts = await queryTopPosts(12); // Hardcoded posts fetched once when app is initialised
       this.setTopRatedPosts(posts);
     },
   },
