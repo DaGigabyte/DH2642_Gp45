@@ -7,7 +7,6 @@ import {
   queryUsername,
 } from "../firebase/firebaseModel";
 import { searchMovie } from "../services/firePinsSource";
-import { newPostCreatedToast } from "../utils/toastify";
 import { useNavigate } from "react-router-dom";
 
 // Enum for search API source
@@ -106,10 +105,12 @@ function RootPresenter(props) {
       setSearchResultsTMDB([]);
       // Reset rating
       setNewPostRating(0);
-
-      // Notify user of new post creation
-      newPostCreatedToast();
     }
+  }
+
+  // Handle reset create post status
+  function handleResetCreatePostStatus() {
+    props.model.createPostEditor.setCreatePostStatus(null);
   }
 
   // Handle search movie depending on search API source use async/await
@@ -235,6 +236,8 @@ function RootPresenter(props) {
       newPostCaption={newPostCaption}
       onSetNewPostCaption={handleSetNewPostCaption}
       onCreateNewPost={handleCreateNewPost}
+      createNewPostStatus={props.model.createPostEditor.createPostStatus}
+      resetCreatePostStatus={handleResetCreatePostStatus}
       newPostRating={newPostRating}
       onSetPostRating={handlePostRating}
       searchbarText={searchText}
