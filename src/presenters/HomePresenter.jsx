@@ -7,7 +7,7 @@ function HomePresenter(props) {
   let data = props.model.homePageData.data;
 
   function loadMorePostACB() {
-    props.model.homePageData.fetchNewestPosts();
+    props.model.newestPostsData.fetchNewestPosts();
   }
   function userSelectsPostACB(postId) {
     props.model.postDetailData.setCurrentPostID(postId);
@@ -31,7 +31,7 @@ function HomePresenter(props) {
   return (
     <HomePage
       currentUID={props.model.user.uid}
-      hotPosts={data.topRatedPosts}
+      hotPosts={props.model.topRatedPostsData.topRatedPosts}
       newPosts={props.model.newestPostsData.newestPosts}
       loadMorePosts={loadMorePostACB}
       selectPost={userSelectsPostACB}

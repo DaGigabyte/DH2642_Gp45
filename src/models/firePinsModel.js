@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { listOfGenre } from "../services/firePinsSource";
 import { savePostToFirestore, removePostFromFirestore, queryTopPosts, queryFavoritePosts, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, saveCommentToFireStore, removeCommentFromFirestore } from "../firebase/firebaseModel";
 import NewestPostListenerManager from "../firebase/NewestPostListenerManager";
+import FavoritesPostListenerManager from "../firebase/FavoritesPostListenerManager";
 
 const model = observable({
   count: 1,
@@ -134,28 +135,26 @@ const model = observable({
       });
   }),
   homePageData: {
-    data: {
-      topRatedPosts: [],
-      newestPosts: [],
-      newestPostsBeforeTimeOfConstruction: [],
-    },
+    scrollPosition: 0,
+    setScrollPosition: action(function(position) {
+      this.scrollPosition = position;
+    }),
+  },
+  topRatedPostsData: {
+    topRatedPosts: [],
     setTopRatedPosts: action(function(posts) {
-      console.debug("current homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
-      console.debug("setting homePageData.data.topRatedPosts to: ", posts);
-      this.data.topRatedPosts = posts;
-      console.debug("new homePageData.data.topRatedPosts: ", this.data.topRatedPosts);
+      this.topRatedPosts = posts;
+      console.debug("new homePageData.data.topRatedPosts: ", this.topRatedPosts);
     }),
     fetchTopPosts: async function() {
       const posts = await queryTopPosts(4); // Hardcoded posts fetched once when app is initialised
       this.setTopRatedPosts(posts);
     },
-    fetchNewestPosts: async function() {
-      newestPostListenerManager.addNewestPostsListener();
-    },
   },
   newestPostsData: {
     newestPosts: [],
     newestPostsBeforeTimeOfConstruction: [],
+    endOfNewestPostsBeforeTimeOfConstruction: false,
     newestPostsAfterTimeOfConstruction: [],
     setNewestPosts: action(function(posts) {
       this.newestPosts = posts;
@@ -164,10 +163,17 @@ const model = observable({
       this.newestPostsBeforeTimeOfConstruction = posts;
       console.debug("newestPostsData.newestPostsBeforeTimeOfConstruction: ", this.newestPostsBeforeTimeOfConstruction);
     }),
+    setEndOfNewestPostsBeforeTimeOfConstruction: action(function(endOfPosts) {
+      this.endOfNewestPostsBeforeTimeOfConstruction = endOfPosts;
+      console.debug("newestPostsData.endOfNewestPostsBeforeTimeOfConstruction: ", this.endOfNewestPostsBeforeTimeOfConstruction);
+    }),
     setNewestPostsAfterTimeOfConstruction: action(function(posts) {
       this.newestPostsAfterTimeOfConstruction = posts;
       console.debug("newestPostsData.newestPostsAfterTimeOfConstruction: ", this.newestPostsAfterTimeOfConstruction);
     }),
+    fetchNewestPosts: async function() {
+      newestPostListenerManager.addNewestPostsListener();
+    },
   },
   postDetailData: {
     currentPostID: null,
@@ -305,32 +311,28 @@ const model = observable({
     },
   },
   favoritesPageData: {
-    data: {
-      favoritePosts: [],
-    },
+    favoritePosts: [],
+    newestPostsBeforeTimeOfConstruction: [],
+    endOfNewestPostsBeforeTimeOfConstruction: false,
+    newestPostsAfterTimeOfConstruction: [],
     setFavoritePosts: action(function(posts) {
-      this.data.favoritePosts = posts;
+      this.favoritePosts = posts;
+    }),
+    setNewestPostsBeforeTimeOfConstruction: action(function(posts) {
+      this.newestPostsBeforeTimeOfConstruction = posts;
+      console.debug("newestPostsData.newestPostsBeforeTimeOfConstruction: ", this.newestPostsBeforeTimeOfConstruction);
+    }),
+    setEndOfNewestPostsBeforeTimeOfConstruction: action(function(endOfPosts) {
+      this.endOfNewestPostsBeforeTimeOfConstruction = endOfPosts;
+      console.debug("newestPostsData.endOfNewestPostsBeforeTimeOfConstruction: ", this.endOfNewestPostsBeforeTimeOfConstruction);
+    }),
+    setNewestPostsAfterTimeOfConstruction: action(function(posts) {
+      this.newestPostsAfterTimeOfConstruction = posts;
+      console.debug("newestPostsData.newestPostsAfterTimeOfConstruction: ", this.newestPostsAfterTimeOfConstruction);
     }),
     fetchFavoritePosts: async function() {
-      const uid = model.user.uid;
-      const posts = await queryFavoritePosts(this.data.favoritePosts.length + 4, uid);
-      this.setFavoritePosts(posts);
+      favoritePostListenerManager.addNewestPostsListener();
     },
-  },
-  newPostsData: {
-    numberOfNewPost: 0,
-    data: [], // array of new posts
-    setNumberOfNewPost: action(function(number) {
-      console.debug("setting numberOfNewPost to: ", number);
-      this.numberOfNewPost = number;
-    }),
-  },
-  /**
-   * Updates the homePageData.newestPosts with the new posts and clears the newPostsData.data
-   */
-  updateHomePageDataWithNewPosts: function() {
-    this.homePageData.setNewestPosts([...this.newPostsData.data, ...this.homePageData.data.newestPosts]);
-    this.newPostsData.setNewPostsData([]);
   },
   /**
    * get post locally from homePageData.newestPosts
@@ -338,7 +340,7 @@ const model = observable({
    * @returns {Object} post with the corresponding postID
    */
   getPostFromModel: function(postID) {
-    const post = this.homePageData.data.newestPosts.find(post => post.id === postID) || this.homePageData.data.topRatedPosts.find(post => post.id === postID) || this.favoritesPageData.data.favoritePosts.find(post => post.id === postID);
+    const post = this.newestPostsData.newestPosts.find(post => post.id === postID) || this.topRatedPostsData.topRatedPosts.find(post => post.id === postID) || this.favoritesPageData.favoritePosts.find(post => post.id === postID);
     return post;
   },
   listOfTMDBgenre: [],
@@ -354,6 +356,7 @@ const model = observable({
   uuid: uuidv4(),
 });
 
-const newestPostListenerManager = new NewestPostListenerManager(model);
+const newestPostListenerManager = new NewestPostListenerManager(model.newestPostsData);
+const favoritePostListenerManager = new FavoritesPostListenerManager(model.favoritesPageData, model.user.uid);
 
 export default model;

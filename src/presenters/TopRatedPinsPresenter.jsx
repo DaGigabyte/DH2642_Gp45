@@ -3,20 +3,19 @@ import TopRatedPinsView from "../views/TopRatedPinsView";
 import SuspenseAnimation from "../components/global/SuspenseAnimation";
 
 function TopRatedPinsPresenter(props) {
-  let data = props.model.homePageData.data;
-
+  const topRatedPosts = props.model.topRatedPostsData.topRatedPosts;
   function userSelectsPostACB(postId) {
     props.model.postDetailData.setCurrentPostID(postId);
   }
   function userlikesPostACB(postId) {
     props.model.postDetailData.setCurrentPostID(postId);
     props.model.postDetailData.likePost();
-    props.model.homePageData.fetchTopPosts();
+    props.model.topRatedPostsData.fetchTopPosts();
   }
   function userdislikesPostACB(postId) {
     props.model.postDetailData.setCurrentPostID(postId);
     props.model.postDetailData.dislikePost();
-    props.model.homePageData.fetchTopPosts();
+    props.model.topRatedPostsData.fetchTopPosts();
   }
 
   function handleSubmittedCommentACB(post) {
@@ -27,14 +26,14 @@ function TopRatedPinsPresenter(props) {
   }
 
   // Show suspense while fetching data
-  if (data.topRatedPosts.length === 0) {
+  if (topRatedPosts.length === 0) {
     return <SuspenseAnimation loading={true} />;
   }
 
   return (
     <TopRatedPinsView
       currentUID={props.model.user.uid}
-      hotPosts={data.topRatedPosts}
+      hotPosts={topRatedPosts}
       selectPost={userSelectsPostACB}
       likePost={userlikesPostACB}
       dislikePost={userdislikesPostACB}

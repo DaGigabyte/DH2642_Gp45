@@ -1,11 +1,12 @@
-import { collection, onSnapshot, query, orderBy, startAfter, endBefore, limit } from "firebase/firestore";
+import { collection, onSnapshot, query, where, orderBy, startAfter, endBefore, limit } from "firebase/firestore";
 import { db } from "./firebaseModel";
 import { readUserFromFirestore } from "./firebaseModel";
 import { reaction, action, when, makeAutoObservable } from "mobx";
 
-class NewestPostListenerManager {
-    constructor(postsData) {
+class FavoritesPostListenerManager {
+    constructor(postsData, userID) {
         this.postsData = postsData;
+        this.userID = userID;
         this.newerThanConstructionPosts = [];
         this.listeners = [];
         this.timeOfConstruction = new Date();
@@ -38,7 +39,7 @@ class NewestPostListenerManager {
         this.setReadyForAddingNewestPostsListener(false);
         console.log('NewestPostListenerManager: addNewestPostsListener');
         const lastListenerDocs = this.listeners[this.listeners.length - 1]?.post;
-        const q = lastListenerDocs ? query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(lastListenerDocs.createdAt), limit(1)) : query(collection(db, 'Posts'), orderBy('createdAt', 'desc'), startAfter(this.timeOfConstruction), limit(1));
+        const q = lastListenerDocs ? query(collection(db, 'Posts'), where('likedBy', 'array-contains', this.userID), orderBy('createdAt', 'desc'), startAfter(lastListenerDocs.createdAt), limit(1)) : query(collection(db, 'Posts'), where('likedBy', 'array-contains', this.userID), orderBy('createdAt', 'desc'), startAfter(this.timeOfConstruction), limit(1));
         const queryString = lastListenerDocs ? lastListenerDocs.createdAt : this.timeOfConstruction;
         const listener = {unsub: null, post: null};
         listener.unsub = onSnapshot(q, {includeMetadataChanges: true}, async function listenerACB(querySnapshot) {
@@ -94,4 +95,4 @@ class NewestPostListenerManager {
     }
 }
 
-export default NewestPostListenerManager;
+export default FavoritesPostListenerManager;
