@@ -12,6 +12,10 @@ const model = observable({
   },
   
   /* Left here for reference (refer to Firebase usage.md)*/
+  userReady: null,
+  setUserReady: action(function(value) {
+    this.userReady = value;
+  }),
   user: {
     uid: null,
     data: {
