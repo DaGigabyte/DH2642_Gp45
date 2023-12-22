@@ -58,7 +58,7 @@ export default function NewPostSection(props) {
       <InfiniteScroll
         pageStart={0}
         loadMore={() => props.loadMorePosts()}
-        hasMore={true}
+        hasMore={props.hasMore}
         initialLoad={true}
         loader={
           <div className="relative p-10" key={0}>
