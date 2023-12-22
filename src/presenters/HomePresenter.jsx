@@ -11,43 +11,13 @@ import CommentModal from "../components/modal/CommentModal.jsx";
 import SuspenseAnimation from "../components/global/SuspenseAnimation.jsx";
 
 function HomePresenter(props) {
-  function loadMorePostACB() {
-    props.model.newestPostsData.fetchNewestPosts();
-  }
-
-  function userSelectsPostACB(postId) {
-    props.model.postDetailData.setCurrentPostID(postId);
-  }
-
-  function userlikesPostACB(postId) {
-    props.model.postDetailData.setCurrentPostID(postId);
-    props.model.postDetailData.likePost();
-  }
-
-  function userdislikesPostACB(postId) {
-    props.model.postDetailData.setCurrentPostID(postId);
-    props.model.postDetailData.dislikePost();
-  }
-
-  function handleSubmittedCommentACB() {
-    props.model.postDetailData.setCurrentPostID(currentPost.id);
-    props.model.postDetailData.postComment();
-    props.model.postDetailData.setComment("");
-  }
-
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
-
-  function openCommentModalACB(post) {
-    setCurrentPost(post);
-    setCommentModalOpen(true);
-  }
-
-  const isReady = !!(
+  const commentStatus = props.model.postDetailData.postCommentStatus;
+  const isReadyForRender = !!(
     props.model.topRatedPostsData.topRatedPosts.length > 0 &&
     props.model.newestPostsData.newestPosts
   );
-  const commentStatus = props.model.postDetailData.postCommentStatus;
 
   // Checking for commentStatus updates
   useEffect(() => {
@@ -61,9 +31,38 @@ function HomePresenter(props) {
     }
   }, [commentStatus, props.model.postDetailData]);
 
+  function openCommentModalACB(post) {
+    setCurrentPost(post);
+    setCommentModalOpen(true);
+  }
+
+  function loadMorePostACB() {
+    props.model.newestPostsData.fetchNewestPosts();
+  }
+
+  function userSelectsPostACB(postId) {
+    props.model.postDetailData.setCurrentPostID(postId);
+  }
+
+  function userLikesPostACB(postId) {
+    props.model.postDetailData.setCurrentPostID(postId);
+    props.model.postDetailData.likePost();
+  }
+
+  function userDislikesPostACB(postId) {
+    props.model.postDetailData.setCurrentPostID(postId);
+    props.model.postDetailData.dislikePost();
+  }
+
+  function handleSubmittedCommentACB() {
+    props.model.postDetailData.setCurrentPostID(currentPost.id);
+    props.model.postDetailData.postComment();
+    props.model.postDetailData.setComment("");
+  }
+
   return (
     <>
-      {isReady ? (
+      {isReadyForRender ? (
         <div className="flex flex-col w-full gap-5 max-w-6xl">
           <TopRatedSection
             currentUID={props.model.user.uid}
@@ -75,8 +74,8 @@ function HomePresenter(props) {
             currentUID={props.model.user.uid}
             loadMorePosts={loadMorePostACB}
             selectPost={userSelectsPostACB}
-            likePost={userlikesPostACB}
-            dislikePost={userdislikesPostACB}
+            likePost={userLikesPostACB}
+            dislikePost={userDislikesPostACB}
             commentOnCurrentPost={openCommentModalACB}
           />
           <CommentModal
@@ -93,7 +92,7 @@ function HomePresenter(props) {
           />
         </div>
       ) : (
-        <SuspenseAnimation loading={!isReady} />
+        <SuspenseAnimation loading={!isReadyForRender} />
       )}
     </>
   );
