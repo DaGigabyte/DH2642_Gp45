@@ -61,7 +61,7 @@ function HomePresenter(props) {
     props.model.postDetailData.setComment("");
   }
 
-  // Show suspense when loading
+
   if (!isReadyForRender) {
     return <SuspenseAnimation loading={!isReadyForRender} />;
   }
@@ -80,7 +80,7 @@ function HomePresenter(props) {
         likePost={userLikesPostACB}
         dislikePost={userDislikesPostACB}
         commentOnCurrentPost={openCommentModalACB}
-        hasMore={props.model.newestPostsData.hasMore()}
+        hasMore={!props.model.newestPostsData.endOfNewestPostsBeforeTimeOfConstruction}
       />
       <CommentModal
         post={currentPost}

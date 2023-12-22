@@ -178,13 +178,6 @@ const model = observable({
     fetchNewestPosts: async function() {
       newestPostListenerManager.addNewestPostsListener();
     },
-    hasMore: function () {
-      return !(
-          this.newestPosts.length > 0 &&
-          this.newestPosts[this.newestPosts.length - 1].id ===
-          "n8Mr9sreX7LBr5ArjcOy"
-      );
-    },
   },
   postDetailData: {
     currentPostID: null,
