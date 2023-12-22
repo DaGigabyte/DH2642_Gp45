@@ -60,41 +60,37 @@ function HomePresenter(props) {
     props.model.postDetailData.setComment("");
   }
 
+  // Show suspense when loading
+  if (!isReadyForRender) {
+    <SuspenseAnimation loading={!isReadyForRender} />;
+  }
   return (
-    <>
-      {isReadyForRender ? (
-        <div className="flex flex-col w-full gap-5 max-w-6xl">
-          <TopRatedSection
-            currentUID={props.model.user.uid}
-            hotPosts={props.model.topRatedPostsData.topRatedPosts}
-            selectPost={userSelectsPostACB}
-          />
-          <NewPostSection
-            newPosts={props.model.newestPostsData.newestPosts}
-            currentUID={props.model.user.uid}
-            loadMorePosts={loadMorePostACB}
-            selectPost={userSelectsPostACB}
-            likePost={userLikesPostACB}
-            dislikePost={userDislikesPostACB}
-            commentOnCurrentPost={openCommentModalACB}
-          />
-          <CommentModal
-            post={currentPost}
-            isUserConfirmed={!!props.model.user.uid}
-            isOpen={commentModalOpen}
-            setOpen={setCommentModalOpen}
-            commentStatus={commentStatus}
-            text={props.model.postDetailData.comment}
-            userEntersComment={(res) =>
-              props.model.postDetailData.setComment(res)
-            }
-            storeComment={handleSubmittedCommentACB}
-          />
-        </div>
-      ) : (
-        <SuspenseAnimation loading={!isReadyForRender} />
-      )}
-    </>
+    <div className="flex flex-col w-full gap-5 max-w-6xl">
+      <TopRatedSection
+        currentUID={props.model.user.uid}
+        hotPosts={props.model.topRatedPostsData.topRatedPosts}
+        selectPost={userSelectsPostACB}
+      />
+      <NewPostSection
+        newPosts={props.model.newestPostsData.newestPosts}
+        currentUID={props.model.user.uid}
+        loadMorePosts={loadMorePostACB}
+        selectPost={userSelectsPostACB}
+        likePost={userLikesPostACB}
+        dislikePost={userDislikesPostACB}
+        commentOnCurrentPost={openCommentModalACB}
+      />
+      <CommentModal
+        post={currentPost}
+        isUserConfirmed={!!props.model.user.uid}
+        isOpen={commentModalOpen}
+        setOpen={setCommentModalOpen}
+        commentStatus={commentStatus}
+        text={props.model.postDetailData.comment}
+        userEntersComment={(res) => props.model.postDetailData.setComment(res)}
+        storeComment={handleSubmittedCommentACB}
+      />
+    </div>
   );
 }
 
