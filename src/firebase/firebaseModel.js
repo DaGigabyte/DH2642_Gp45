@@ -287,7 +287,7 @@ async function unfollowUserFirestore(uidFollowed, uidUnfollower) {
 
         if (docSnapshotUnfollower.exists()) {
             const { follows } = docSnapshotUnfollower.data();
-            const updatedFollows = follows.filter((uidFollowed) => uidFollowed !== uidFollowed);
+            const updatedFollows = follows.filter((uid) => uid !== uidFollowed);
             await updateDoc(docRefUnfollower, { follows: updatedFollows });
         } else {
             console.error("unfollowUserFirestore: User not found");
