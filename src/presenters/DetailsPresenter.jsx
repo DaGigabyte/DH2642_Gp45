@@ -8,6 +8,8 @@ import {
   newCommentCreatedToast,
   postDeletedToast,
   commentDeletedToast,
+  newCommentFailedToast,
+  commentDeletedFailedToast,
 } from "../utils/toastify";
 import SuspenseAnimation from "../components/global/SuspenseAnimation";
 import { movieById } from "../services/firePinsSource.js";
@@ -15,6 +17,19 @@ import { movieById } from "../services/firePinsSource.js";
 function DetailsPresenter(props) {
   const { pid } = useParams();
   const navigate = useNavigate();
+  const post = props.model.postDetailData.postData;
+  const commentStatus = props.model.postDetailData.postCommentStatus;
+  const commentRemovalStatus = props.model.postDetailData.removeCommentStatus;
+
+  const [postDetailsFromAPI, setPostDetailsFromAPI] = useState(null);
+  const deleteTypes = {
+    PIN: "Pin",
+    COMMENT: "Comment",
+  };
+  const [popUpIsOpen, setPopUpIsOpen] = useState(false);
+  const [deleteAction, setDeleteAction] = useState({});
+
+  // Setting the currentPost
   useEffect(() => {
     props.model.postDetailData.setCurrentPostID(pid);
   }, [pid]);
@@ -22,9 +37,7 @@ function DetailsPresenter(props) {
     document.title = props.model.postDetailData.postData?.title;
   }, [props.model.postDetailData.postData?.title]);
 
-  //Fetching details
-  const [postDetailsFromAPI, setPostDetailsFromAPI] = useState(null);
-
+  // Fetch additional data from API for details
   useEffect(() => {
     const movieId = props.model.postDetailData.postData?.TMDBsourceID;
     if (movieId) {
@@ -32,13 +45,26 @@ function DetailsPresenter(props) {
     }
   }, [props.model.postDetailData.postData?.TMDBsourceID]);
 
-  //DELETE PIN / COMMENT
-  const deleteTypes = {
-    PIN: "Pin",
-    COMMENT: "Comment",
-  };
-  const [popUpIsOpen, setPopUpIsOpen] = useState(false);
-  const [deleteAction, setDeleteAction] = useState({});
+  // Checking for commentStatus updates
+  useEffect(() => {
+    if (commentStatus === "success") {
+      newCommentCreatedToast();
+      props.model.postDetailData.setPostCommentStatus(null);
+    } else if (commentStatus === "error") {
+      newCommentFailedToast();
+    }
+  }, [commentStatus, props.model.postDetailData]);
+
+  // Checking for commentRemovalStatus updates
+  useEffect(() => {
+    setPopUpIsOpen(false);
+    if (commentRemovalStatus === "success") {
+      commentDeletedToast();
+      props.model.postDetailData.setRemoveCommentStatus(null);
+    } else if (commentRemovalStatus === "error") {
+      commentDeletedFailedToast();
+    }
+  }, [commentRemovalStatus]);
 
   function handleDeleteRequest(deleteInfo) {
     setDeleteAction(deleteInfo);
@@ -52,9 +78,7 @@ function DetailsPresenter(props) {
       props.model.postDetailData.removePost();
       postDeletedToast();
     } else if (deleteAction.type === deleteTypes.COMMENT) {
-      setPopUpIsOpen(false);
       props.model.postDetailData.removeComment(deleteAction.id);
-      commentDeletedToast();
     }
   }
 
@@ -71,15 +95,10 @@ function DetailsPresenter(props) {
   /* user want to store the comment */
   function userPostsComment() {
     props.model.postDetailData.postComment();
-    newCommentCreatedToast();
     props.model.postDetailData.setComment("");
   }
 
-  /* Assigning the post in the model to a variable 'post'*/
-  const post = props.model.postDetailData.postData;
-
-  /* conditional rendering */
-  function verifyCurrentPost() {
+  function renderDetailedPost() {
     if (!post)
       return (
         <div className="mt-10">
@@ -108,6 +127,7 @@ function DetailsPresenter(props) {
             userEntersComment={(res) => {
               props.model.postDetailData.setComment(res);
             }}
+            commentStatus={commentStatus}
             storeComment={userPostsComment}
             userDislikesPost={changeDislikeStateForUserACB}
             userLikesPost={changeLikeStateForUserACB}
@@ -126,16 +146,14 @@ function DetailsPresenter(props) {
               setPopUpIsOpen(false);
             }}
             actionType={deleteAction.type}
+            commentRemovalStatus={commentRemovalStatus}
           />
         </>
       );
     }
   }
 
-  {
-    /* General return*/
-  }
-  return verifyCurrentPost();
+  return renderDetailedPost();
 }
 
 export default observer(DetailsPresenter);
