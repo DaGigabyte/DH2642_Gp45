@@ -98,12 +98,17 @@ function DetailedPostView(props) {
         className="flex flex-col border rounded-xl p-3 pl-6 pr-6 gap-2 mb-1"
       >
         {/* user profile */}
-        <UserProfileCard
-          picture={comment.profilePicture}
-          nick={comment.displayName ? comment.displayName : "anonymous"}
-          size="12"
-          textSize="xl"
-        />
+        <button
+          onClick={() => navigate("/profile/" + comment.createdBy)}
+          className="clickableProfile"
+        >
+          <UserProfileCard
+            picture={comment.profilePicture}
+            nick={comment.displayName ? comment.displayName : "anonymous"}
+            size="12"
+            textSize="xl"
+          />
+        </button>
 
         <div className="flex w-full">
           {/* comment */}
@@ -160,7 +165,7 @@ function DetailedPostView(props) {
           <div className="flex flex-col w-full mt-3 pl-4 mb-2">
             {/* user profile */}
             <span
-              className="text-3xl w-fit rounded-full py-1 pr-3 mb-3 mt-2 hover:cursor-pointer hover:shadow hover:bg-pins-light transition duration-300 pl-1.5"
+              className="clickableProfile"
               onClick={() => {
                 navigate("/profile/" + props.post.createdBy);
               }}
