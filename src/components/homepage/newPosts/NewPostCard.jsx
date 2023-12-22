@@ -14,6 +14,7 @@ import { Rating } from "react-simple-star-rating";
  * @param {int}    props.nofDislikes - The nof dislikes on the post
  * @param {boolean}    props.currentUserLikes - True if the user has liked
  * @param {boolean}    props.currentUserDislikes - True if the user has disliked
+ * @param {boolean}    props.disableCommenting - True removes the comment button
  * @param {string}    props.currentUID - The current user uid
  * @param {string} props.postPicture - The URL or source for the post picture.
  * @param {string} props.postTitle - The Movie title
@@ -101,15 +102,17 @@ export default function NewPostCard(props) {
         </div>
         {/* Interaction buttons*/}
         <div className="flex gap-4 items-center justify-end mt-auto">
-          <button
-            title={props.currentUID ? "Click to comment" : "Log in to access"}
-            onClick={handleCommentClickACB}
-            className="postModifyingButtons"
-            disabled={props.currentUID ? false : true}
-          >
-            <IoAddOutline />
-            <BiCommentDetail size="40" />
-          </button>
+          {!props.disableCommenting && (
+            <button
+              title={props.currentUID ? "Click to comment" : "Log in to access"}
+              onClick={handleCommentClickACB}
+              className="postModifyingButtons"
+              disabled={props.currentUID ? false : true}
+            >
+              <IoAddOutline />
+              <BiCommentDetail size="40" />
+            </button>
+          )}
 
           <button
             title={props.currentUID ? "Click to like" : "Log in to access"}
