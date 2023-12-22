@@ -6,9 +6,10 @@ import Zia from "../assets/team/zia-mohseni.png";
 const teamMembers = [
   {
     id: 1,
-    name: "Emanuel Wilches Brandt",
+    name: "Emanuel Wilches",
     role: "Back-end Developer",
     image: "https://avatars.githubusercontent.com/u/57797989?v=4",
+    about: "",
   },
   {
     id: 2,
@@ -21,14 +22,17 @@ const teamMembers = [
   {
     id: 3,
     name: "Pontus Morin",
-    role: "Frontend Developer",
+    role: "Front-end Developer",
     image: "https://avatars.githubusercontent.com/u/57797989?v=4",
+    about: "",
   },
   {
     id: 4,
     name: "Zia Mohseni",
-    role: "Frontend Developer",
+    role: "Front-end Developer",
     image: Zia,
+    about:
+      "I am a student at KTH, studying Computer Science. I am a passionate full stack web developer who loves simplicity in things and crafts beautiful user interfaces with love.",
   },
 ];
 
@@ -59,15 +63,21 @@ function AboutUs() {
           {teamMembers.map((member) => (
             <div
               key={member.id}
-              className="flex flex-col items-center space-y-5 bg-white p-3 rounded-lg mb-10 mr-10"
+              className="flex flex-col items-center relative  bg-white p-3 rounded-lg mb-10 mr-10 cursor-pointer"
             >
               <img
                 className="rounded-full w-48 h-48"
                 src={member.image}
                 alt={member.name}
               />
-              <h2 className="text-lg">{member.name}</h2>
-              <p className="text-lg">{member.role}</p>
+              <h2 className="text-lg mb-1">{member.name}</h2>
+              <p className="text-lg mb-1">{member.role}</p>
+              {/* About member show on hover */}
+              <div className="absolute inset-1 p-2 bg-white/90 rounded-lg opacity-0 hover:opacity-100 transition duration-500 ease-in-out">
+                <p className="text-lg">
+                  {member.about ? member.about : "No bio"}
+                </p>
+              </div>
             </div>
           ))}
         </div>
