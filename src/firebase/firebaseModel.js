@@ -394,6 +394,25 @@ function userPostsListener(userUid, onUpdate) {
         onUpdate(posts);
     });
 }
+
+function favoritePostsListener(userUid, onUpdate) {
+    favoritePostsListener.unsub?.();
+    const q = query(collection(db, "Posts"), where("likedBy", "array-contains", userUid), orderBy("createdAt", "desc"));
+    favoritePostsListener.unsub = onSnapshot(q, async (querySnapshot) => {
+        const posts = [];
+        for (const doc of querySnapshot.docs) {
+            const postData = doc.data();
+            try {
+                const user = await readUserFromFirestore(postData.createdBy);
+                posts.push({ id: doc.id, user: user, ...postData });
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        }
+        console.debug("favoritePostsListener: Current posts: ", posts);
+        onUpdate(posts);
+    });
+}
 /**
  * Return an array of n more posts after the last post in the array of posts returned by the previous call to this function.
  * @param {Number} nMorePosts 
@@ -501,4 +520,4 @@ async function queryFollowingFeed(amountOfPosts, uid) {
     return posts;
 }
 
-export { db, connectToFirestore, signInACB, signOutACB, readUserFromFirestore, postDataListener, removePostFromFirestore, savePostToFirestore, profileDataListener, saveCommentToFireStore, removeCommentFromFirestore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, userPostsListener, postCommentsDataListener, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername };
+export { db, connectToFirestore, signInACB, signOutACB, readUserFromFirestore, postDataListener, removePostFromFirestore, savePostToFirestore, profileDataListener, saveCommentToFireStore, removeCommentFromFirestore, likePostFirestore, dislikePostFirestore, followUserFirestore, unfollowUserFirestore, userPostsListener, postCommentsDataListener, queryMoreNewestPosts, queryTopPosts, queryFavoritePosts, queryUsername, favoritePostsListener };

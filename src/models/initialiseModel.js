@@ -1,4 +1,4 @@
-import { connectToFirestore, postDataListener, postCommentsDataListener, profileDataListener, userPostsListener } from "../firebase/firebaseModel";
+import { connectToFirestore, postDataListener, postCommentsDataListener, profileDataListener, userPostsListener, favoritePostsListener } from "../firebase/firebaseModel";
 import resolvePromise from "./resolvePromise";
 import { reaction, autorun } from "mobx";
 import { listOfGenre } from "../services/firePinsSource";
@@ -97,5 +97,6 @@ export default async function initialiseModel(model) {
     currentProfileUidReaction(model);
     model.topRatedPostsData.fetchTopPosts();
     combineLatestPosts(model);
+    autorun(()=>favoritePostsListener(model.user.uid, model.favoritesPageData.setFavoritePosts.bind(model.favoritesPageData)));
     Object.assign(model, {listOfTMDBgenre: await listOfGenre()});
 }
