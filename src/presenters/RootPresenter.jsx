@@ -6,8 +6,7 @@ import {
   signOutACB,
   queryUsername,
 } from "../firebase/firebaseModel";
-import { searchMovie, listOfGenre } from "../services/firePinsSource";
-import { newPostCreatedToast } from "../utils/toastify";
+import { searchMovie } from "../services/firePinsSource";
 import { useNavigate } from "react-router-dom";
 
 // Enum for search API source
@@ -28,7 +27,6 @@ function RootPresenter(props) {
   const [searchApiSource, setSearchApiSource] = useState(sourceENUM.TMDB);
   const [newPostCaption, setNewPostCaption] = useState("");
   const [newPostRating, setNewPostRating] = useState(0);
-  const [allTMDBGenres, setAllTMDBGenres] = useState([]);
   const [genreNames, setGenreNames] = useState([]);
 
   // Handle set search text
@@ -70,12 +68,6 @@ function RootPresenter(props) {
     setNewPostRating(rating);
   }
 
-  // Handle get genres from TMDB
-  async function handleGetGenres() {
-    const genres = await listOfGenre();
-    setAllTMDBGenres(genres);
-  }
-
   // Handle create new post
   function handleCreateNewPost() {
     if (selectedMovieID && selectedMovieObject) {
@@ -113,10 +105,12 @@ function RootPresenter(props) {
       setSearchResultsTMDB([]);
       // Reset rating
       setNewPostRating(0);
-
-      // Notify user of new post creation
-      newPostCreatedToast();
     }
+  }
+
+  // Handle reset create post status
+  function handleResetCreatePostStatus() {
+    props.model.createPostEditor.setCreatePostStatus(null);
   }
 
   // Handle search movie depending on search API source use async/await
@@ -124,13 +118,9 @@ function RootPresenter(props) {
     setIsSearching(true);
     if (searchApiSource === sourceENUM.TMDB) {
       const results = await searchMovie(searchTextTMDB);
-      // Remove movies without poster_path from the results
-      results.forEach((movie, index) => {
-        if (!movie.poster_path) {
-          results.splice(index, 1);
-        }
-      });
-      setSearchResultsTMDB(results);
+      // Filter movies to only include those with a poster_path
+      const filteredResults = results.filter((movie) => movie.poster_path);
+      setSearchResultsTMDB(filteredResults);
     } else if (searchApiSource === sourceENUM.Unsplash) {
       console.log("Unsplash");
     } else if (searchApiSource === sourceENUM.Pinterest) {
@@ -144,10 +134,6 @@ function RootPresenter(props) {
   // Search for movies in TMDB on searchTextTMDB change
   // Wait for user to stop typing for 500ms before searching TMDB
   useEffect(() => {
-    if (allTMDBGenres.length === 0) {
-      handleGetGenres();
-    }
-
     const timeoutId = setTimeout(() => {
       handleSearchMovie();
     }, 500);
@@ -165,7 +151,7 @@ function RootPresenter(props) {
     if (selectedMovieObject) {
       const genreNames = [];
       selectedMovieObject.genre_ids.forEach((genreID) => {
-        const genreName = allTMDBGenres.find(
+        const genreName = props.model.listOfTMDBgenre.find(
           (genre) => genre.id === genreID
         ).name;
         genreNames.push(genreName);
@@ -246,6 +232,8 @@ function RootPresenter(props) {
       newPostCaption={newPostCaption}
       onSetNewPostCaption={handleSetNewPostCaption}
       onCreateNewPost={handleCreateNewPost}
+      createNewPostStatus={props.model.createPostEditor.createPostStatus}
+      resetCreatePostStatus={handleResetCreatePostStatus}
       newPostRating={newPostRating}
       onSetPostRating={handlePostRating}
       searchbarText={searchText}

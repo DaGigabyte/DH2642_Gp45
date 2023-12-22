@@ -1,47 +1,67 @@
 import { observer } from "mobx-react-lite";
 import ProfileView from "../views/ProfileView";
 import { useEffect, useState } from "react";
-import { useParams } from 'react-router-dom';
-import model from "../models/firePinsModel";
+import { useParams } from "react-router-dom";
+import SuspenseAnimation from "../components/global/SuspenseAnimation.jsx";
+import ConfirmationPopupModal from "../components/modal/ConfirmationPopupModal.jsx";
+import { commentDeletedToast } from "../utils/toastify.js";
 
 function ProfilePresenter(props) {
-    const { uid } = useParams();
+  const { uid } = useParams();
+  const loading = !props.model.profilePageData.userPosts;
+  const isFollowing = props.model?.user?.data?.follows?.includes(uid);
 
-    useEffect(() => {
-        props.model.profilePageData.setCurrentProfileUid(uid);
-    }, [uid]);
+  function userSelectsPostACB(postId) {
+    props.model.postDetailData.setCurrentPostID(postId);
+  }
+  function userlikesPostACB(postId) {
+    props.model.postDetailData.setCurrentPostID(postId);
+    props.model.postDetailData.likePost();
+    props.model.homePageData.fetchTopPosts();
+  }
+  function userdislikesPostACB(postId) {
+    props.model.postDetailData.setCurrentPostID(postId);
+    props.model.postDetailData.dislikePost();
+    props.model.homePageData.fetchTopPosts();
+  }
 
-    useEffect(() => {
-        document.title = props.model.profilePageData.profileBannerPromiseState.data?.displayName;
-    }, [props.model.profilePageData.profileBannerPromiseState.data?.displayName]);
+  function handleSubmittedCommentACB(post) {
+    props.model.postDetailData.setCurrentPostID(post.id);
+    props.model.postDetailData.postComment();
+    props.model.postDetailData.setComment("");
+    newCommentCreatedToast();
+  }
 
-    function profileButtonClick() {
-        if (!model.user.data.follows.includes(uid)) {
-            props.model.profilePageData.followUser();
-        } else {
-            props.model.profilePageData.unfollowUser();
-        }
+  // Handle follow and unfollow
+  function handleFollowAndUnfollow() {
+    if (!isFollowing) {
+      props.model.profilePageData.followUser();
+    } else {
+      props.model.profilePageData.unfollowUser();
     }
+  }
 
-    const profileBannerData = props.model.profilePageData.profileBannerPromiseState.data;
+  // Set user id to the model
+  useEffect(() => {
+    props.model.profilePageData.setCurrentProfileUid(uid);
+  }, [uid]);
 
-    if(!profileBannerData) {
-        return ("Implement proper suspense here");
-    }
+  // Show suspense while fetching data
+  if (loading) {
+    return <SuspenseAnimation loading={loading} />;
+  }
 
-    return (
-        <ProfileView
-            picture={profileBannerData?.profilePicture}
-            username={profileBannerData?.displayName}
-            bio={profileBannerData?.bio}
-            followerAmt={profileBannerData?.followedBy.length}
-            followingAmt={profileBannerData?.follows.length}
-            profileButtonClick={profileButtonClick}
-            ownAccount={model.user?.uid === uid}
-            follows={model.user?.data?.follows?.includes(uid)}
-            isLoggedIn={props.model.user.uid}
-        />
-    );
+  return (
+    <ProfileView
+      {...props.model}
+      isFollowing={isFollowing}
+      handleFollowAndUnfollow={handleFollowAndUnfollow}
+      userSelectsPostACB={userSelectsPostACB}
+      userlikesPostACB={userlikesPostACB}
+      userdislikesPostACB={userdislikesPostACB}
+      handleSubmittedCommentACB={handleSubmittedCommentACB}
+    />
+  );
 }
 
 export default observer(ProfilePresenter);

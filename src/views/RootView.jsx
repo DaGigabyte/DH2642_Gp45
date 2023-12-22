@@ -13,7 +13,7 @@ function RootView(props) {
   const [showSearch, setShowSearch] = useState(false);
 
   return (
-    <div className="flex flex-col min-h-screen bg-pins-light md:flex-row">
+    <div className="flex flex-col 2xl:container 2xl:mx-auto min-h-screen bg-pins-light md:flex-row">
       {/* Sidebar */}
       <Sidebar />
       <div className="flex-1">
@@ -73,6 +73,8 @@ function RootView(props) {
                 newPostCaption={props.newPostCaption}
                 onSetNewPostCaption={props.onSetNewPostCaption}
                 onCreateNewPost={props.onCreateNewPost}
+                createNewPostStatus={props.createNewPostStatus}
+                resetCreatePostStatus={props.resetCreatePostStatus}
                 newPostRating={props.newPostRating}
                 onSetPostRating={props.onSetPostRating}
               />

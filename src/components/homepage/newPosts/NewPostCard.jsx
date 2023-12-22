@@ -32,7 +32,7 @@ export default function NewPostCard(props) {
   /*OnClick ACBs*/
   function handlePostClickACB() {
     props.selectPost();
-    navigate("post/" + props.postId);
+    navigate("/post/" + props.postId);
   }
 
   function handleCommentClickACB(event) {
@@ -52,7 +52,7 @@ export default function NewPostCard(props) {
 
   /* React Component*/
   return (
-    <div
+    <button
       className="relative flex flex-col lg:flex-row space-x-4 w-full text-black text-left
           rounded-xl border border-gray-300 p-3 bg-white shadow hover:shadow-xl cursor-pointer
              hover:bg-gray-200 transition duration-300 mb-5 disable-selection"
@@ -60,10 +60,10 @@ export default function NewPostCard(props) {
       title="Click to view post"
     >
       {/* Image container */}
-      <div className="aspect-[14/10]  w-full overflow-hidden rounded-xl shadow-lg">
+      <div className="aspect-[14/8] max-h-[350px] w-full overflow-hidden rounded-xl shadow-lg">
         <img
           src={props.postPicture}
-          alt="Picture"
+          alt={props.postTitle}
           className="rounded-xl w-full h-full object-cover"
         />
       </div>
@@ -87,7 +87,17 @@ export default function NewPostCard(props) {
           {props.postCaption}
         </span>
         <div className="flex justify-start mt-1.5 mb-1">
-          <Rating initialValue={props.rating} readonly={true} />
+          <Rating
+            initialValue={props.rating}
+            readonly={true}
+            fillColorArray={[
+              "#f14f45",
+              "#f16c45",
+              "#f18845",
+              "#f1b345",
+              "#f1d045",
+            ]}
+          />
         </div>
         {/* Interaction buttons*/}
         <div className="flex gap-4 items-center justify-end mt-auto">
@@ -138,6 +148,6 @@ export default function NewPostCard(props) {
           {""}
         </div>
       </div>
-    </div>
+    </button>
   );
 }

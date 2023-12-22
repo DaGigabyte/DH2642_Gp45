@@ -152,8 +152,14 @@ function profileDataListener(uid, onUpdate) {
 
 async function savePostToFirestore(postObj, userUid) {
     const postObjWithMetadata = {...postObj, createdBy: userUid, createdAt: new Date(), modifiedAt: new Date(), likedBy: [], dislikedBy: [], likes: 0};
-    const docRef = await addDoc(collection(db, "Posts"), postObjWithMetadata);
-    console.debug("savePostToFirestore: Document written with ID: ", docRef.id);
+    try {
+        const docRef = await addDoc(collection(db, "Posts"), postObjWithMetadata);
+        console.debug("savePostToFirestore: Document written with ID: ", docRef.id);
+        return docRef;
+    } catch (error) {
+        console.error("Error adding document: ", error);
+        throw new Error("Error adding document");
+    }
 }
 
 async function removePostFromFirestore(postId) {
@@ -306,12 +312,14 @@ async function unfollowUserFirestore(uidFollowed, uidUnfollower) {
 
 async function saveCommentToFireStore(commentObj, postId) {
     const path = "Posts/" + postId + "/Comments";
-    const docRef = await addDoc(collection(db, path), commentObj);
-
-    // Update the document with the correct document ID
-    await updateDoc(docRef, { id: docRef.id });
-
-    console.debug("saveCommentToFirestore: Document written with ID: ", docRef.id);
+    try {
+        const docRef = await addDoc(collection(db, path), commentObj);
+        console.debug("saveCommentToFirestore: Document written with ID: ", docRef.id);
+        return docRef;
+    } catch (error) {
+        console.error("Error adding document: ", error);
+        throw new Error("Error adding document");
+    }
 }
 
 async function removeCommentFromFirestore(postId, commentId) {
@@ -319,9 +327,11 @@ async function removeCommentFromFirestore(postId, commentId) {
     deleteDoc(docRef)
     .then(() => {
         console.debug("removeCommentFromFirestore: Document removed with ID: ", commentId);
+        return;
     })
     .catch((error) => {
         console.error('Error removing document: ', error);
+        throw new Error("Error removing comment");
     });
 }
 

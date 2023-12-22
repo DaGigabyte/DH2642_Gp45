@@ -5,6 +5,7 @@ import DeletePostButton from "../components/global/DeletePostButton.jsx";
 import { BiLike, BiDislike } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
+import { IoReloadOutline } from "react-icons/io5";
 
 /**
  * Renders the Detailed post view
@@ -37,7 +38,14 @@ function DetailedPostView(props) {
             title="Enter text to enable"
             disabled={props.commentText ? false : true}
           >
-            Post Comment
+            {props.commentStatus === "loading" ? (
+              <div className="flex items-center">
+                <IoReloadOutline size={20} className="animate-spin mr-2" />
+                Posting...
+              </div>
+            ) : (
+              "Post Comment"
+            )}
           </button>
         </div>
       );
@@ -86,7 +94,7 @@ function DetailedPostView(props) {
     return (
       /* container */
       <div
-        key={comment.createdAt.nanoseconds + comment.createdBy}
+        key={comment.id || comment.createdAt.nanoseconds + comment.createdBy}
         className="flex flex-col border rounded-xl p-3 pl-6 pr-6 gap-2 mb-1"
       >
         {/* user profile */}
@@ -104,7 +112,7 @@ function DetailedPostView(props) {
           </p>
 
           {/* Only visible if uid = post.uid */}
-          {props.currentUID === comment.createdBy && (
+          {props.currentUID === comment.createdBy && comment.id && (
             <div className="flex justify-end mt-auto pr-1">
               <DeletePostButton
                 handleOnClick={() =>
@@ -174,7 +182,17 @@ function DetailedPostView(props) {
               </p>
               {props.rating && (
                 <div className="mt-3">
-                  <Rating initialValue={props.rating} readonly={true} />
+                  <Rating
+                    initialValue={props.rating}
+                    readonly={true}
+                    fillColorArray={[
+                      "#f14f45",
+                      "#f16c45",
+                      "#f18845",
+                      "#f1b345",
+                      "#f1d045",
+                    ]}
+                  />
                 </div>
               )}
             </div>

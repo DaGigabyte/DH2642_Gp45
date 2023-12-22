@@ -1,36 +1,31 @@
-import ProfileBanner from "../components/layout/ProfileBanner";
+import ProfileBanner from "../components/profile/ProfileBanner";
+import ProfileUserPins from "../components/profile/ProfileUserPins";
 
-/**
- * Renders the profile view
- * @param {string} props.picture - The profile picture
- * @param {string} props.username - The profile username
- * @param {string} props.bio - The profile biography
- * @param {int} props.followerAmt - Amount of followers
- * @param {int} props.followingAmt - Amount following
- * @param {boolean} props.ownAccount - True if the user logged in owns the profile
- * @param {boolean} props.following - True if the user logged in follows the account of the profile
- * @param {boolean} props.isLoggedIn - True if the user is logged in
- * @param {Function} props.profileButtonClick - Custom event called when the button in the profile is pressed, depending on the state it might be a follow or unfollow
- * @returns {React.Element} A render of a profile
- */
 function ProfileView(props) {
-    return (
-      <div>
-        <ProfileBanner 
-            picture={props.picture}
-            username={props.username} 
-            bio={props.bio} 
-            followerAmt={props.followerAmt} 
-            followingAmt={props.followingAmt} 
-            profileButtonClick={props.profileButtonClick} 
-            ownAccount={props.ownAccount} 
-            following={props.follows}
-            isLoggedIn={props.isLoggedIn}
-        />
-        <h2 className="font-semibold text-5xl w-full text-center mt-10 mb-4">Pins</h2>
-      </div>
-    );
-  }
-  
-  export default ProfileView;
-  
+  return (
+    <div className="flex flex-col w-full max-w-6xl">
+      {/* Banner */}
+      <ProfileBanner
+        {...props.profilePageData.profileBannerPromiseState.data}
+        isFollowing={props.isFollowing}
+        currenLoggedInUid={props.user.uid}
+        currentProfileUid={props.profilePageData.currentProfileUid}
+        handleFollowAndUnfollow={props.handleFollowAndUnfollow}
+      />
+      {/* User's pins */}
+      <ProfileUserPins
+        currentUID={props.user.uid}
+        currentUserData={props.profilePageData.profileBannerPromiseState.data}
+        userPins={props.profilePageData.userPosts}
+        selectPost={props.userSelectsPostACB}
+        likePost={props.userlikesPostACB}
+        dislikePost={props.userdislikesPostACB}
+        commentText={props.postDetailData.comment}
+        userEntersComment={(res) => props.postDetailData.setComment(res)}
+        storeComment={props.handleSubmittedCommentACB}
+      />
+    </div>
+  );
+}
+
+export default ProfileView;
