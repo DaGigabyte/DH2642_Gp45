@@ -20,9 +20,6 @@ function ProfileView(props) {
         selectPost={props.userSelectsPostACB}
         likePost={props.userlikesPostACB}
         dislikePost={props.userdislikesPostACB}
-        commentText={props.postDetailData.comment}
-        userEntersComment={(res) => props.postDetailData.setComment(res)}
-        storeComment={props.handleSubmittedCommentACB}
       />
     </div>
   );

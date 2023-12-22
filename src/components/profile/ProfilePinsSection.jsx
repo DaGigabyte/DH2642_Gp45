@@ -33,9 +33,7 @@ function ProfilePinsSection(props) {
         dislikePost={() => {
           props.dislikePost(post.id);
         }}
-        commentOnPost={() => {
-          props.commentOnCurrentPost(post);
-        }}
+        disableCommenting={true}
       />
     );
   }

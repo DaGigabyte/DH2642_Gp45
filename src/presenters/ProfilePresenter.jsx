@@ -17,19 +17,10 @@ function ProfilePresenter(props) {
   function userlikesPostACB(postId) {
     props.model.postDetailData.setCurrentPostID(postId);
     props.model.postDetailData.likePost();
-    props.model.homePageData.fetchTopPosts();
   }
   function userdislikesPostACB(postId) {
     props.model.postDetailData.setCurrentPostID(postId);
     props.model.postDetailData.dislikePost();
-    props.model.homePageData.fetchTopPosts();
-  }
-
-  function handleSubmittedCommentACB(post) {
-    props.model.postDetailData.setCurrentPostID(post.id);
-    props.model.postDetailData.postComment();
-    props.model.postDetailData.setComment("");
-    newCommentCreatedToast();
   }
 
   // Handle follow and unfollow
@@ -59,7 +50,6 @@ function ProfilePresenter(props) {
       userSelectsPostACB={userSelectsPostACB}
       userlikesPostACB={userlikesPostACB}
       userdislikesPostACB={userdislikesPostACB}
-      handleSubmittedCommentACB={handleSubmittedCommentACB}
     />
   );
 }
