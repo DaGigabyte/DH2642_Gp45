@@ -52,7 +52,7 @@ export default function NewPostCard(props) {
 
   /* React Component*/
   return (
-    <div
+    <button
       className="relative flex flex-col lg:flex-row space-x-4 w-full text-black text-left
           rounded-xl border border-gray-300 p-3 bg-white shadow hover:shadow-xl cursor-pointer
              hover:bg-gray-200 transition duration-300 mb-5 disable-selection"
@@ -63,7 +63,7 @@ export default function NewPostCard(props) {
       <div className="aspect-[14/8] max-h-[350px] w-full overflow-hidden rounded-xl shadow-lg">
         <img
           src={props.postPicture}
-          alt="Picture"
+          alt={props.postTitle}
           className="rounded-xl w-full h-full object-cover"
         />
       </div>
@@ -148,6 +148,6 @@ export default function NewPostCard(props) {
           {""}
         </div>
       </div>
-    </div>
+    </button>
   );
 }
