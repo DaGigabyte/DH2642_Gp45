@@ -16,15 +16,15 @@ import FollowButton from "./FollowButton";
 
 export default function ProfileBanner(props) {
   return (
-    <div className="flex justify-center space-x-6">
+    <div className="flex flex-col lg:flex-row justify-center space-y-4 lg:space-x-4">
       <img
         src={props.picture}
         alt={props.username}
-        className="w-48 h-48 rounded-full"
+        className="w-40 h-4w-40 rounded-full self-center"
       />
       {/* Other content */}
-      <div className="flex flex-col justify-around bg-white p-4 w-full rounded-xl shadow-md">
-        <div className="flex items-center justify-between">
+      <div className="flex flex-col items-center lg:items-stretch justify-around bg-white p-4 flex-1 rounded-xl shadow-md">
+        <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-between">
           <h1 className="text-2xl font-bold">{props.username}</h1>
           <div className="ml-auto flex">
             <div className="text-2xl mr-5">{props.followerAmt} followers</div>
@@ -34,13 +34,14 @@ export default function ProfileBanner(props) {
         <div className="text-lg py-2 overflow-auto whitespace-pre-line">
           {props.bio}
         </div>
-        <div className="self-end">
+        <div className="lg:self-end">
           {props.ownAccount || !props.isLoggedIn ? (
             ""
           ) : (
             <FollowButton
               text={props.following ? "Unfollow" : "Follow"}
               onUserClick={props.profileButtonClick}
+              following={props.following}
             />
           )}
         </div>

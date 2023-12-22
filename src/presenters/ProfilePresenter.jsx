@@ -1,15 +1,12 @@
 import { observer } from "mobx-react-lite";
 import ProfileView from "../views/ProfileView";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import SuspenseAnimation from "../components/global/SuspenseAnimation.jsx";
-import ConfirmationPopupModal from "../components/modal/ConfirmationPopupModal.jsx";
-import { commentDeletedToast } from "../utils/toastify.js";
 
 function ProfilePresenter(props) {
   const { uid } = useParams();
   const loading = !props.model.profilePageData.userPosts;
-  const isFollowing = props.model?.user?.data?.follows?.includes(uid);
 
   function userSelectsPostACB(postId) {
     props.model.postDetailData.setCurrentPostID(postId);
@@ -23,27 +20,18 @@ function ProfilePresenter(props) {
     props.model.postDetailData.dislikePost();
   }
 
-  // Handle follow and unfollow
-  function handleFollowAndUnfollow() {
-    if (!isFollowing) {
-      props.model.profilePageData.followUser();
-    } else {
-      props.model.profilePageData.unfollowUser();
-    }
-  }
-
   // Set user id to the model
   useEffect(() => {
     props.model.profilePageData.setCurrentProfileUid(uid);
   }, [uid]);
 
-  const [popupModalIsOpen, setPopupModalIsOpen] = useState(false);
-
+  // Change document title to the user's display name
   useEffect(() => {
     document.title =
       props.model.profilePageData.profileBannerPromiseState.data?.displayName;
   }, [props.model.profilePageData.profileBannerPromiseState.data?.displayName]);
 
+  // Handle follow/unfollow button click
   function profileButtonClick() {
     if (!props.model.user.data.follows.includes(uid)) {
       props.model.profilePageData.followUser();
@@ -63,8 +51,6 @@ function ProfilePresenter(props) {
   return (
     <ProfileView
       {...props.model}
-      isFollowing={isFollowing}
-      handleFollowAndUnfollow={handleFollowAndUnfollow}
       userSelectsPostACB={userSelectsPostACB}
       userlikesPostACB={userlikesPostACB}
       userdislikesPostACB={userdislikesPostACB}
