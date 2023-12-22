@@ -122,11 +122,8 @@ function RootPresenter(props) {
       const filteredResults = results.filter((movie) => movie.poster_path);
       setSearchResultsTMDB(filteredResults);
     } else if (searchApiSource === sourceENUM.Unsplash) {
-      console.log("Unsplash");
     } else if (searchApiSource === sourceENUM.Pinterest) {
-      console.log("Pinterest");
     } else {
-      console.log("No search API source selected");
     }
     setIsSearching(false);
   }

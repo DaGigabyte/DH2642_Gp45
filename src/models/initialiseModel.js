@@ -4,12 +4,10 @@ import { reaction, autorun } from "mobx";
 import { listOfGenre } from "../services/firePinsSource";
 
 function settingsReaction(model) {
-    console.debug("settingsReaction");
     function watchUserCB() {
         return [model.user.data];
     }
     function copyUserToUserSettingsDataCB() {
-        console.debug("copyUserToUserSettingsDataCB: model.user.data changed, copying to model.userSettingsData.data");
         model.userSettingsData.setFullName(model.user.data.fullName);
         model.userSettingsData.setDisplayName(model.user.data.displayName);
         model.userSettingsData.setBio(model.user.data.bio);
@@ -90,7 +88,6 @@ function combineLatestPosts(model) {
 }
 
 export default async function initialiseModel(model) {
-    console.debug("initialiseModel");
     connectToFirestore(model);
     settingsReaction(model);
     currentPostIdReaction(model);
