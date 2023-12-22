@@ -331,15 +331,15 @@ const model = observable({
     }),
     setNewestPostsBeforeTimeOfConstruction: action(function(posts) {
       this.newestPostsBeforeTimeOfConstruction = posts;
-      console.debug("newestPostsData.newestPostsBeforeTimeOfConstruction: ", this.newestPostsBeforeTimeOfConstruction);
+      console.debug("favoritesPageData.newestPostsBeforeTimeOfConstruction: ", this.newestPostsBeforeTimeOfConstruction);
     }),
     setEndOfNewestPostsBeforeTimeOfConstruction: action(function(endOfPosts) {
       this.endOfNewestPostsBeforeTimeOfConstruction = endOfPosts;
-      console.debug("newestPostsData.endOfNewestPostsBeforeTimeOfConstruction: ", this.endOfNewestPostsBeforeTimeOfConstruction);
+      console.debug("favoritesPageData.endOfNewestPostsBeforeTimeOfConstruction: ", this.endOfNewestPostsBeforeTimeOfConstruction);
     }),
     setNewestPostsAfterTimeOfConstruction: action(function(posts) {
       this.newestPostsAfterTimeOfConstruction = posts;
-      console.debug("newestPostsData.newestPostsAfterTimeOfConstruction: ", this.newestPostsAfterTimeOfConstruction);
+      console.debug("favoritesPageData.newestPostsAfterTimeOfConstruction: ", this.newestPostsAfterTimeOfConstruction);
     }),
     fetchFavoritePosts: async function() {
       favoritePostListenerManager.addNewestPostsListener();
