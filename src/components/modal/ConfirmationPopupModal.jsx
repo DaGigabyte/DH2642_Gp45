@@ -7,11 +7,10 @@ export default function ConfirmationPopupModal(props) {
       <Modal.Content title={"Delete " + props.actionType}>
         <ConfirmationPopupContainer
           actionType={props.actionType}
-          commentRemovalStatus={props.commentRemovalStatus}
-          onConfirm={() => {
-            props.onConfirm();
-          }}
+          onConfirm={() => props.onConfirm()}
           onCancel={() => props.onCancel()}
+          commentRemovalStatus={props.commentRemovalStatus}
+          postRemovalStatus={[props.postRemovalStatus]}
         />
       </Modal.Content>
     </Modal>

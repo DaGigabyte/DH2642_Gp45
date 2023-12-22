@@ -10,6 +10,7 @@ import {
   commentDeletedToast,
   newCommentFailedToast,
   commentDeletedFailedToast,
+  postDeletedFailedToast,
 } from "../utils/toastify";
 import SuspenseAnimation from "../components/global/SuspenseAnimation";
 import { movieById } from "../services/firePinsSource.js";
@@ -20,6 +21,7 @@ function DetailsPresenter(props) {
   const post = props.model.postDetailData.postData;
   const commentStatus = props.model.postDetailData.postCommentStatus;
   const commentRemovalStatus = props.model.postDetailData.removeCommentStatus;
+  const postRemovalStatus = props.model.postDetailData.removePostStatus;
 
   const [postDetailsFromAPI, setPostDetailsFromAPI] = useState(null);
   const deleteTypes = {
@@ -53,18 +55,32 @@ function DetailsPresenter(props) {
     } else if (commentStatus === "error") {
       newCommentFailedToast();
     }
-  }, [commentStatus, props.model.postDetailData]);
+  }, [props.model.postDetailData.postCommentStatus]);
 
   // Checking for commentRemovalStatus updates
   useEffect(() => {
-    setPopUpIsOpen(false);
     if (commentRemovalStatus === "success") {
       commentDeletedToast();
       props.model.postDetailData.setRemoveCommentStatus(null);
+      setPopUpIsOpen(false);
     } else if (commentRemovalStatus === "error") {
       commentDeletedFailedToast();
+      setPopUpIsOpen(false);
     }
-  }, [commentRemovalStatus]);
+  }, [props.model.postDetailData.removeCommentStatus]);
+
+  // Checking for postRemovalStatus updates
+  useEffect(() => {
+    if (postRemovalStatus === "success") {
+      setPopUpIsOpen(false);
+      navigate("/");
+      props.model.postDetailData.setRemovePostStatus(null);
+      postDeletedToast();
+    } else if (postRemovalStatus === "error") {
+      setPopUpIsOpen(false);
+      postDeletedFailedToast();
+    }
+  }, [props.model.postDetailData.removePostStatus]);
 
   function handleDeleteRequest(deleteInfo) {
     setDeleteAction(deleteInfo);
@@ -73,10 +89,7 @@ function DetailsPresenter(props) {
 
   function confirmDelete() {
     if (deleteAction.type === deleteTypes.PIN) {
-      setPopUpIsOpen(false);
-      navigate("/");
       props.model.postDetailData.removePost();
-      postDeletedToast();
     } else if (deleteAction.type === deleteTypes.COMMENT) {
       props.model.postDetailData.removeComment(deleteAction.id);
     }
@@ -142,11 +155,10 @@ function DetailsPresenter(props) {
             isOpen={popUpIsOpen}
             setOpen={setPopUpIsOpen}
             onConfirm={confirmDelete}
-            onCancel={() => {
-              setPopUpIsOpen(false);
-            }}
+            onCancel={() => setPopUpIsOpen(false)}
             actionType={deleteAction.type}
             commentRemovalStatus={commentRemovalStatus}
+            postRemovalStatus={postRemovalStatus}
           />
         </>
       );
