@@ -4,26 +4,33 @@ import { readUserFromFirestore } from "./firebaseModel";
 import { reaction, action, when, makeAutoObservable } from "mobx";
 
 class FavoritesPostListenerManager {
-    constructor(postsData, userID) {
+    constructor(postsData) {
         this.postsData = postsData;
-        this.userID = userID;
+        this.userID = null;
         this.newerThanConstructionPosts = [];
         this.listeners = [];
         this.timeOfConstruction = new Date();
         this.readyForAddingNewestPostsListener = true;
         this.endOfPosts = false;
         makeAutoObservable(this);
-        reaction(()=>this.listeners.map(l => l.post), ()=> {
+        reaction(() => this.listeners.map(l => l.post), () => {
             console.debug('FavoritesPostListenerManager: reaction', this.listeners);
-            const postArr = this.listeners.map(l => l.post).filter(p => p!==null);
+            const postArr = this.listeners.map(l => l.post).filter(p => p !== null);
             this.postsData.setNewestPostsBeforeTimeOfConstruction(postArr)
         });
-        when(()=>this.endOfPosts, ()=>{
+        when(() => this.endOfPosts, () => {
             console.debug('FavoritesPostListenerManager: whenEndOfPosts: endOfPosts');
             this.postsData.setEndOfNewestPostsBeforeTimeOfConstruction(true);
         });
         this.listenToAndUpdatePostsCreatedAfterConstruction();
+        function userIDACB() {
+            this.listeners.map(l=>l.unsub());
+            this.setListeners([]);
+            console.debug('Unsubscribed and removed all listeners');
+        }
+        reaction(()=>this.userID, userIDACB.bind(this));
     }
+    setUserID = action((userID) => this.userID = userID);
     setListeners = action((listeners) => this.listeners = listeners);
     setListenerPostAt = action((post, index) => this.listeners[index].post = post);
     removeListener(postId) {
