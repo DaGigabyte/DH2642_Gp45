@@ -6,7 +6,7 @@ import {
   signOutACB,
   queryUsername,
 } from "../firebase/firebaseModel";
-import { searchMovie, listOfGenre } from "../services/firePinsSource";
+import { searchMovie } from "../services/firePinsSource";
 import { newPostCreatedToast } from "../utils/toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -28,7 +28,6 @@ function RootPresenter(props) {
   const [searchApiSource, setSearchApiSource] = useState(sourceENUM.TMDB);
   const [newPostCaption, setNewPostCaption] = useState("");
   const [newPostRating, setNewPostRating] = useState(0);
-  const [allTMDBGenres, setAllTMDBGenres] = useState([]);
   const [genreNames, setGenreNames] = useState([]);
 
   // Handle set search text
@@ -68,12 +67,6 @@ function RootPresenter(props) {
   // Handle post rating
   function handlePostRating(rating) {
     setNewPostRating(rating);
-  }
-
-  // Handle get genres from TMDB
-  async function handleGetGenres() {
-    const genres = await listOfGenre();
-    setAllTMDBGenres(genres);
   }
 
   // Handle create new post
@@ -144,10 +137,6 @@ function RootPresenter(props) {
   // Search for movies in TMDB on searchTextTMDB change
   // Wait for user to stop typing for 500ms before searching TMDB
   useEffect(() => {
-    if (allTMDBGenres.length === 0) {
-      handleGetGenres();
-    }
-
     const timeoutId = setTimeout(() => {
       handleSearchMovie();
     }, 500);
@@ -165,7 +154,7 @@ function RootPresenter(props) {
     if (selectedMovieObject) {
       const genreNames = [];
       selectedMovieObject.genre_ids.forEach((genreID) => {
-        const genreName = allTMDBGenres.find(
+        const genreName = props.model.listOfTMDBgenre.find(
           (genre) => genre.id === genreID
         ).name;
         genreNames.push(genreName);
